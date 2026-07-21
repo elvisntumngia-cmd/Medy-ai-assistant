@@ -1,0 +1,152 @@
+:root {
+  --medy-navy: #071c34;
+  --medy-blue: #1478d4;
+  --medy-line: #dce5ec;
+}
+.medy-launch {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px 10px 10px;
+  background: linear-gradient(135deg, var(--medy-blue), #075da7);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  box-shadow: 0 14px 38px #0a51834d;
+  cursor: pointer;
+  z-index: 20;
+}
+.medy-launch-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffffff1f;
+  font-size: 18px;
+}
+.medy-launch-copy {
+  display: flex;
+  flex-direction: column;
+}
+.medy-launch-copy strong {
+  font-size: 13px;
+}
+.medy-launch-copy small {
+  color: #d7ecff;
+  font-size: 10px;
+  margin-top: 2px;
+}
+.medy-assistant {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: #172638;
+  border: 1px solid var(--medy-line);
+  border-radius: 14px;
+  overflow: hidden;
+  min-height: 500px;
+}
+.medy-floating {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 390px;
+  height: min(650px, calc(100vh - 48px));
+  z-index: 30;
+  box-shadow: 0 24px 70px #001b3830;
+}
+.medy-workspace {
+  height: 100%;
+}
+.medy-assistant header {
+  display: flex;
+  justify-content: space-between;
+  background: var(--medy-navy);
+  color: #fff;
+  padding: 16px;
+}
+.medy-assistant header div {
+  display: flex;
+  flex-direction: column;
+}
+.medy-assistant header small {
+  color: #b9cadb;
+}
+.medy-assistant header button {
+  background: none;
+  border: 0;
+  color: #fff;
+}
+.medy-messages {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+  background: #f5f8fb;
+}
+.medy-messages article {
+  margin-bottom: 12px;
+}
+.medy-messages p,
+.medy-messages pre {
+  white-space: pre-wrap;
+  background: #fff;
+  border: 1px solid var(--medy-line);
+  border-radius: 8px;
+  padding: 10px;
+}
+.medy-messages .user p {
+  background: var(--medy-blue);
+  color: #fff;
+}
+.medy-actions,
+.medy-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 7px;
+}
+.medy-actions button,
+.medy-quick button,
+.medy-suggestion {
+  border: 1px solid #b8d5ec;
+  background: #fff;
+  color: #0d64ad;
+  border-radius: 7px;
+  padding: 8px;
+}
+.medy-assistant form {
+  display: flex;
+  gap: 7px;
+  padding: 12px;
+}
+.medy-assistant form input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+}
+.medy-assistant form button {
+  border: 0;
+  border-radius: 6px;
+  background: var(--medy-blue);
+  color: #fff;
+}
+.medy-error {
+  color: #a52525 !important;
+}
+.medy-quick {
+  padding: 10px;
+}
+@media (max-width: 600px) {
+  .medy-floating {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+}

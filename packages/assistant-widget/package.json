@@ -1,0 +1,1 @@
+{"name":"@medy/assistant-widget","version":"1.0.0","type":"module","main":"src/medy-assistant.ts","exports":"./src/medy-assistant.ts","scripts":{"build":"tsc -p tsconfig.json"},"dependencies":{"@medy/shared":"*"},"devDependencies":{"typescript":"^5.7.3"}}

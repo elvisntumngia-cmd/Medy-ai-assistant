@@ -1,0 +1,12 @@
+node_modules/
+dist/
+data/*.json
+!data/.gitkeep
+playwright-report/
+test-results/
+.env
+*.tsbuildinfo
+*.log
+.agents/
+sources/
+AGENTS.md

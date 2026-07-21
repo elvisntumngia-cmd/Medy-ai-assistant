@@ -1,0 +1,1 @@
+{"name":"@medy/assistant-react","version":"1.0.0","type":"module","main":"src/index.tsx","types":"src/index.tsx","exports":"./src/index.tsx","scripts":{"build":"tsc -p tsconfig.json"},"peerDependencies":{"react":"^18 || ^19"},"dependencies":{"@medy/assistant-core":"*","@medy/shared":"*"},"devDependencies":{"@types/react":"^19.0.8","typescript":"^5.7.3"}}
