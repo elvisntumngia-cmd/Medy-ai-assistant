@@ -10,21 +10,17 @@ import {
   LeadSchema,
 } from "@medy/shared";
 import {
-  BedrockAIProvider,
-  LocalKnowledgeProvider,
   LocalLeadProvider,
   MockActionProvider,
-  MockAIProvider,
   MockAuthAdapter,
   employeeData,
 } from "./providers.js";
+import { ConversationEngine } from "./conversation.js";
 
 export function createApp() {
   const app = express();
   const auth = new MockAuthAdapter();
-  const knowledge = new LocalKnowledgeProvider();
-  const mockAI = new MockAIProvider();
-  const bedrock = new BedrockAIProvider();
+  const conversation = new ConversationEngine();
   const leads = new LocalLeadProvider();
   const actions = new MockActionProvider();
   const session = (req: express.Request) => req.header("x-demo-session");
@@ -48,8 +44,7 @@ export function createApp() {
   app.get("/api/health", (_req, res) =>
     res.json({
       status: "ok",
-      provider:
-        process.env.BEDROCK_ENABLED === "true" ? "bedrock-enabled" : "mock",
+      provider: "deterministic-local",
     }),
   );
   app.post("/api/chat", async (req, res, next) => {
@@ -73,19 +68,12 @@ export function createApp() {
       if (config.delay) await new Promise((r) => setTimeout(r, 800));
       if (config.providerError || body.triggerError)
         throw new Error("Triggered provider error");
-      const context = await knowledge.search(
-        body.mode,
-        body.messages.at(-1)!.content,
-      );
-      const useBedrock =
-        process.env.BEDROCK_ENABLED === "true" &&
-        (body.provider || config.provider) === "bedrock";
-      const provider = useBedrock ? bedrock : mockAI;
+      const conversationKey = `${body.mode}:${body.conversationId || session(req) || "anonymous-demo"}`;
       res.json(
-        await provider.chat(
+        conversation.respond(
           body.mode,
-          body.messages,
-          context,
+          conversationKey,
+          body.messages.at(-1)!.content,
           user || undefined,
         ),
       );
@@ -204,6 +192,7 @@ export function createApp() {
     if (body.leads) leads.reset();
     if (body.actions) actions.reset();
     if (body.session) auth.reset();
+    if (body.session) conversation.reset();
     res.json({ reset: true, ...body });
   });
   app.use(

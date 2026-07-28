@@ -8,10 +8,13 @@ import {
 } from "@medy/shared";
 
 export class ApiClient {
+  private conversationId: string;
   constructor(
     public apiUrl: string,
     private sessionId = "demo-default",
-  ) {}
+  ) {
+    this.conversationId = `${sessionId}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  }
   private headers() {
     return {
       "Content-Type": "application/json",
@@ -23,7 +26,12 @@ export class ApiClient {
     messages: { role: "user" | "assistant"; content: string }[],
     config?: Partial<DemoConfig>,
   ): Promise<AssistantResponse> {
-    const body = { mode, messages, ...config };
+    const body = {
+      mode,
+      messages,
+      conversationId: this.conversationId,
+      ...config,
+    };
     const response = await fetch(`${this.apiUrl}/chat`, {
       method: "POST",
       headers: this.headers(),

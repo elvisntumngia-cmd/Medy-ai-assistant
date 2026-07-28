@@ -2,6 +2,13 @@ import { z } from "zod";
 
 export const ModeSchema = z.enum(["public", "employee"]);
 export type Mode = z.infer<typeof ModeSchema>;
+export const KnowledgeStatusSchema = z.enum([
+  "approved",
+  "provisional",
+  "demo_only",
+  "requires_confirmation",
+]);
+export type KnowledgeStatus = z.infer<typeof KnowledgeStatusSchema>;
 export const RoleSchema = z.enum(["officer", "manager", "hr_admin"]);
 export type DemoRole = z.infer<typeof RoleSchema>;
 
@@ -44,6 +51,8 @@ export const SourceSchema = z.object({
   title: z.string(),
   domain: ModeSchema,
   snippet: z.string(),
+  label: z.string().optional(),
+  status: KnowledgeStatusSchema.optional(),
 });
 export const AssistantResponseSchema = z.object({
   message: z.string(),
@@ -56,6 +65,10 @@ export const AssistantResponseSchema = z.object({
     .union([z.record(z.unknown()), z.array(z.record(z.unknown()))])
     .optional(),
   sources: z.array(SourceSchema).default([]),
+  alternativeIntents: z.array(z.string()).default([]),
+  matchingKnowledgeEntryIds: z.array(z.string()).default([]),
+  disclaimer: z.string().optional(),
+  missingRequiredFields: z.array(z.string()).default([]),
 });
 export type AssistantResponse = z.infer<typeof AssistantResponseSchema>;
 export const MessageSchema = z.object({
@@ -65,7 +78,8 @@ export const MessageSchema = z.object({
 export const ChatRequestSchema = z.object({
   mode: ModeSchema,
   messages: z.array(MessageSchema).min(1),
-  provider: z.enum(["mock", "bedrock"]).optional(),
+  provider: z.literal("mock").optional(),
+  conversationId: z.string().min(1).max(100).optional(),
   triggerError: z.boolean().optional(),
 });
 export const LeadSchema = z.object({
@@ -89,7 +103,7 @@ export const LeadSchema = z.object({
 export type LeadInput = z.infer<typeof LeadSchema>;
 export const DemoConfigSchema = z.object({
   role: RoleSchema.default("officer"),
-  provider: z.enum(["mock", "bedrock"]).default("mock"),
+  provider: z.literal("mock").default("mock"),
   delay: z.boolean().default(false),
   providerError: z.boolean().default(false),
 });

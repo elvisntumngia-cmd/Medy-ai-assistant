@@ -1,6 +1,6 @@
 # Medy Assistant
 
-Medy Assistant is a locally runnable integration prototype for SecureMedy. It contains a standalone public-site widget, a reusable React employee assistant, a mock M3dyHub portal, a typed Express API, local knowledge retrieval, configurable AI providers, and presentation controls. All included people and records are fictional.
+Medy Assistant is a locally runnable deterministic stakeholder-demo assistant for SecureMedy. It contains a standalone public-site widget, a reusable React employee assistant, a mock M3dyHub portal, a typed Express API, validated structured knowledge, deterministic intent matching, session conversation state, and presentation controls. It does not use an external language model and is not described as trained. All included people and records are fictional.
 
 ## Start locally
 
@@ -22,7 +22,7 @@ Useful routes:
 - `/employee/dashboard` — fictional M3dyHub dashboard
 - `/employee/assistant` — full employee assistant workspace
 - `/admin/leads` — locally captured demonstration leads
-- `/control` — role/provider controls, error/delay simulation, action log, and reset
+- `/control` — role, error/delay simulation, action log, and reset controls
 
 ## Verification
 
@@ -35,7 +35,7 @@ npm run build
 npm run test:e2e
 ```
 
-Unit/integration tests cover API hardening, mode separation, role authorization, conflicts, audit records, employee endpoints, fallback behavior, React rendering, reset, and XSS-safe text rendering. Chromium journeys cover lead intake, the local lead view, employee support intents, responsive widget behavior, provider switching, roles, and Shadow DOM isolation.
+Unit/integration tests cover deterministic matching, contextual field collection, API hardening, domain separation, role authorization, emergency handling, safe fallback, knowledge status, anti-fabrication boundaries, audit records, reset, and XSS-safe rendering. Chromium journeys cover multi-turn public and employee conversations, lead intake, responsive behavior, roles, and Shadow DOM isolation.
 
 Playwright uses dedicated ports 4281 and 5281, refuses to reuse existing servers, and creates lead/action files in a temporary operating-system directory. Acceptance tests therefore do not write to repository data files.
 
@@ -56,8 +56,8 @@ flowchart LR
   ReactUI --> Core[Assistant core client]
   Core --> API
   API --> Auth[Session and role adapter]
-  API --> Knowledge[Public or employee knowledge provider]
-  API --> AI[Mock or Bedrock provider]
+  API --> Knowledge[Validated public or employee knowledge]
+  API --> Engine[Deterministic matcher and conversation engine]
   API --> Data[Employee, lead, and action providers]
 ```
 
@@ -65,10 +65,10 @@ flowchart LR
 - `packages/assistant-core` owns the API client and navigation adapters.
 - `packages/assistant-react` is the reusable employee/floating React UI used by the demo.
 - `packages/assistant-widget` is the framework-independent public custom element used by the demo.
-- `apps/api` owns security middleware and provider boundaries.
-- `knowledge/public` and `knowledge/employee` are separate retrieval scopes.
+- `apps/api` owns security middleware, the deterministic conversation engine, structured knowledge, and local data providers.
+- Public and employee entries are separate validated retrieval scopes.
 
-The browser never receives AWS credentials. API input and provider output are runtime-validated. Helmet, constrained CORS, request limits, rate limiting, role checks, and safe text rendering are enabled. Mock write actions require confirmation in the React UI and produce audit records.
+API input, knowledge entries, and assistant output are runtime-validated. Helmet, constrained CORS, request limits, rate limiting, role checks, and safe text rendering are enabled. Mock write actions require confirmation in the React UI and produce audit records.
 
 ## Public widget integration
 
@@ -99,11 +99,9 @@ import { ReactRouterNavigationAdapter } from "@medy/assistant-core";
 
 Replace the mock session adapter with M3dyHub's server-validated identity and claims. Replace employee-data providers with authenticated M3dyHub adapters. Update the one route map in `packages/shared-types` if production portal paths differ.
 
-## Bedrock integration
+## Deterministic knowledge system
 
-Bedrock is off by default. The current `BedrockAIProvider` is an AWS SDK `InvokeModelCommand` invocation scaffold, not a completed integration. No real AWS invocation has been completed, its generic payload has not been validated against an approved model, and no Guardrail or Bedrock Knowledge Base is connected. When Bedrock is disabled, local demonstrations automatically use the mock provider.
-
-Production deployment should use an IAM workload role with permission only for the approved model. Do not store access keys in this repository or expose them to either client. Approved retrieval sources should be moved to a Bedrock Knowledge Base or another authorized store while preserving public/employee separation and document-level authorization.
+The assistant uses no OpenAI, Amazon Bedrock, or other external language model. `apps/api/src/knowledge.ts` contains Zod-validated entries with source status, workflow fields, warnings, disclaimers, actions, and escalation ownership. `apps/api/src/conversation.ts` performs normalized deterministic matching, weighted synonyms and examples, contextual field collection, emergency precedence, and safe fallback logging.
 
 ## API summary
 
@@ -121,11 +119,10 @@ Lead administration, action audit access, configuration, provider/error controls
 
 - If npm tries to write under `C:\Windows\System32`, the terminal is in the wrong directory. Change to this repository before running npm.
 - If port 5180 or 4180 is occupied, change the configured Vite/API port and `VITE_API_URL` together.
-- A Bedrock selection still uses mock responses unless `BEDROCK_ENABLED=true` is set on the API process; this is intentional and keeps local startup credential-free.
 - If browser tests cannot launch Chromium, run `npx playwright install chromium` once.
 
 ## Production boundaries and limitations
 
-This repository does not contain production M3dyHub authentication, live employee data, a CRM, durable database, email/SMS, emergency dispatch, or approved SecureMedy policy content. Employee endpoints now require an explicitly provisioned fictional session (`stakeholder-demo`, `demo-officer`, `demo-manager`, or `demo-hr-admin`), but these identifiers are not production credentials. Local JSON persistence and demo-session identity are demonstration mechanisms only. Production requires privacy and security review, authoritative authentication/authorization, encrypted durable storage, retention/deletion controls, secrets management, monitoring, WAF/abuse protection, accessibility testing, model evaluation, human escalation, disaster recovery, and penetration testing.
+This repository does not contain production M3dyHub authentication, live employee data, a CRM, durable database, email/SMS, emergency dispatch, or approved SecureMedy policy content. Employee endpoints require an explicitly provisioned fictional session (`stakeholder-demo`, `demo-officer`, `demo-manager`, or `demo-hr-admin`), but these identifiers are not production credentials. Local JSON persistence and demo-session identity are demonstration mechanisms only. Production requires privacy and security review, authoritative authentication/authorization, encrypted durable storage, retention/deletion controls, secrets management, monitoring, WAF/abuse protection, accessibility testing, deterministic-rule evaluation, human escalation, disaster recovery, and penetration testing.
 
 The requested reference HTML, Word, and PDF assets were not present in the supplied workspace. Their absence and the resulting design limitation are documented in `docs/reference/README.md` and `docs/architecture/REFERENCE_FINDINGS.md`; no claim of exact reference parity is made.

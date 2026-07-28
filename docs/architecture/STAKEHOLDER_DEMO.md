@@ -2,56 +2,25 @@
 
 ## Accuracy and safety note
 
-Employee access requires an explicitly provisioned fictional demo session. It fails closed when the session is missing or unknown, but it is not production authentication. Demo controls and lead administration require `DEMO_MODE=true`; the root development command enables it for this presentation. Bedrock is an `InvokeModelCommand` SDK scaffold only: no real AWS invocation has been completed, no Guardrail is configured, and no Bedrock Knowledge Base is connected. Playwright runs on isolated ports with temporary lead/action files.
+Medy is a deterministic rule-based and retrieval-based demo assistant. It does not use an external language model and is not AI-trained. Employee access uses explicitly provisioned fictional sessions, not production authentication. Public and employee knowledge are strictly separated. Non-approved knowledge is labeled provisional, demo-only, or requiring SecureMedy confirmation.
 
 ## Five-minute walkthrough
 
-### 1. Position the concept — 30 seconds
-
-“Medy Assistant is a shared AI support platform with two governed experiences: public customer support and authenticated employee support. This demonstration uses only fictional local data. No production request is dispatched and no official policy is represented.”
-
-Open `http://localhost:5180`.
-
-### 2. Public support and lead capture — 90 seconds
-
-1. Open **Ask Medy**.
-2. Ask: “What security services are available?”
-3. Select **Request Security Services**.
-4. Complete the intake with demonstration contact information.
-5. Review the structured summary and save it.
-6. Point out the demonstration disclaimer and local reference number.
-7. Open `/admin/leads` to show the captured record.
-
-Key message: the experience can later connect to an approved CRM without changing the public conversation UI.
-
-### 3. Employee personalization — 60 seconds
-
-Open `/employee/dashboard`. Show the fictional profile for James Carter, recent requests, training, license status, and approval count. Open the dedicated **Medy Assistant** workspace.
-
-Key message: the portal experience uses a separate employee mode, trusted server-side identity boundary, and employee-only knowledge domain.
-
-### 4. Guided employee workflows — 90 seconds
-
-Ask each question:
-
-- “I need a new uniform.” Show the configured Uniform Request route.
-- “My overtime is missing.” Show the fictional payroll record and confirmation-gated write action.
-- “Find the attendance policy.” Point out the conspicuous demonstration-content disclaimer.
-- “My guard card expires soon.” Show the fictional expiration data and HR/Compliance guidance.
-
-Key message: Medy answers, presents structured data, and guides employees into existing workflows rather than silently performing consequential actions.
-
-### 5. Governance and readiness — 30 seconds
-
-Open `/control`. Demonstrate failure handling, simulated delay, provider selection, action audit history, role selection, and centralized route mappings.
-
-Close with: “The prototype runs without AWS credentials. Its provider boundaries are ready for an approved Bedrock model, Bedrock Knowledge Base, M3dyHub APIs, SSO, and CRM integration.”
+1. Open `http://localhost:5180`, launch Medy, and ask about security services.
+2. Ask for an event-security quote and answer the focused location, date, attendance, and coverage questions.
+3. Open `/employee/dashboard`, then `/employee/assistant`.
+4. Ask “My payroll has missing hours,” then answer “Yesterday.”
+5. Ask “My uniform is the wrong size,” then answer “The pants.”
+6. Ask for the policy handbook and point out the provisional-content disclaimer.
+7. Ask an unsupported question and show safe clarification rather than an invented answer.
+8. Use an emergency example and show that fixed 911 guidance takes precedence.
+9. Open `/control` to demonstrate fictional roles, simulated delay/error behavior, action audits, and reset.
 
 ## Presenter checklist
 
-- Start the application and verify `/api/health` before the meeting.
-- Keep the browser at 100% zoom and use a window at least 1280 pixels wide.
-- Reset the demo session and remove unwanted test leads.
-- Use only fictional `.test` email addresses and demonstration phone numbers.
-- Keep a production build or screen recording available as a fallback.
-- Never describe demonstration policy text as official SecureMedy guidance.
+- Verify `/api/health` reports `deterministic-local`.
+- Use only fictional `.test` contact data.
+- Reset local demo data before presenting.
+- Never describe demonstration content as official policy.
+- Never claim human-level understanding or model training.
+- Keep the question library in `docs/demo-question-library.md` available.

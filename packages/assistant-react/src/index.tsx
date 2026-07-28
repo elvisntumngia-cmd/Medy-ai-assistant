@@ -71,6 +71,21 @@ export function MedyAssistant({
       setBusy(false);
     }
   }
+  async function resetConversation() {
+    if (busy) return;
+    setBusy(true);
+    try {
+      await client.chat(mode, [
+        { role: "user", content: "reset conversation" },
+      ]);
+      setMessages([{ role: "assistant", content: greeting }]);
+      setError("");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Reset unavailable");
+    } finally {
+      setBusy(false);
+    }
+  }
   async function act(action: AssistantAction) {
     if (action.type === "navigate" && action.target)
       return navigation.navigate(action.target);
@@ -219,13 +234,7 @@ export function MedyAssistant({
           placeholder="Type your question…"
         />
         <button disabled={busy}>Send</button>
-        <button
-          type="button"
-          onClick={() => {
-            setMessages([{ role: "assistant", content: greeting }]);
-            setError("");
-          }}
-        >
+        <button type="button" onClick={() => void resetConversation()}>
           Reset
         </button>
       </form>

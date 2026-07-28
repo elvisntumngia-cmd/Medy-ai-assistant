@@ -19,6 +19,7 @@ class MedyAssistantWidget extends HTMLElement {
   messages = el("div", "messages");
   panel = el("section", "panel");
   input = el("input");
+  conversationId = `public-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   connectedCallback() {
     this.api = this.dataset.apiUrl || this.api;
     const style = el("style");
@@ -89,6 +90,7 @@ class MedyAssistantWidget extends HTMLElement {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode: "public",
+          conversationId: this.conversationId,
           messages: [{ role: "user", content: text }],
         }),
       });
