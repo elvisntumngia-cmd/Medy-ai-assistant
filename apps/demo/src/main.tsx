@@ -18,7 +18,9 @@ import "./styles.css";
 
 const API =
   import.meta.env.VITE_API_URL ||
-  `${location.protocol}//${location.hostname}:${location.port === "5281" ? "4281" : "4180"}/api`;
+  (location.port === "5180" || location.port === "5281"
+    ? `${location.protocol}//${location.hostname}:${location.port === "5281" ? "4281" : "4180"}/api`
+    : "/api");
 const SESSION = "stakeholder-demo";
 type PortalData = {
   requests?: Array<{ id: string; type: string; status: string }>;

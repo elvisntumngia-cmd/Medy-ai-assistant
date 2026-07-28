@@ -2,6 +2,9 @@ import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { ZodError, z } from "zod";
 import {
   ActionSchema,
@@ -17,7 +20,31 @@ import {
 } from "./providers.js";
 import { ConversationEngine } from "./conversation.js";
 
-export function createApp() {
+type AppOptions = {
+  serveFrontend?: boolean;
+  demoDistPath?: string;
+};
+
+export function resolveDemoDistPath() {
+  const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
+  const candidates = [
+    // Compiled API: apps/api/dist/src/app.js -> apps/demo/dist
+    path.resolve(moduleDirectory, "../../../demo/dist"),
+    // Source/tsx execution: apps/api/src/app.ts -> apps/demo/dist
+    path.resolve(moduleDirectory, "../../demo/dist"),
+    // Monorepo root working directory
+    path.resolve(process.cwd(), "apps/demo/dist"),
+    // apps/api working directory
+    path.resolve(process.cwd(), "../demo/dist"),
+  ];
+  return (
+    candidates.find((candidate) =>
+      fs.existsSync(path.join(candidate, "index.html")),
+    ) || candidates[0]
+  );
+}
+
+export function createApp(options: AppOptions = {}) {
   const app = express();
   const auth = new MockAuthAdapter();
   const conversation = new ConversationEngine();
@@ -195,6 +222,11 @@ export function createApp() {
     if (body.session) conversation.reset();
     res.json({ reset: true, ...body });
   });
+  app.use("/api", (_req, res) =>
+    res.status(404).json({
+      error: { code: "NOT_FOUND", message: "API route not found" },
+    }),
+  );
   app.use(
     (
       error: unknown,
@@ -214,5 +246,18 @@ export function createApp() {
       });
     },
   );
+  const serveFrontend =
+    options.serveFrontend ??
+    (process.env.NODE_ENV === "production" || process.env.RENDER === "true");
+  if (serveFrontend) {
+    const demoDist = options.demoDistPath || resolveDemoDistPath();
+    const indexFile = path.join(demoDist, "index.html");
+    if (!fs.existsSync(indexFile))
+      throw new Error(
+        `Built demo frontend was not found at ${indexFile}. Run the monorepo build before starting the API.`,
+      );
+    app.use(express.static(demoDist));
+    app.get("*", (_req, res) => res.sendFile(indexFile));
+  }
   return app;
 }

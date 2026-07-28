@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
 import request from "supertest";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import { createApp } from "./app.js";
 process.env.DEMO_MODE = "true";
 describe("integrated API", () => {
@@ -9,6 +12,45 @@ describe("integrated API", () => {
     expect(
       (await request(app).get("/api/health")).headers["x-content-type-options"],
     ).toBe("nosniff"));
+  it("serves the built frontend with SPA fallback without intercepting APIs", async () => {
+    const demoDist = fs.mkdtempSync(path.join(os.tmpdir(), "medy-demo-dist-"));
+    fs.writeFileSync(
+      path.join(demoDist, "index.html"),
+      '<!doctype html><html><body><div id="root">Medy demo</div></body></html>',
+    );
+    fs.writeFileSync(path.join(demoDist, "app.js"), "window.__MEDY__ = true;");
+    try {
+      const productionApp = createApp({
+        serveFrontend: true,
+        demoDistPath: demoDist,
+      });
+      const root = await request(productionApp).get("/");
+      expect(root.status).toBe(200);
+      expect(root.text).toContain("Medy demo");
+
+      const workspace = await request(productionApp).get("/workspace");
+      expect(workspace.status).toBe(200);
+      expect(workspace.text).toContain("Medy demo");
+
+      const asset = await request(productionApp).get("/app.js");
+      expect(asset.status).toBe(200);
+      expect(asset.text).toContain("__MEDY__");
+
+      const health = await request(productionApp).get("/api/health");
+      expect(health.status).toBe(200);
+      expect(health.body).toEqual({
+        status: "ok",
+        provider: "deterministic-local",
+      });
+
+      const unknownApi = await request(productionApp).get("/api/not-a-route");
+      expect(unknownApi.status).toBe(404);
+      expect(unknownApi.body.error.code).toBe("NOT_FOUND");
+      expect(unknownApi.headers["content-type"]).toMatch(/json/);
+    } finally {
+      fs.rmSync(demoDist, { recursive: true, force: true });
+    }
+  });
   it("uses the deterministic local engine", async () => {
     const r = await request(app)
       .post("/api/chat")
