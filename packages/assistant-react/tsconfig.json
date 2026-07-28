@@ -4,6 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "declaration": true,
     "outDir": "dist",
     "rootDir": "./src",
