@@ -6,7 +6,8 @@ import type {
   EmployeeProfile,
   Mode,
 } from "@medy/shared";
-import "./styles.css";
+// @ts-ignore
+import './styles.css';
 
 type Message = {
   role: "user" | "assistant";
