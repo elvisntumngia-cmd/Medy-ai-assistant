@@ -326,6 +326,15 @@ describe("integrated API", () => {
           .set("Access-Control-Request-Method", "POST")
       ).headers["access-control-allow-origin"],
     ).toBe("http://localhost:5180"));
+  it("allows the local WordPress integration origin", async () =>
+    expect(
+      (
+        await request(app)
+          .options("/api/chat")
+          .set("Origin", "http://localhost:8888")
+          .set("Access-Control-Request-Method", "POST")
+      ).headers["access-control-allow-origin"],
+    ).toBe("http://localhost:8888"));
   it.each([
     "https://securemedy.ng",
     "https://www.securemedy.ng",
