@@ -48,7 +48,7 @@ script-src 'self' https://medy-ai-assistant-demo.onrender.com;
 connect-src 'self' https://medy-ai-assistant-demo.onrender.com;
 ```
 
-Merge these sources into the site's existing directives; do not replace its entire policy. The widget does not require `unsafe-inline` because its styles live inside its own Shadow DOM.
+Merge these sources into the site's existing directives; do not replace its entire policy. The script does not require `unsafe-inline` or `unsafe-eval`. The widget currently inserts its isolated styles into its Shadow DOM, so a future restrictive `style-src` policy should be tested separately; SecureMedy's current public response does not send a CSP header.
 
 ## Verification checklist
 
