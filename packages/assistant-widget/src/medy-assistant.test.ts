@@ -26,6 +26,16 @@ async function submitWith(response: unknown) {
 }
 
 describe("standalone widget response validation", () => {
+  it("uses the explicit public API URL without exposing employee controls", () => {
+    const widget = document.createElement("medy-assistant");
+    widget.setAttribute("api-url", "https://example.test/api/");
+    document.body.append(widget);
+    const root = widget.shadowRoot!;
+    expect((widget as HTMLElement & { api: string }).api).toBe(
+      "https://example.test/api",
+    );
+    expect(root.textContent).not.toMatch(/employee|dashboard|sign in/i);
+  });
   it("renders a valid structured response", async () => {
     const root = await submitWith({
       message: "Validated response",

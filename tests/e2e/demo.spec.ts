@@ -252,6 +252,20 @@ test("widget shadow DOM resists hostile host styles", async ({ page }) => {
   expect(isolated).toBe(true);
 });
 
+test("standalone widget loads on an independent host and calls the public API", async ({
+  page,
+}) => {
+  await page.goto("/wordpress-host.html");
+  await page.getByRole("button", { name: "Open Medy Assistant" }).click();
+  await expect(page.getByText(/I’m Medy Assistant/)).toBeVisible();
+  await page
+    .getByLabel("Message Medy Assistant")
+    .fill("What services do you offer?");
+  await page.getByRole("button", { name: "Send" }).click();
+  await expect(page.getByText(/security/i).last()).toBeVisible();
+  await expect(page.getByText(/employee|dashboard|sign in/i)).toHaveCount(0);
+});
+
 test("captured lead is visible in the local admin view", async ({ page }) => {
   await page.goto("/admin/leads");
   await expect(page.getByText("Alex Morgan")).toBeVisible();

@@ -22,7 +22,7 @@ export default async function globalSetup() {
   process.env.MEDY_ACTIONS_FILE = join(dataDir, "actions.json");
 
   const { createApp } = await import("../../apps/api/src/app.js");
-  const api = createApp().listen(4281, "127.0.0.1");
+  const api = createApp({ serveFrontend: true }).listen(4281, "127.0.0.1");
   await new Promise<void>((resolveReady, reject) => {
     api.once("listening", resolveReady);
     api.once("error", reject);
@@ -30,6 +30,17 @@ export default async function globalSetup() {
 
   const root = resolve("apps/demo/dist");
   const web = createServer((request, response) => {
+    if ((request.url || "").startsWith("/wordpress-host.html")) {
+      response.setHeader("Content-Type", "text/html; charset=utf-8");
+      response.end(`<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>External WordPress host simulation</title></head>
+<body><main><h1>Independent host page</h1><p>Medy is loaded from the production API artifact route.</p></main>
+<script src="http://127.0.0.1:4281/medy-widget.js?v=test" defer></script>
+<medy-assistant api-url="http://127.0.0.1:4281/api"></medy-assistant>
+</body></html>`);
+      return;
+    }
     const requested = normalize(
       decodeURIComponent((request.url || "/").split("?")[0]),
     ).replace(/^[/\\]+/, "");

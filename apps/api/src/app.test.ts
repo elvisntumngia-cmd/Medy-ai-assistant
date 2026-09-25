@@ -19,10 +19,16 @@ describe("integrated API", () => {
       '<!doctype html><html><body><div id="root">Medy demo</div></body></html>',
     );
     fs.writeFileSync(path.join(demoDist, "app.js"), "window.__MEDY__ = true;");
+    const widgetBundle = path.join(demoDist, "standalone-widget.js");
+    fs.writeFileSync(
+      widgetBundle,
+      'customElements.define("medy-assistant", class extends HTMLElement {});',
+    );
     try {
       const productionApp = createApp({
         serveFrontend: true,
         demoDistPath: demoDist,
+        widgetBundlePath: widgetBundle,
       });
       const root = await request(productionApp).get("/");
       expect(root.status).toBe(200);
@@ -35,6 +41,15 @@ describe("integrated API", () => {
       const asset = await request(productionApp).get("/app.js");
       expect(asset.status).toBe(200);
       expect(asset.text).toContain("__MEDY__");
+
+      const widget = await request(productionApp).get("/medy-widget.js");
+      expect(widget.status).toBe(200);
+      expect(widget.headers["content-type"]).toMatch(/javascript/);
+      expect(widget.text).toContain('customElements.define("medy-assistant"');
+      expect(widget.headers["cache-control"]).toBe("public, max-age=3600");
+      expect(widget.headers["cross-origin-resource-policy"]).toBe(
+        "cross-origin",
+      );
 
       const health = await request(productionApp).get("/api/health");
       expect(health.status).toBe(200);
@@ -311,6 +326,29 @@ describe("integrated API", () => {
           .set("Access-Control-Request-Method", "POST")
       ).headers["access-control-allow-origin"],
     ).toBe("http://localhost:5180"));
+  it.each([
+    "https://securemedy.ng",
+    "https://www.securemedy.ng",
+    "https://medy-ai-assistant-demo.onrender.com",
+  ])("allows the approved production origin %s", async (origin) =>
+    expect(
+      (
+        await request(app)
+          .options("/api/chat")
+          .set("Origin", origin)
+          .set("Access-Control-Request-Method", "POST")
+      ).headers["access-control-allow-origin"],
+    ).toBe(origin),
+  );
+  it("does not grant CORS access to an unapproved origin", async () =>
+    expect(
+      (
+        await request(app)
+          .options("/api/chat")
+          .set("Origin", "https://untrusted.example")
+          .set("Access-Control-Request-Method", "POST")
+      ).headers["access-control-allow-origin"],
+    ).toBeUndefined());
   it("hides administration routes outside demo mode", async () => {
     process.env.DEMO_MODE = "false";
     const productionLikeApp = createApp();

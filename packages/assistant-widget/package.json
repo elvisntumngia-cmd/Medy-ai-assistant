@@ -1,1 +1,17 @@
-{"name":"@medy/assistant-widget","version":"1.0.0","type":"module","main":"src/medy-assistant.ts","exports":"./src/medy-assistant.ts","scripts":{"build":"tsc -p tsconfig.json"},"dependencies":{"@medy/shared":"*"},"devDependencies":{"typescript":"^5.7.3"}}
+{
+  "name": "@medy/assistant-widget",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/medy-assistant.ts",
+  "exports": "./src/medy-assistant.ts",
+  "scripts": {
+    "build": "esbuild ./src/medy-assistant.ts --bundle --format=iife --outfile=./dist/medy-widget.js --sourcemap --minify && tsc -p tsconfig.json --emitDeclarationOnly"
+  },
+  "dependencies": {
+    "@medy/shared": "*"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1",
+    "typescript": "^5.7.3"
+  }
+}

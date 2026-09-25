@@ -21,9 +21,14 @@ class MedyAssistantWidget extends HTMLElement {
   input = el("input");
   conversationId = `public-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   connectedCallback() {
-    this.api = this.dataset.apiUrl || this.api;
+    if (this.root.childElementCount) return;
+    this.api = (
+      this.getAttribute("api-url") ||
+      this.dataset.apiUrl ||
+      this.api
+    ).replace(/\/$/, "");
     const style = el("style");
-    style.textContent = `:host{--blue:#1478d4;--navy:#071c34;font-family:system-ui;color:#172638}.launch{position:fixed;right:24px;bottom:24px;border:0;border-radius:999px;padding:15px 20px;background:var(--blue);color:#fff;font-weight:700;z-index:30}.panel{display:none;position:fixed;right:24px;bottom:24px;width:390px;height:min(650px,calc(100vh - 48px));background:#fff;border:1px solid #dce5ec;border-radius:14px;box-shadow:0 24px 70px #001b3830;z-index:31;overflow:hidden}.open{display:flex;flex-direction:column}header{background:var(--navy);color:#fff;padding:16px;display:flex;justify-content:space-between}header button{background:none;color:#fff;border:0}.messages{flex:1;overflow:auto;padding:16px;background:#f5f8fb}.messages p{background:#fff;padding:10px;border-radius:8px}.actions,.suggestions{display:flex;flex-wrap:wrap;gap:6px}.actions button,.suggestions button{border:1px solid #b8d5ec;background:#fff;color:#0d64ad;border-radius:7px;padding:8px}.composer{display:flex;gap:7px;padding:12px}.composer input{flex:1;min-width:0;padding:10px}.composer button,.primary{border:0;background:var(--blue);color:#fff;border-radius:6px;padding:9px}.lead{padding:16px;overflow:auto}.lead label{display:flex;flex-direction:column;margin:8px 0;font-size:12px}.lead input,.lead select{padding:8px}.summary{white-space:pre-wrap;background:#f5f8fb;padding:10px}@media(max-width:500px){.panel{inset:0;width:100%;height:100%;border-radius:0}}`;
+    style.textContent = `:host{--blue:#1478d4;--navy:#071c34;font-family:system-ui;color:#172638;line-height:1.4}.launch{position:fixed;right:24px;bottom:24px;border:0;border-radius:999px;padding:15px 20px;background:var(--blue);color:#fff;font:700 16px system-ui;cursor:pointer;z-index:2147483646;box-shadow:0 10px 30px #001b3840}.panel{display:none;position:fixed;right:24px;bottom:24px;width:min(390px,calc(100vw - 48px));height:min(650px,calc(100vh - 48px));background:#fff;border:1px solid #dce5ec;border-radius:14px;box-shadow:0 24px 70px #001b3830;z-index:2147483647;overflow:hidden}.open{display:flex;flex-direction:column}header{background:var(--navy);color:#fff;padding:16px;display:flex;justify-content:space-between}header button{background:none;color:#fff;border:0;font-size:20px;cursor:pointer}.messages{flex:1;overflow:auto;padding:16px;background:#f5f8fb}.messages p{background:#fff;padding:10px;border-radius:8px}.actions,.suggestions{display:flex;flex-wrap:wrap;gap:6px}.actions button,.suggestions button{border:1px solid #b8d5ec;background:#fff;color:#0d64ad;border-radius:7px;padding:8px;cursor:pointer}.composer{display:flex;gap:7px;padding:12px}.composer input{flex:1;min-width:0;padding:10px}.composer button,.primary{border:0;background:var(--blue);color:#fff;border-radius:6px;padding:9px;cursor:pointer}.lead{padding:16px;overflow:auto}.lead label{display:flex;flex-direction:column;margin:8px 0;font-size:12px}.lead input,.lead select{padding:8px}.summary{white-space:pre-wrap;background:#f5f8fb;padding:10px}@media(max-width:500px){.panel{inset:0;width:100%;height:100%;border-radius:0}}`;
     const launch = el("button", "launch", "Ask Medy");
     launch.setAttribute("aria-label", "Open Medy Assistant");
     const header = el("header");
@@ -82,7 +87,11 @@ class MedyAssistantWidget extends HTMLElement {
     this.addMessage(text);
     this.input.value = "";
     this.input.disabled = true;
-    const loading = el("p", "loading", "Reviewing your request…");
+    const loading = el(
+      "p",
+      "loading",
+      "Connecting to Medy… The demo service may take up to a minute to wake.",
+    );
     this.messages.append(loading);
     try {
       const r = await fetch(`${this.api}/chat`, {

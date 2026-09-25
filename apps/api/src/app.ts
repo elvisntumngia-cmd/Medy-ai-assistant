@@ -23,7 +23,26 @@ import { ConversationEngine } from "./conversation.js";
 type AppOptions = {
   serveFrontend?: boolean;
   demoDistPath?: string;
+  widgetBundlePath?: string;
 };
+
+const defaultAllowedOrigins = [
+  "https://securemedy.ng",
+  "https://www.securemedy.ng",
+  "https://medy-ai-assistant-demo.onrender.com",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:5180",
+  "http://127.0.0.1:5180",
+];
+
+export function resolveAllowedOrigins() {
+  const configured = (process.env.CLIENT_ORIGIN || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  return [...new Set([...defaultAllowedOrigins, ...configured])];
+}
 
 export function resolveDemoDistPath() {
   const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -44,6 +63,34 @@ export function resolveDemoDistPath() {
   );
 }
 
+export function resolveWidgetBundlePath() {
+  const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
+  const candidates = [
+    // Compiled API: apps/api/dist/src/app.js -> repository root
+    path.resolve(
+      moduleDirectory,
+      "../../../../packages/assistant-widget/dist/medy-widget.js",
+    ),
+    // Source/tsx execution: apps/api/src/app.ts -> repository root
+    path.resolve(
+      moduleDirectory,
+      "../../../packages/assistant-widget/dist/medy-widget.js",
+    ),
+    path.resolve(
+      process.cwd(),
+      "packages/assistant-widget/dist/medy-widget.js",
+    ),
+    // apps/api working directory
+    path.resolve(
+      process.cwd(),
+      "../../packages/assistant-widget/dist/medy-widget.js",
+    ),
+  ];
+  return (
+    candidates.find((candidate) => fs.existsSync(candidate)) || candidates[0]
+  );
+}
+
 export function createApp(options: AppOptions = {}) {
   const app = express();
   const auth = new MockAuthAdapter();
@@ -61,9 +108,7 @@ export function createApp(options: AppOptions = {}) {
   app.use(helmet());
   app.use(
     cors({
-      origin: (process.env.CLIENT_ORIGIN || "http://localhost:5180")
-        .split(",")
-        .map((x) => x.trim()),
+      origin: resolveAllowedOrigins(),
     }),
   );
   app.use(express.json({ limit: "100kb" }));
@@ -251,11 +296,23 @@ export function createApp(options: AppOptions = {}) {
     (process.env.NODE_ENV === "production" || process.env.RENDER === "true");
   if (serveFrontend) {
     const demoDist = options.demoDistPath || resolveDemoDistPath();
+    const widgetBundle = options.widgetBundlePath || resolveWidgetBundlePath();
     const indexFile = path.join(demoDist, "index.html");
     if (!fs.existsSync(indexFile))
       throw new Error(
         `Built demo frontend was not found at ${indexFile}. Run the monorepo build before starting the API.`,
       );
+    if (!fs.existsSync(widgetBundle))
+      throw new Error(
+        `Built standalone widget was not found at ${widgetBundle}. Run the monorepo build before starting the API.`,
+      );
+    app.get("/medy-widget.js", (_req, res) =>
+      res
+        .type("application/javascript")
+        .set("Cache-Control", "public, max-age=3600")
+        .set("Cross-Origin-Resource-Policy", "cross-origin")
+        .sendFile(widgetBundle),
+    );
     app.use(express.static(demoDist));
     app.get("*", (_req, res) => res.sendFile(indexFile));
   }
