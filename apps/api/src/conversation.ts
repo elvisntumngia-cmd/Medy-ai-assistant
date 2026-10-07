@@ -26,6 +26,14 @@ export type IntentMatch = {
   alternativeIntents: string[];
   matchingKnowledgeEntryIds: string[];
   entry: KnowledgeEntry | null;
+  routeClass:
+    | "safety"
+    | "exact"
+    | "domain"
+    | "explicit"
+    | "context"
+    | "general"
+    | "fallback";
 };
 
 const normalize = (value: string) =>
@@ -37,6 +45,10 @@ const normalize = (value: string) =>
     .trim();
 const tokens = (value: string) =>
   new Set(normalize(value).split(" ").filter(Boolean));
+const phrasePattern = (value: string) =>
+  new RegExp(`(?:^|\\s)${normalize(value).replace(/ /g, "\\s+")}(?:$|\\s)`);
+const hasPhrase = (query: string, phrase: string) =>
+  Boolean(normalize(phrase)) && phrasePattern(phrase).test(query);
 const similarity = (a: string, b: string) => {
   const left = tokens(a);
   const right = tokens(b);
@@ -48,38 +60,113 @@ export class DeterministicIntentMatcher {
   match(mode: Mode, input: string, state?: ConversationState): IntentMatch {
     const query = normalize(input);
     const queryTokens = tokens(query);
-    const ranked = knowledgeFor(mode)
+    const entries = knowledgeFor(mode);
+    const restricted =
+      mode === "public" &&
+      /\b(payroll(?: record| detail)?|compensation|cash balance|bank(?:ing)?(?: detail| information)?|password|credential|verification code|one time code|otp|mfa code|access code|patrol (?:route|schedule)|guard route|route does the guard|post orders?|camera locations?|surveillance gaps?|site vulnerabilities|active incidents?|active investigations?|employee(?: specific)? records?|supervisor at (?:a )?site|site supervisor|admin(?:istrative)? configuration|confidential client|confidential pricing|restricted financial)\b/.test(
+        query,
+      );
+    if (restricted) {
+      const safety = entries.find(
+        (item) => item.intent === "public_sensitive_data",
+      )!;
+      return {
+        selectedIntent: safety.intent,
+        confidence: 1,
+        alternativeIntents: [],
+        matchingKnowledgeEntryIds: [safety.id],
+        entry: safety,
+        routeClass: "safety",
+      };
+    }
+    const genericTerms = new Set([
+      "securemedy",
+      "security",
+      "service",
+      "services",
+      "company",
+      "help",
+      "support",
+      "question",
+      "information",
+      "contact",
+    ]);
+    const namedIntents = new Set([
+      "contact_phone",
+      "contact_location",
+      "contact_email",
+      "contact_hours",
+      "company_founded",
+      "company_mission",
+      "company_motto",
+      "m3dyhub_public",
+      "m3dyhub_public_access",
+      "support_services_public",
+      "command_center_public",
+      "public_onboarding",
+    ]);
+    const ambiguousFollowUp =
+      queryTokens.size <= 5 &&
+      /^(what|why|how|when|where|who|what next|what happens next|and then|then what|documents|what documents|tell me more)(?:\s|$)/.test(
+        query,
+      );
+    const ranked = entries
       .map((item) => {
         let score = 0;
+        let exact = false;
+        let named = false;
         for (const phrase of [
           item.intent.replaceAll("_", " "),
           ...item.exampleQuestions,
         ]) {
           const normalizedPhrase = normalize(phrase);
-          if (query === normalizedPhrase) score += 12;
-          else if (
-            query.includes(normalizedPhrase) ||
-            normalizedPhrase.includes(query)
-          )
-            score += 5;
+          if (query === normalizedPhrase) {
+            score += 18;
+            exact = true;
+          } else if (
+            normalizedPhrase.split(" ").length >= 2 &&
+            hasPhrase(query, normalizedPhrase)
+          ) {
+            score += 8;
+          }
         }
         for (const keyword of item.keywords) {
           const key = normalize(keyword);
-          if (query.includes(key)) score += key.includes(" ") ? 5 : 2.5;
+          if (!hasPhrase(query, key)) continue;
+          if (key.includes(" ")) {
+            score += 7 + Math.min(3, key.split(" ").length);
+            named = true;
+          } else score += genericTerms.has(key) ? 0.6 : 3.5;
         }
         for (const [term, values] of Object.entries(item.synonyms)) {
-          if (query.includes(normalize(term))) score += 2;
-          for (const synonym of values)
-            if (query.includes(normalize(synonym))) score += 2.5;
+          for (const candidate of [term, ...values]) {
+            const alias = normalize(candidate);
+            if (!hasPhrase(query, alias)) continue;
+            if (alias.includes(" ")) {
+              score += 8;
+              named = true;
+            } else score += genericTerms.has(alias) ? 0.5 : 3;
+          }
         }
-        score +=
-          Math.max(
-            ...item.exampleQuestions.map((q) => similarity(query, q)),
-            0,
-          ) * 6;
-        if (query.includes(normalize(item.category))) score += 2;
-        if (state?.activeIntent === item.intent) score += 1.8;
-        if (state?.currentTopic === item.category) score += 1;
+        const semanticOverlap = Math.max(
+          ...item.exampleQuestions.map((q) => similarity(query, q)),
+          0,
+        );
+        if (semanticOverlap >= 0.3) score += semanticOverlap * 4;
+        if (hasPhrase(query, item.category)) score += 4;
+        const explicitScore = score;
+        if (
+          ambiguousFollowUp &&
+          explicitScore < 5 &&
+          state?.activeIntent === item.intent
+        )
+          score += 5;
+        if (
+          ambiguousFollowUp &&
+          explicitScore < 5 &&
+          state?.currentTopic === item.category
+        )
+          score += 2;
         if (
           item.intent === "event_security_quote" &&
           /\b(event|concert|conference|festival|wedding|venue)\b/.test(query)
@@ -92,9 +179,15 @@ export class DeterministicIntentMatcher {
           score -= 20;
         for (const negative of item.negativeKeywords)
           if (queryTokens.has(normalize(negative))) score -= 5;
-        return { item, score };
+        if (namedIntents.has(item.intent) && (exact || named)) score += 4;
+        return { item, score, explicitScore, exact, named };
       })
-      .sort((a, b) => b.score - a.score);
+      .sort(
+        (a, b) =>
+          b.score - a.score ||
+          Number(namedIntents.has(b.item.intent)) -
+            Number(namedIntents.has(a.item.intent)),
+      );
     const best = ranked[0];
     const confidence = best ? Math.min(0.99, best.score / 12) : 0;
     const accepted = Boolean(
@@ -114,6 +207,17 @@ export class DeterministicIntentMatcher {
         .slice(0, 3)
         .map((x) => x.item.id),
       entry: accepted ? best.item : null,
+      routeClass: !accepted
+        ? "fallback"
+        : best.exact
+          ? "exact"
+          : best.named && namedIntents.has(best.item.intent)
+            ? "domain"
+            : ambiguousFollowUp && best.explicitScore < 5
+              ? "context"
+              : best.explicitScore >= 5
+                ? "explicit"
+                : "general",
     };
   }
 }
@@ -376,6 +480,7 @@ export class ConversationEngine {
           alternativeIntents: [],
           matchingKnowledgeEntryIds: [emergency.id],
           entry: emergency,
+          routeClass: "safety",
         },
         [],
         emergency.responseSummary,
@@ -441,6 +546,7 @@ export class ConversationEngine {
             alternativeIntents: [],
             matchingKnowledgeEntryIds: [active.id],
             entry: active,
+            routeClass: "context",
           },
           state.missingRequiredFields,
           `Thanks. ${question}`,
@@ -457,6 +563,7 @@ export class ConversationEngine {
           alternativeIntents: [],
           matchingKnowledgeEntryIds: [active.id],
           entry: active,
+          routeClass: "context",
         },
         [],
         `Thanks—I have the demonstration details needed to start this workflow. ${active.responseSummary}`,

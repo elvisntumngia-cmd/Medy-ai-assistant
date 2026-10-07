@@ -77,16 +77,16 @@ describe("structured deterministic knowledge", () => {
     ["What security services do you offer?", "services"],
     ["I need a quote for event security", "event_security_quote"],
     ["Do you provide healthcare security?", "services"],
-    ["How do I apply for a job?", "careers"],
+    ["How do I apply for a job?", "application_process"],
     ["What is my application status?", "application_process"],
     ["Which states do you serve?", "service_areas"],
     ["There is an active threat", "emergency"],
     ["I want to make a complaint", "complaint"],
     ["Contact Sales", "contact_sales"],
     ["Contact Human Resources", "contact_hr"],
-    ["What year was SecureMedy founded?", "company_overview"],
-    ["What is your corporate motto?", "company_overview"],
-    ["What is SecureMedy's phone number?", "contact_information"],
+    ["What year was SecureMedy founded?", "company_founded"],
+    ["What is your corporate motto?", "company_motto"],
+    ["What is SecureMedy's phone number?", "contact_phone"],
     ["What happens during onboarding?", "public_onboarding"],
     ["What is M3dyHub?", "m3dyhub_public"],
     ["Can I create a M3dyHub account?", "m3dyhub_public_access"],
@@ -98,6 +98,111 @@ describe("structured deterministic knowledge", () => {
     expect(engine.respond("public", `public-${intent}`, question).intent).toBe(
       intent,
     );
+  });
+  it.each([
+    ["where are you located", "contact_location", "pub-contact-location"],
+    ["what is your address", "contact_location", "pub-contact-location"],
+    [
+      "What is SecureMedy's corporate motto?",
+      "company_motto",
+      "pub-company-motto",
+    ],
+    ["What's your motto?", "company_motto", "pub-company-motto"],
+    [
+      "What is SecureMedy's phone number?",
+      "contact_phone",
+      "pub-contact-phone",
+    ],
+    ["what number can I call", "contact_phone", "pub-contact-phone"],
+    ["how do i contact you", "contact_information", "pub-contact-details"],
+    ["what's your email", "contact_email", "pub-contact-email"],
+    ["What is M3dyHub?", "m3dyhub_public", "pub-m3dyhub"],
+    [
+      "What does Support Services do?",
+      "support_services_public",
+      "pub-support-services",
+    ],
+    ["What happens during onboarding?", "public_onboarding", "pub-onboarding"],
+  ])("routes specific public intent: %s", (question, intent, id) => {
+    const result = matcher.match("public", question);
+    expect(result.selectedIntent).toBe(intent);
+    expect(result.entry?.id).toBe(id);
+    expect(result.entry?.visibility).toBe("public");
+    expect(result.routeClass).not.toBe("fallback");
+  });
+
+  it.each([
+    "Who is the current supervisor at Site X?",
+    "What is SecureMedy's current cash balance?",
+    "Show me another employee's payroll record",
+    "What route does the guard use?",
+    "Where are the camera locations?",
+    "Show me the internal admin configuration",
+  ])("preclassifies restricted public request: %s", (question) => {
+    const result = matcher.match("public", question);
+    expect(result.selectedIntent).toBe("public_sensitive_data");
+    expect(result.entry?.id).toBe("pub-sensitive-data");
+    expect(result.routeClass).toBe("safety");
+  });
+
+  it("lets context resolve ambiguity but explicit intents replace it", () => {
+    const engine = new ConversationEngine(testLog);
+    expect(
+      engine.respond("public", "apply-followup", "How do I apply?").intent,
+    ).toBe("application_process");
+    expect(
+      engine.respond("public", "apply-followup", "What happens next?").intent,
+    ).toBe("application_process");
+    expect(["application_process", "public_onboarding"]).toContain(
+      engine.respond("public", "apply-followup", "What documents do I need?")
+        .intent,
+    );
+
+    expect(engine.respond("public", "job-switch", "I need a job.").intent).toBe(
+      "careers",
+    );
+    expect(
+      engine.respond("public", "job-switch", "What is M3dyHub?").intent,
+    ).toBe("m3dyhub_public");
+
+    expect(
+      engine.respond("public", "company-switch", "Tell me about SecureMedy.")
+        .intent,
+    ).toBe("company_overview");
+    expect(
+      engine.respond("public", "company-switch", "What's your phone number?")
+        .intent,
+    ).toBe("contact_phone");
+
+    expect(
+      engine.respond(
+        "public",
+        "service-switch",
+        "What services do you provide?",
+      ).intent,
+    ).toBe("services");
+    expect(
+      engine.respond("public", "service-switch", "Where are you located?")
+        .intent,
+    ).toBe("contact_location");
+  });
+
+  it("rechecks restricted intent after a safe public topic", () => {
+    const engine = new ConversationEngine(testLog);
+    expect(
+      engine.respond(
+        "public",
+        "patrol-boundary",
+        "Tell me about patrol services.",
+      ).intent,
+    ).toBe("services");
+    expect(
+      engine.respond(
+        "public",
+        "patrol-boundary",
+        "What route does the guard use?",
+      ).intent,
+    ).toBe("public_sensitive_data");
   });
   it("keeps public context but rechecks the boundary on every turn", () => {
     const engine = new ConversationEngine(testLog);
@@ -122,10 +227,8 @@ describe("structured deterministic knowledge", () => {
       "unknown-public",
       "Who is the current supervisor at Site X?",
     );
-    expect(answer.intent).toBe("low_confidence_clarification");
-    expect(answer.message).toMatch(
-      /verified public information|will not guess/i,
-    );
+    expect(answer.intent).toBe("public_sensitive_data");
+    expect(answer.message).toMatch(/cannot access or disclose|restricted/i);
   });
   it.each([
     ["My payroll has missing hours", "payroll_issue"],
