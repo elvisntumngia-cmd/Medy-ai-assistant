@@ -5,8 +5,10 @@ export type Mode = z.infer<typeof ModeSchema>;
 export const KnowledgeStatusSchema = z.enum([
   "approved",
   "provisional",
+  "draft",
   "demo_only",
   "requires_confirmation",
+  "restricted",
 ]);
 export type KnowledgeStatus = z.infer<typeof KnowledgeStatusSchema>;
 export const RoleSchema = z.enum(["officer", "manager", "hr_admin"]);

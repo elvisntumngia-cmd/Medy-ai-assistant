@@ -189,7 +189,11 @@ const statusDisclaimer = (entry: KnowledgeEntry) => {
     return "PROVISIONAL DEMONSTRATION GUIDANCE — confirm against the current approved SecureMedy source.";
   if (entry.sourceStatus === "demo_only")
     return "DEMONSTRATION-ONLY CONTENT — this is fictional local demo information, not an official SecureMedy record or policy.";
-  return "REQUIRES SECUREMEDY CONFIRMATION — an authorized department must confirm this information.";
+  if (entry.sourceStatus === "draft")
+    return "DRAFT GUIDANCE — this information is not controlling policy and requires owner approval.";
+  if (entry.sourceStatus === "restricted")
+    return "RESTRICTED INFORMATION — access requires verified authorization.";
+  return "REQUIRES SECUREMEDY CONFIRMATION — an authorized department or live source must confirm this information.";
 };
 const source = (entry: KnowledgeEntry) => ({
   id: entry.id,
@@ -469,9 +473,14 @@ export class ConversationEngine {
         )
         .filter(Boolean) as string[];
       return AssistantResponseSchema.parse({
-        message: labels.length
-          ? `I’m not confident enough to answer that safely. Did you mean ${labels.join(", ")}, or would you like department assistance?`
-          : "I’m not confident enough to answer that safely. Please choose a supported topic or ask for department assistance.",
+        message:
+          mode === "public"
+            ? labels.length
+              ? `I do not have verified public information to confirm that safely. Did you mean ${labels.join(", ")}? Otherwise, please use the official SecureMedy website, portal, communication, or public contact channel for assistance.`
+              : "I do not have verified public information to confirm that. Please use the official SecureMedy website, portal, communication, or public contact channel for assistance. I will not guess or present an assumption as company policy."
+            : labels.length
+              ? `I’m not confident enough to answer that safely. Did you mean ${labels.join(", ")}, or would you like department assistance?`
+              : "I’m not confident enough to answer that safely. Please choose a supported topic or ask for department assistance.",
         intent: "low_confidence_clarification",
         confidence: match.confidence,
         actions: [

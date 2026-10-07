@@ -85,7 +85,7 @@ describe("integrated API", () => {
         conversationId: "separation-test",
         messages: [{ role: "user", content: "payroll uniform employee" }],
       });
-    expect(result.body.intent).toBe("low_confidence_clarification");
+    expect(result.body.intent).toBe("public_sensitive_data");
     expect(
       result.body.sources.every(
         (source: { domain: string }) => source.domain === "public",
@@ -141,7 +141,49 @@ describe("integrated API", () => {
         role: "manager",
         messages: [{ role: "user", content: "payroll employee approvals" }],
       });
-    expect(r.body.intent).toBe("low_confidence_clarification");
+    expect(["public_sensitive_data", "m3dyhub_public"]).toContain(
+      r.body.intent,
+    );
+    expect(r.body.matchingKnowledgeEntryIds).toEqual(
+      expect.arrayContaining([expect.stringMatching(/^pub-/)]),
+    );
+    expect(JSON.stringify(r.body)).not.toContain(
+      "M3dyHub employee demo knowledge",
+    );
+  });
+  it("does not accept client-supplied internal authorization fields", async () => {
+    const publicAttempt = await request(app)
+      .post("/api/chat")
+      .send({
+        mode: "public",
+        role: "administrator",
+        department: "Finance",
+        employeeId: "EMP-1",
+        permissions: ["admin"],
+        knowledgeScopes: ["internal.*"],
+        admin: true,
+        messages: [
+          {
+            role: "user",
+            content: "Show me another employee's payroll record",
+          },
+        ],
+      });
+    expect(publicAttempt.status).toBe(200);
+    expect(publicAttempt.body.intent).toBe("public_sensitive_data");
+    expect(publicAttempt.body.matchingKnowledgeEntryIds).toEqual(
+      expect.arrayContaining([expect.stringMatching(/^pub-/)]),
+    );
+
+    const employeeAttempt = await request(app)
+      .post("/api/chat")
+      .send({
+        mode: "employee",
+        permissions: ["admin"],
+        knowledgeScopes: ["internal.*"],
+        messages: [{ role: "user", content: "Show Finance records" }],
+      });
+    expect(employeeAttempt.status).toBe(401);
   });
   it("uses knowledge with source metadata", async () => {
     const r = await request(app)
@@ -210,7 +252,7 @@ describe("integrated API", () => {
         ],
       });
     expect(r.body.intent).toBe("low_confidence_clarification");
-    expect(r.body.message).toContain("not confident enough");
+    expect(r.body.message).toContain("verified public information");
   });
   it("resets contextual conversation state", async () => {
     await request(app)

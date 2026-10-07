@@ -31,6 +31,18 @@ export const KnowledgeEntrySchema = z.object({
   emergencyFlag: z.boolean().default(false),
   relatedIntents: z.array(z.string()).default([]),
   negativeKeywords: z.array(z.string()).default([]),
+  knowledgeDomain: z.string().min(1),
+  visibility: z.enum([
+    "public",
+    "internal_general",
+    "internal_role_restricted",
+    "sensitive",
+  ]),
+  sensitivity: z.enum(["public", "internal", "confidential", "restricted"]),
+  sourceDocument: z.string().min(1),
+  sourceAuthority: z.string().min(1),
+  requiresLiveVerification: z.boolean().default(false),
+  allowedAudience: z.array(z.string()).min(1),
 });
 export type KnowledgeEntry = z.infer<typeof KnowledgeEntrySchema>;
 
@@ -56,6 +68,13 @@ type EntryInput = Omit<
   | "emergencyFlag"
   | "relatedIntents"
   | "negativeKeywords"
+  | "knowledgeDomain"
+  | "visibility"
+  | "sensitivity"
+  | "sourceDocument"
+  | "sourceAuthority"
+  | "requiresLiveVerification"
+  | "allowedAudience"
 > &
   Partial<KnowledgeEntry>;
 const entry = (value: EntryInput) =>
@@ -72,10 +91,25 @@ const entry = (value: EntryInput) =>
     emergencyFlag: false,
     relatedIntents: [],
     negativeKeywords: [],
+    knowledgeDomain:
+      value.domain === "public" ? "public.faq" : "internal.m3dyhub",
+    visibility: value.domain === "public" ? "public" : "internal_general",
+    sensitivity: value.domain === "public" ? "public" : "internal",
+    sourceDocument:
+      value.domain === "public"
+        ? "Securemedy Public Chatbot Knowledge Base"
+        : "Existing fictional employee demo knowledge",
+    sourceAuthority:
+      value.domain === "public"
+        ? "Approved public knowledge-base content"
+        : "Demonstration-only local content",
+    requiresLiveVerification: false,
+    allowedAudience:
+      value.domain === "public" ? ["public"] : ["authenticated_demo_employee"],
     ...value,
   });
 
-const publicSource = "SecureMedy public demo knowledge";
+const publicSource = "Securemedy Public Chatbot Knowledge Base";
 const employeeSource = "M3dyHub employee demo knowledge";
 const publicEntries: KnowledgeEntry[] = [
   entry({
@@ -84,17 +118,26 @@ const publicEntries: KnowledgeEntry[] = [
     category: "company overview",
     intent: "company_overview",
     title: "About SecureMedy",
-    keywords: ["securemedy", "company", "about", "mission"],
+    keywords: [
+      "securemedy",
+      "company",
+      "about",
+      "mission",
+      "founded",
+      "motto",
+      "on time response",
+    ],
     synonyms: {
       company: ["organization", "business"],
       about: ["background", "overview"],
     },
     exampleQuestions: ["What is SecureMedy?", "Tell me about the company"],
     responseSummary:
-      "SecureMedy provides physical security and emergency-management support for organizations, properties, and events.",
+      "SecureMedy, Incorporated is a security and emergency-management services provider founded in 2009. It provides customized security solutions intended to help clients protect people, property, information, and operations while managing risk. Its mission is to detect vulnerabilities, deter threats, observe risks to client assets, report findings, and suggest protective measures through superior security services. Its corporate motto is “On Time Response | Real Time Events.”",
     suggestedReplies: ["Explore services", "Contact SecureMedy"],
     sourceLabel: publicSource,
     sourceStatus: "approved",
+    knowledgeDomain: "public.company",
   }),
   entry({
     id: "pub-services",
@@ -121,7 +164,7 @@ const publicEntries: KnowledgeEntry[] = [
       "Can you provide healthcare security?",
     ],
     responseSummary:
-      "SecureMedy supports command operations, roving patrol, surveillance, risk management, access control, alarm response, armed or unarmed security, and event security. Scope and availability require confirmation.",
+      "SecureMedy provides customized services that may include armed or unarmed security personnel, access control, foot or mobile patrols, alarm response, risk management, security assessments, asset protection, loss prevention, reception or concierge support, parking and traffic management, emergency response support, CCTV/control-room support, escort and perimeter security, consulting, investigations, surveillance, executive protection, and supervisory training. Availability depends on the client, contract, jurisdiction, location, risk profile, and applicable requirements.",
     suggestedReplies: [
       "Request a quote",
       "Healthcare security",
@@ -132,6 +175,8 @@ const publicEntries: KnowledgeEntry[] = [
     ],
     sourceLabel: publicSource,
     sourceStatus: "approved",
+    knowledgeDomain: "public.services",
+    requiresLiveVerification: true,
     relatedIntents: ["quote_request", "service_areas"],
   }),
   entry({
@@ -167,6 +212,8 @@ const publicEntries: KnowledgeEntry[] = [
     availableActions: [action("lead", "start_form", "Request a Quote")],
     sourceLabel: publicSource,
     sourceStatus: "requires_confirmation",
+    knowledgeDomain: "public.services",
+    requiresLiveVerification: true,
     escalationDepartment: "Sales",
   }),
   entry({
@@ -190,6 +237,8 @@ const publicEntries: KnowledgeEntry[] = [
     suggestedReplies: ["Enter service location", "Contact Sales"],
     sourceLabel: publicSource,
     sourceStatus: "requires_confirmation",
+    knowledgeDomain: "public.services",
+    requiresLiveVerification: true,
     escalationDepartment: "Sales",
   }),
   entry({
@@ -212,6 +261,7 @@ const publicEntries: KnowledgeEntry[] = [
     sourceLabel: publicSource,
     sourceStatus: "approved",
     escalationDepartment: "Sales",
+    knowledgeDomain: "public.escalation",
   }),
   entry({
     id: "pub-careers",
@@ -226,7 +276,7 @@ const publicEntries: KnowledgeEntry[] = [
     },
     exampleQuestions: ["Are you hiring?", "How do I apply for a job?"],
     responseSummary:
-      "Candidates can review opportunities and application information on SecureMedy's careers page. Availability and hiring decisions are confirmed only by Recruiting or HR.",
+      "Current opportunities can change. Review active positions and application instructions through SecureMedy’s approved Careers Page or Job Application Portal. A stored position should not be treated as open unless it appears on the approved live career source, and Medy cannot promise an interview, employment, pay, assignment, benefits, licensing, clearance, or a start date.",
     suggestedReplies: ["Apply now", "Application process", "Contact HR"],
     availableActions: [
       action(
@@ -238,6 +288,8 @@ const publicEntries: KnowledgeEntry[] = [
     ],
     sourceLabel: publicSource,
     sourceStatus: "approved",
+    knowledgeDomain: "public.careers",
+    requiresLiveVerification: true,
     escalationDepartment: "Human Resources",
   }),
   entry({
@@ -253,7 +305,15 @@ const publicEntries: KnowledgeEntry[] = [
       "What is my application status?",
     ],
     responseSummary:
-      "Use the official careers channel to submit or review application information. Medy cannot view a real candidate record or promise an interview timeline.",
+      "Find an active posting through an approved career source, review its requirements, submit the official online application accurately, monitor official communications, complete requested screening if selected, and wait for official confirmation. Submission does not guarantee an interview or employment, and Medy cannot view or change an individual application record.",
+    orderedSteps: [
+      "Find an active posting through an approved career source.",
+      "Review the posting’s requirements and instructions.",
+      "Submit the official online application accurately.",
+      "Monitor official communications, including spam or junk folders.",
+      "Complete requested screening only if officially selected to continue.",
+      "Wait for official confirmation of any interview, offer, onboarding, assignment, or start date.",
+    ],
     warnings: ["Do not send sensitive identity documents through chat."],
     suggestedReplies: ["View careers", "Contact HR"],
     availableActions: [
@@ -267,6 +327,8 @@ const publicEntries: KnowledgeEntry[] = [
     ],
     sourceLabel: publicSource,
     sourceStatus: "approved",
+    knowledgeDomain: "public.applications",
+    requiresLiveVerification: true,
     escalationDepartment: "Human Resources",
   }),
   entry({
@@ -293,6 +355,8 @@ const publicEntries: KnowledgeEntry[] = [
     sourceLabel: publicSource,
     sourceStatus: "requires_confirmation",
     escalationDepartment: "Human Resources",
+    knowledgeDomain: "public.careers",
+    requiresLiveVerification: true,
   }),
   entry({
     id: "pub-contact-sales",
@@ -322,6 +386,7 @@ const publicEntries: KnowledgeEntry[] = [
     sourceLabel: publicSource,
     sourceStatus: "approved",
     escalationDepartment: "Sales",
+    knowledgeDomain: "public.contact",
   }),
   entry({
     id: "pub-contact-hr",
@@ -341,6 +406,7 @@ const publicEntries: KnowledgeEntry[] = [
     sourceLabel: publicSource,
     sourceStatus: "approved",
     escalationDepartment: "Human Resources",
+    knowledgeDomain: "public.contact",
   }),
   entry({
     id: "pub-complaint",
@@ -370,6 +436,7 @@ const publicEntries: KnowledgeEntry[] = [
     sourceLabel: publicSource,
     sourceStatus: "approved",
     escalationDepartment: "Operations",
+    knowledgeDomain: "public.escalation",
   }),
   entry({
     id: "pub-vendor",
@@ -396,6 +463,282 @@ const publicEntries: KnowledgeEntry[] = [
     sourceLabel: publicSource,
     sourceStatus: "requires_confirmation",
     escalationDepartment: "Operations",
+    knowledgeDomain: "public.escalation",
+    requiresLiveVerification: true,
+  }),
+  entry({
+    id: "pub-contact-details",
+    domain: "public",
+    category: "public contact information",
+    intent: "contact_information",
+    title: "SecureMedy contact information",
+    keywords: [
+      "address",
+      "headquarters",
+      "phone",
+      "telephone",
+      "email",
+      "hours",
+      "contact",
+    ],
+    synonyms: {
+      headquarters: ["office", "location"],
+      telephone: ["phone number", "call"],
+      hours: ["open", "business hours"],
+    },
+    exampleQuestions: [
+      "What is SecureMedy's phone number?",
+      "Where is the corporate headquarters?",
+      "What are your business hours?",
+    ],
+    responseSummary:
+      "SecureMedy’s corporate headquarters is 8507 Oxon Hill Road, Suite 101, Fort Washington, MD 20744. The public telephone number is (240) 419-3125, the public email is info@securemedy.com, and listed hours are Monday through Friday, 8:00 AM to 5:00 PM. The approved source references securemedy.com; current website links should be verified before relying on them.",
+    suggestedReplies: ["Explore services", "Careers", "Request a quote"],
+    sourceLabel: publicSource,
+    sourceStatus: "approved",
+    knowledgeDomain: "public.contact",
+    requiresLiveVerification: true,
+  }),
+  entry({
+    id: "pub-onboarding",
+    domain: "public",
+    category: "public onboarding",
+    intent: "public_onboarding",
+    title: "Public onboarding guidance",
+    keywords: [
+      "onboarding",
+      "new hire",
+      "orientation",
+      "documents",
+      "start date",
+      "checklist",
+    ],
+    synonyms: {
+      onboarding: ["joining", "getting started", "new employee"],
+      orientation: ["induction", "training session"],
+    },
+    exampleQuestions: [
+      "What happens during onboarding?",
+      "I did not receive my onboarding checklist",
+      "My onboarding document was rejected",
+    ],
+    responseSummary:
+      "Public-safe onboarding generally includes official initiation, requested document completion, eligibility or credential review, orientation or training, and operational-readiness confirmation. Follow only authorized hiring communications, do not send sensitive documents in chat, and wait for official confirmation of reporting location, schedule, supervisor, equipment, system access, and start date.",
+    orderedSteps: [
+      "Follow the official offer or onboarding communication.",
+      "Complete only forms and actions requested through an authorized channel.",
+      "Provide eligibility or credential documents only when formally requested.",
+      "Attend scheduled orientation or training and complete acknowledgements.",
+      "Wait for official operational-readiness and start instructions.",
+    ],
+    warnings: [
+      "Do not upload identity, medical, banking, or other sensitive documents in public chat.",
+    ],
+    suggestedReplies: [
+      "Missing checklist",
+      "No system access",
+      "Contact the official sender",
+    ],
+    sourceLabel: publicSource,
+    sourceStatus: "approved",
+    knowledgeDomain: "public.onboarding",
+    requiresLiveVerification: true,
+    escalationDepartment: "Human Resources",
+  }),
+  entry({
+    id: "pub-m3dyhub",
+    domain: "public",
+    category: "M3dyHub public overview",
+    intent: "m3dyhub_public",
+    title: "About M3dyHub",
+    keywords: [
+      "m3dyhub",
+      "employee app",
+      "employee portal",
+      "forms",
+      "approvals",
+    ],
+    synonyms: {
+      m3dyhub: ["medyhub", "employee application", "internal portal"],
+    },
+    exampleQuestions: [
+      "What is M3dyHub?",
+      "What can the employee application do?",
+    ],
+    responseSummary:
+      "M3dyHub is SecureMedy Incorporated’s internal employee application. At a high level, it supports authorized forms, requests, approvals, acknowledgements, tickets, employee workflows, and status visibility. Available functions depend on verified employment, role, department, site, publication status, and permissions; detailed operational and administrative information is restricted.",
+    suggestedReplies: [
+      "How do I request access?",
+      "I cannot sign in",
+      "Why is a form missing?",
+    ],
+    sourceLabel: publicSource,
+    sourceStatus: "approved",
+    knowledgeDomain: "public.m3dyhub",
+  }),
+  entry({
+    id: "pub-m3dyhub-access",
+    domain: "public",
+    category: "M3dyHub public access guidance",
+    intent: "m3dyhub_public_access",
+    title: "M3dyHub registration and access",
+    keywords: [
+      "m3dyhub",
+      "register",
+      "registration",
+      "activate",
+      "activation",
+      "access",
+      "sign in",
+      "login",
+      "account",
+      "form missing",
+    ],
+    synonyms: {
+      register: ["create account", "sign up"],
+      access: ["log in", "login", "locked out"],
+      activate: ["enable account", "approval"],
+    },
+    exampleQuestions: [
+      "Can I create a M3dyHub account?",
+      "Does registration give me immediate access?",
+      "I cannot access M3dyHub",
+      "Why can’t I see a form?",
+    ],
+    responseSummary:
+      "Only current SecureMedy employees may request or create a M3dyHub account through official instructions. Registration is not automatic access: authorized staff must verify employment, review and approve the request, activate the account, and assign access appropriate to the verified role. Medy cannot verify employment, approve or activate an account, reset credentials, reveal status, or change permissions.",
+    orderedSteps: [
+      "Use only the official registration or access instructions supplied by SecureMedy.",
+      "Confirm the registered email address and check spam or junk folders for authorized messages.",
+      "Do not repeatedly create accounts if one may already exist.",
+      "Use the approved support channel if access remains unavailable.",
+      "Report the issue, time, visible error, and business impact without sharing credentials or codes.",
+    ],
+    warnings: [
+      "Never provide a password, PIN, MFA code, or one-time code in chat.",
+    ],
+    suggestedReplies: [
+      "Account pending",
+      "Form not visible",
+      "Official support",
+    ],
+    sourceLabel: publicSource,
+    sourceStatus: "approved",
+    knowledgeDomain: "public.m3dyhub",
+    requiresLiveVerification: true,
+  }),
+  entry({
+    id: "pub-support-services",
+    domain: "public",
+    category: "Support Services public guidance",
+    intent: "support_services_public",
+    title: "Support Services",
+    keywords: [
+      "support services",
+      "licensing",
+      "training",
+      "credential",
+      "quality control",
+      "qa",
+      "qc",
+      "sop",
+    ],
+    synonyms: {
+      licensing: ["license support", "renewal"],
+      training: ["learning", "orientation", "course"],
+      "quality control": ["qa qc", "quality assurance"],
+    },
+    exampleQuestions: [
+      "What does Support Services do?",
+      "Who handles training and licensing?",
+      "What is quality assurance?",
+    ],
+    responseSummary:
+      "Support Services supports organizational readiness through training and credential coordination, licensing support, Command Center support, quality assurance and quality control, controlled process documentation, and cross-functional coordination. Requirements can vary by role, contract, and jurisdiction. Public Medy cannot confirm an individual record, provide legal conclusions, evaluate an employee, or disclose internal procedures.",
+    suggestedReplies: [
+      "Training invitation issue",
+      "License renewal",
+      "Command Center",
+    ],
+    sourceLabel: publicSource,
+    sourceStatus: "approved",
+    knowledgeDomain: "public.support_services",
+    requiresLiveVerification: true,
+  }),
+  entry({
+    id: "pub-command-center",
+    domain: "public",
+    category: "Command Center public guidance",
+    intent: "command_center_public",
+    title: "Command Center",
+    keywords: [
+      "command center",
+      "dispatcher",
+      "dispatch",
+      "incident",
+      "monitoring",
+      "operational event",
+    ],
+    synonyms: {
+      dispatcher: ["control room", "communications center"],
+      incident: ["event", "operational issue"],
+    },
+    exampleQuestions: [
+      "What does the Command Center do?",
+      "Can the chatbot contact a dispatcher?",
+      "Can you tell me where a patrol is?",
+    ],
+    responseSummary:
+      "The Command Center supports authorized communications, monitoring, incident intake, activity documentation, escalation, and shift continuity. It does not replace emergency services. Public Medy cannot dispatch help, contact an active site, or disclose staffing, assignments, post orders, patrol routes, live locations, monitoring details, call trees, access information, or incident records.",
+    warnings: [
+      "For an immediate threat to life or safety, contact local emergency services.",
+    ],
+    suggestedReplies: ["What does Support Services do?", "Emergency help"],
+    sourceLabel: publicSource,
+    sourceStatus: "approved",
+    knowledgeDomain: "public.command_center",
+  }),
+  entry({
+    id: "pub-sensitive-data",
+    domain: "public",
+    category: "public privacy and restricted information",
+    intent: "public_sensitive_data",
+    title: "Sensitive information and privacy",
+    keywords: [
+      "password",
+      "social security",
+      "ssn",
+      "bank",
+      "mfa",
+      "verification code",
+      "medical",
+      "identity document",
+      "another employee",
+      "employee approval",
+      "payroll",
+      "pay rate",
+      "cash balance",
+      "post orders",
+      "patrol route",
+      "admin configuration",
+    ],
+    synonyms: {
+      password: ["credential", "passcode", "pin"],
+      "social security": ["ssn", "social security number"],
+      "verification code": ["one time code", "otp", "mfa code"],
+    },
+    exampleQuestions: [
+      "Can I give you my Social Security number?",
+      "Show me another employee's payroll record",
+      "What is the patrol route?",
+      "Show me M3dyHub admin configuration",
+    ],
+    responseSummary:
+      "Do not provide passwords, verification codes, Social Security or government identification numbers, banking details, medical information, identity documents, payroll details, confidential employee or client records, or credentials in public chat. Medy can provide general public guidance but cannot access or disclose restricted records, live operations, security details, investigations, contracts, pricing, or administrative configuration. Use the authorized SecureMedy channel for the request.",
+    suggestedReplies: ["Public contact information", "M3dyHub public help"],
+    sourceLabel: publicSource,
+    sourceStatus: "approved",
+    knowledgeDomain: "public.safety",
   }),
   entry({
     id: "pub-faq",
@@ -410,10 +753,11 @@ const publicEntries: KnowledgeEntry[] = [
       "Where is SecureMedy located?",
     ],
     responseSummary:
-      "Medy can help with services, service inquiries, careers, public contact routing, complaints, and general SecureMedy information.",
+      "Medy can help with verified public information about SecureMedy, services, careers, applications, public-safe onboarding, M3dyHub, Support Services, the Command Center, contact routing, safety, and escalation. It cannot access individual records, live operations, credentials, confidential company information, or internal administrative functions.",
     suggestedReplies: ["Explore services", "Request a quote", "Careers"],
     sourceLabel: publicSource,
     sourceStatus: "approved",
+    knowledgeDomain: "public.faq",
   }),
   entry({
     id: "pub-emergency",
@@ -448,6 +792,7 @@ const publicEntries: KnowledgeEntry[] = [
     sourceStatus: "approved",
     escalationDepartment: "Operations",
     emergencyFlag: true,
+    knowledgeDomain: "public.safety",
   }),
 ];
 
@@ -1163,4 +1508,8 @@ export const knowledgeEntries = z
   .array(KnowledgeEntrySchema)
   .parse([...publicEntries, ...employeeEntries]);
 export const knowledgeFor = (mode: Mode) =>
-  knowledgeEntries.filter((item) => item.domain === mode);
+  knowledgeEntries.filter((item) =>
+    mode === "public"
+      ? item.domain === "public" && item.visibility === "public"
+      : item.domain === "employee" && item.visibility !== "public",
+  );

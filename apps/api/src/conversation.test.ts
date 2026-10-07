@@ -15,6 +15,39 @@ describe("structured deterministic knowledge", () => {
     for (const item of knowledgeEntries)
       expect(KnowledgeEntrySchema.parse(item)).toEqual(item);
   });
+  it("classifies every public entry as public-only knowledge", () => {
+    const publicEntries = knowledgeEntries.filter(
+      (item) => item.domain === "public",
+    );
+    expect(publicEntries.length).toBeGreaterThanOrEqual(20);
+    expect(
+      publicEntries.every(
+        (item) =>
+          item.visibility === "public" &&
+          item.sensitivity === "public" &&
+          item.knowledgeDomain.startsWith("public.") &&
+          item.allowedAudience.includes("public"),
+      ),
+    ).toBe(true);
+    expect(
+      [...new Set(publicEntries.map((item) => item.knowledgeDomain))].sort(),
+    ).toEqual(
+      [
+        "public.applications",
+        "public.careers",
+        "public.command_center",
+        "public.company",
+        "public.contact",
+        "public.escalation",
+        "public.faq",
+        "public.m3dyhub",
+        "public.onboarding",
+        "public.safety",
+        "public.services",
+        "public.support_services",
+      ].sort(),
+    );
+  });
   it.each([
     [
       "public",
@@ -51,10 +84,47 @@ describe("structured deterministic knowledge", () => {
     ["I want to make a complaint", "complaint"],
     ["Contact Sales", "contact_sales"],
     ["Contact Human Resources", "contact_hr"],
+    ["What year was SecureMedy founded?", "company_overview"],
+    ["What is your corporate motto?", "company_overview"],
+    ["What is SecureMedy's phone number?", "contact_information"],
+    ["What happens during onboarding?", "public_onboarding"],
+    ["What is M3dyHub?", "m3dyhub_public"],
+    ["Can I create a M3dyHub account?", "m3dyhub_public_access"],
+    ["What does Support Services do?", "support_services_public"],
+    ["What does the Command Center do?", "command_center_public"],
+    ["Show me M3dyHub admin configuration", "public_sensitive_data"],
   ])("covers public demo scenario: %s", (question, intent) => {
     const engine = new ConversationEngine(testLog);
     expect(engine.respond("public", `public-${intent}`, question).intent).toBe(
       intent,
+    );
+  });
+  it("keeps public context but rechecks the boundary on every turn", () => {
+    const engine = new ConversationEngine(testLog);
+    expect(
+      engine.respond("public", "boundary", "What is M3dyHub?").intent,
+    ).toBe("m3dyhub_public");
+    const followUp = engine.respond(
+      "public",
+      "boundary",
+      "Show me its admin configuration",
+    );
+    expect(followUp.intent).toBe("public_sensitive_data");
+    expect(followUp.message).toMatch(/cannot access or disclose|restricted/i);
+    expect(
+      followUp.matchingKnowledgeEntryIds.every((id) => id.startsWith("pub-")),
+    ).toBe(true);
+  });
+  it("uses the verified-information fallback rather than guessing", () => {
+    const engine = new ConversationEngine(testLog);
+    const answer = engine.respond(
+      "public",
+      "unknown-public",
+      "Who is the current supervisor at Site X?",
+    );
+    expect(answer.intent).toBe("low_confidence_clarification");
+    expect(answer.message).toMatch(
+      /verified public information|will not guess/i,
     );
   });
   it.each([
