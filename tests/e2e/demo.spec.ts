@@ -99,10 +99,10 @@ test("policy lookup is labeled", async ({ page }) => {
   await page.goto("/employee/assistant");
   await page
     .getByLabel("Message Medy Assistant")
-    .fill("Show me the policy handbook");
+    .fill("Find attendance policy");
   await page.getByRole("button", { name: "Send" }).click();
   await expect(
-    page.getByText(/PROVISIONAL DEMONSTRATION GUIDANCE/),
+    page.getByText(/NOT AN OFFICIAL SECUREMEDY POLICY/),
   ).toBeVisible();
 });
 test("implemented data, department contact, and escalation actions respond", async ({
@@ -113,9 +113,7 @@ test("implemented data, department contact, and escalation actions respond", asy
     .getByLabel("Message Medy Assistant")
     .fill("When does my license expire?");
   await page.getByRole("button", { name: "Send" }).click();
-  await page
-    .getByRole("button", { name: "View License Details", exact: true })
-    .click();
+  await page.getByRole("button", { name: "View License Details" }).click();
   await expect(
     page.getByText("The available details are shown above."),
   ).toBeVisible();
@@ -129,7 +127,7 @@ test("implemented data, department contact, and escalation actions respond", asy
   await page.getByRole("button", { name: "Open Medy Assistant" }).click();
   await page.getByLabel("Message Medy Assistant").fill("I want a handoff");
   await page.getByRole("button", { name: "Send" }).click();
-  await page.getByRole("button", { name: "Request Department Help" }).click();
+  await page.getByRole("button", { name: "Speak with Someone" }).click();
   await expect(
     page.getByText(/demonstration handoff was noted/i),
   ).toBeVisible();
@@ -146,55 +144,17 @@ test("mobile widget opens and closes", async ({ page }) => {
     page.getByRole("region", { name: "Medy Assistant" }),
   ).toHaveCount(0);
 });
-test("control panel exposes only the deterministic local engine", async ({
-  page,
-}) => {
+test("demo provider control changes chat behavior", async ({ page }) => {
   await page.goto("/control");
-  await expect(
-    page
-      .locator("label")
-      .filter({ hasText: /^Provider/ })
-      .locator("select"),
-  ).toHaveValue("mock");
-  await expect(page.getByRole("option", { name: /Bedrock/i })).toHaveCount(0);
+  await page
+    .locator("label")
+    .filter({ hasText: /^Provider/ })
+    .locator("select")
+    .selectOption("bedrock");
   await page.goto("/employee/assistant");
   await page.getByLabel("Message Medy Assistant").fill("Help with training");
   await page.getByRole("button", { name: "Send" }).click();
-  await expect(page.getByText(/fictional assigned courses/i)).toBeVisible();
-});
-
-test("employee conversation collects a contextual short reply", async ({
-  page,
-}) => {
-  await page.goto("/employee/assistant");
-  await page
-    .getByLabel("Message Medy Assistant")
-    .fill("My uniform is the wrong size");
-  await page.getByRole("button", { name: "Send" }).click();
-  await expect(page.getByText(/Which item is affected/)).toBeVisible();
-  await page.getByLabel("Message Medy Assistant").fill("the pants");
-  await page.getByRole("button", { name: "Send" }).click();
-  await expect(page.getByText(/details needed to start/i)).toBeVisible();
-});
-
-test("public event quote collects fields over multiple turns", async ({
-  page,
-}) => {
-  await page.goto("/");
-  await page.getByRole("button", { name: "Open Medy Assistant" }).click();
-  const assistant = page.getByRole("region", { name: "Medy Assistant" });
-  const input = page.getByLabel("Message Medy Assistant");
-  for (const answer of [
-    "I need security for a concert",
-    "Baltimore, Maryland",
-    "October 12",
-    "About 500 people",
-    "Four officers from 6 PM to midnight",
-  ]) {
-    await input.fill(answer);
-    await assistant.getByRole("button", { name: "Send" }).click();
-  }
-  await expect(assistant.getByText(/details needed to start/i)).toBeVisible();
+  await expect(page.getByText(/assigned demonstration courses/i)).toBeVisible();
 });
 test("mock role selection updates the portal", async ({ page }) => {
   await page.goto("/control");

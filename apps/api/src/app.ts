@@ -13,12 +13,14 @@ import {
   LeadSchema,
 } from "@medy/shared";
 import {
+  BedrockAIProvider,
+  LocalKnowledgeProvider,
   LocalLeadProvider,
   MockActionProvider,
+  MockAIProvider,
   MockAuthAdapter,
   employeeData,
 } from "./providers.js";
-import { ConversationEngine } from "./conversation.js";
 
 type AppOptions = {
   serveFrontend?: boolean;
@@ -95,7 +97,9 @@ export function resolveWidgetBundlePath() {
 export function createApp(options: AppOptions = {}) {
   const app = express();
   const auth = new MockAuthAdapter();
-  const conversation = new ConversationEngine();
+  const knowledge = new LocalKnowledgeProvider();
+  const mockAI = new MockAIProvider();
+  const bedrock = new BedrockAIProvider();
   const leads = new LocalLeadProvider();
   const actions = new MockActionProvider();
   const session = (req: express.Request) => req.header("x-demo-session");
@@ -117,7 +121,8 @@ export function createApp(options: AppOptions = {}) {
   app.get("/api/health", (_req, res) =>
     res.json({
       status: "ok",
-      provider: "deterministic-local",
+      provider:
+        process.env.BEDROCK_ENABLED === "true" ? "bedrock-enabled" : "mock",
     }),
   );
   app.post("/api/chat", async (req, res, next) => {
@@ -141,12 +146,19 @@ export function createApp(options: AppOptions = {}) {
       if (config.delay) await new Promise((r) => setTimeout(r, 800));
       if (config.providerError || body.triggerError)
         throw new Error("Triggered provider error");
-      const conversationKey = `${body.mode}:${body.conversationId || session(req) || "anonymous-demo"}`;
+      const context = await knowledge.search(
+        body.mode,
+        body.messages.at(-1)!.content,
+      );
+      const useBedrock =
+        process.env.BEDROCK_ENABLED === "true" &&
+        (body.provider || config.provider) === "bedrock";
+      const provider = useBedrock ? bedrock : mockAI;
       res.json(
-        conversation.respond(
+        await provider.chat(
           body.mode,
-          conversationKey,
-          body.messages.at(-1)!.content,
+          body.messages,
+          context,
           user || undefined,
         ),
       );
@@ -265,7 +277,6 @@ export function createApp(options: AppOptions = {}) {
     if (body.leads) leads.reset();
     if (body.actions) actions.reset();
     if (body.session) auth.reset();
-    if (body.session) conversation.reset();
     res.json({ reset: true, ...body });
   });
   app.use("/api", (_req, res) =>

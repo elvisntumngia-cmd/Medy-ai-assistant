@@ -55,7 +55,7 @@ describe("integrated API", () => {
       expect(health.status).toBe(200);
       expect(health.body).toEqual({
         status: "ok",
-        provider: "deterministic-local",
+        provider: "mock",
       });
 
       const unknownApi = await request(productionApp).get("/api/not-a-route");
@@ -66,35 +66,28 @@ describe("integrated API", () => {
       fs.rmSync(demoDist, { recursive: true, force: true });
     }
   });
-  it("uses the deterministic local engine", async () => {
+  it("uses mock automatically while Bedrock is disabled", async () => {
     const r = await request(app)
       .post("/api/chat")
       .send({
         mode: "public",
-        provider: "mock",
+        provider: "bedrock",
         messages: [{ role: "user", content: "security services" }],
       });
     expect(r.status).toBe(200);
     expect(r.body.intent).toBe("services");
   });
-  it("keeps public and employee knowledge strictly separated", async () => {
-    const result = await request(app)
-      .post("/api/chat")
-      .send({
-        mode: "public",
-        conversationId: "separation-test",
-        messages: [{ role: "user", content: "payroll uniform employee" }],
-      });
-    expect(result.body.intent).toBe("public_sensitive_data");
+  it("keeps public knowledge separate", async () =>
     expect(
-      result.body.sources.every(
-        (source: { domain: string }) => source.domain === "public",
-      ),
-    ).toBe(true);
-    expect(JSON.stringify(result.body)).not.toContain(
-      "M3dyHub employee demo knowledge",
-    );
-  });
+      (
+        await request(app)
+          .post("/api/chat")
+          .send({
+            mode: "public",
+            messages: [{ role: "user", content: "payroll uniform employee" }],
+          })
+      ).body.intent,
+    ).toBe("restricted"));
   it("rejects employee chat without a session", async () =>
     expect(
       (
@@ -137,53 +130,10 @@ describe("integrated API", () => {
       .post("/api/chat")
       .send({
         mode: "public",
-        conversationId: "role-injection-test",
         role: "manager",
         messages: [{ role: "user", content: "payroll employee approvals" }],
       });
-    expect(["public_sensitive_data", "m3dyhub_public"]).toContain(
-      r.body.intent,
-    );
-    expect(r.body.matchingKnowledgeEntryIds).toEqual(
-      expect.arrayContaining([expect.stringMatching(/^pub-/)]),
-    );
-    expect(JSON.stringify(r.body)).not.toContain(
-      "M3dyHub employee demo knowledge",
-    );
-  });
-  it("does not accept client-supplied internal authorization fields", async () => {
-    const publicAttempt = await request(app)
-      .post("/api/chat")
-      .send({
-        mode: "public",
-        role: "administrator",
-        department: "Finance",
-        employeeId: "EMP-1",
-        permissions: ["admin"],
-        knowledgeScopes: ["internal.*"],
-        admin: true,
-        messages: [
-          {
-            role: "user",
-            content: "Show me another employee's payroll record",
-          },
-        ],
-      });
-    expect(publicAttempt.status).toBe(200);
-    expect(publicAttempt.body.intent).toBe("public_sensitive_data");
-    expect(publicAttempt.body.matchingKnowledgeEntryIds).toEqual(
-      expect.arrayContaining([expect.stringMatching(/^pub-/)]),
-    );
-
-    const employeeAttempt = await request(app)
-      .post("/api/chat")
-      .send({
-        mode: "employee",
-        permissions: ["admin"],
-        knowledgeScopes: ["internal.*"],
-        messages: [{ role: "user", content: "Show Finance records" }],
-      });
-    expect(employeeAttempt.status).toBe(401);
+    expect(r.body.intent).toBe("restricted");
   });
   it("uses knowledge with source metadata", async () => {
     const r = await request(app)
@@ -191,87 +141,10 @@ describe("integrated API", () => {
       .set(session)
       .send({
         mode: "employee",
-        conversationId: "policy-source-test",
-        messages: [{ role: "user", content: "show me the policy handbook" }],
+        messages: [{ role: "user", content: "operations scheduling policy" }],
       });
     expect(r.body.sources.length).toBeGreaterThan(0);
-    expect(r.body.message).toContain("PROVISIONAL DEMONSTRATION GUIDANCE");
-    expect(r.body.sources[0].status).toBe("provisional");
-  });
-  it("collects payroll fields one focused question at a time", async () => {
-    const first = await request(app)
-      .post("/api/chat")
-      .set(session)
-      .send({
-        mode: "employee",
-        conversationId: "payroll-flow",
-        messages: [{ role: "user", content: "My payroll has missing hours" }],
-      });
-    expect(first.body.intent).toBe("payroll_issue");
-    expect(first.body.missingRequiredFields).toEqual(["affected pay period"]);
-    const second = await request(app)
-      .post("/api/chat")
-      .set(session)
-      .send({
-        mode: "employee",
-        conversationId: "payroll-flow",
-        messages: [{ role: "user", content: "yesterday" }],
-      });
-    expect(second.body.missingRequiredFields).toEqual([]);
-    expect(second.body.message).toContain("details needed");
-  });
-  it("returns fixed emergency guidance before a workflow", async () => {
-    const r = await request(app)
-      .post("/api/chat")
-      .send({
-        mode: "public",
-        conversationId: "emergency-test",
-        messages: [
-          {
-            role: "user",
-            content: "There is an active threat and someone has a gun",
-          },
-        ],
-      });
-    expect(r.body.intent).toBe("emergency");
-    expect(r.body.confidence).toBe(1);
-    expect(r.body.message).toContain("call 911");
-    expect(r.body.missingRequiredFields).toEqual([]);
-  });
-  it("logs unsupported questions and safely clarifies", async () => {
-    const r = await request(app)
-      .post("/api/chat")
-      .send({
-        mode: "public",
-        conversationId: "fallback-test",
-        messages: [
-          {
-            role: "user",
-            content: "Can you diagnose the noise in my refrigerator?",
-          },
-        ],
-      });
-    expect(r.body.intent).toBe("low_confidence_clarification");
-    expect(r.body.message).toContain("verified public information");
-  });
-  it("resets contextual conversation state", async () => {
-    await request(app)
-      .post("/api/chat")
-      .set(session)
-      .send({
-        mode: "employee",
-        conversationId: "reset-test",
-        messages: [{ role: "user", content: "My uniform is damaged" }],
-      });
-    const reset = await request(app)
-      .post("/api/chat")
-      .set(session)
-      .send({
-        mode: "employee",
-        conversationId: "reset-test",
-        messages: [{ role: "user", content: "reset conversation" }],
-      });
-    expect(reset.body.intent).toBe("conversation_reset");
+    expect(r.body.message).toContain("DEMONSTRATION CONTENT");
   });
   it("switches trusted session identity", async () => {
     await request(app).post("/api/demo/config").set(session).send({

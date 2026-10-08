@@ -19,7 +19,6 @@ class MedyAssistantWidget extends HTMLElement {
   messages = el("div", "messages");
   panel = el("section", "panel");
   input = el("input");
-  conversationId = `public-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   connectedCallback() {
     if (this.root.childElementCount) return;
     this.api = (
@@ -99,7 +98,6 @@ class MedyAssistantWidget extends HTMLElement {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode: "public",
-          conversationId: this.conversationId,
           messages: [{ role: "user", content: text }],
         }),
       });

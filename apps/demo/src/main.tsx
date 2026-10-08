@@ -506,7 +506,8 @@ function Controls() {
             void update({ provider: e.target.value as DemoConfig["provider"] })
           }
         >
-          <option value="mock">Deterministic local engine</option>
+          <option value="mock">Mock</option>
+          <option value="bedrock">Bedrock when server-enabled</option>
         </select>
       </label>
       <label>
