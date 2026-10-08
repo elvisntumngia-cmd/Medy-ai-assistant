@@ -66,6 +66,7 @@ export const ChatRequestSchema = z.object({
   mode: ModeSchema,
   messages: z.array(MessageSchema).min(1),
   provider: z.enum(["mock", "bedrock"]).optional(),
+  conversationId: z.string().min(8).max(120).optional(),
   triggerError: z.boolean().optional(),
 });
 export const LeadSchema = z.object({

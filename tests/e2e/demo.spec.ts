@@ -32,6 +32,39 @@ test("public lead intake completes and persists", async ({ page }) => {
   await page.getByRole("button", { name: "Save request" }).click();
   await expect(page.getByText(/saved locally/)).toBeVisible();
 });
+test("public assistant supports independent topic changes without qualification", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Open Medy Assistant" }).click();
+  const input = page.getByLabel("Message Medy Assistant");
+  const send = async (message: string) => {
+    await input.fill(message);
+    await page.getByRole("button", { name: "Send" }).click();
+  };
+  await send("I need security for my warehouse");
+  await expect(page.getByText(/physical security services/i)).toBeVisible();
+  await send("Are you hiring?");
+  await expect(page.getByText(/Careers page/i)).toBeVisible();
+  await send("Do you install cameras?");
+  await expect(page.getByText(/CCTV design and installation/i)).toBeVisible();
+  await send("What's your phone number?");
+  await expect(page.getByText(/\(240\) 419-3125/i)).toBeVisible();
+});
+test("explicit public lead form can be cancelled back to chat", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Open Medy Assistant" }).click();
+  await page.getByRole("button", { name: "Request security services" }).click();
+  await page
+    .getByRole("button", { name: "Request Security Services", exact: true })
+    .click();
+  await expect(page.getByLabel("Full name")).toBeVisible();
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+  await expect(page.getByLabel("Message Medy Assistant")).toBeVisible();
+  await expect(page.getByText(/form closed/i)).toBeVisible();
+});
 test("employee uniform request routes through config", async ({ page }) => {
   await page.goto("/employee/assistant");
   await page.getByLabel("Message Medy Assistant").fill("I need a new uniform");
@@ -125,11 +158,12 @@ test("implemented data, department contact, and escalation actions respond", asy
 
   await page.goto("/");
   await page.getByRole("button", { name: "Open Medy Assistant" }).click();
-  await page.getByLabel("Message Medy Assistant").fill("I want a handoff");
+  await page
+    .getByLabel("Message Medy Assistant")
+    .fill("I want someone to call me");
   await page.getByRole("button", { name: "Send" }).click();
-  await page.getByRole("button", { name: "Speak with Someone" }).click();
   await expect(
-    page.getByText(/demonstration handoff was noted/i),
+    page.getByRole("button", { name: "Contact SecureMedy" }),
   ).toBeVisible();
 });
 test("mobile widget opens and closes", async ({ page }) => {
@@ -217,7 +251,7 @@ test("standalone widget loads on an independent host and calls the public API", 
 }) => {
   await page.goto("/wordpress-host.html");
   await page.getByRole("button", { name: "Open Medy Assistant" }).click();
-  await expect(page.getByText(/I’m Medy Assistant/)).toBeVisible();
+  await expect(page.getByText(/I’m Medy/)).toBeVisible();
   await page
     .getByLabel("Message Medy Assistant")
     .fill("What services do you offer?");

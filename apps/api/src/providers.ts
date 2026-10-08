@@ -34,6 +34,7 @@ export interface AIProvider {
     messages: { role: string; content: string }[],
     context: KnowledgeMatch[],
     user?: EmployeeProfile,
+    conversationId?: string,
   ): Promise<AssistantResponse>;
 }
 export interface AuthAdapter {

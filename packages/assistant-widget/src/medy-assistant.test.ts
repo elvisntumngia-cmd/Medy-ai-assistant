@@ -62,4 +62,18 @@ describe("standalone widget response validation", () => {
     );
     expect(root.textContent).not.toContain("Unsafe");
   });
+
+  it("cancels the optional lead form and returns to normal chat", () => {
+    const widget = document.createElement("medy-assistant") as HTMLElement & {
+      leadForm: () => void;
+    };
+    document.body.append(widget);
+    widget.leadForm();
+    const root = widget.shadowRoot!;
+    expect(root.querySelector(".messages")?.hasAttribute("hidden")).toBe(true);
+    (root.querySelector(".secondary") as HTMLButtonElement).click();
+    expect(root.querySelector(".lead")).toBeNull();
+    expect(root.querySelector(".messages")?.hasAttribute("hidden")).toBe(false);
+    expect(root.textContent).toContain("form closed");
+  });
 });

@@ -20,6 +20,10 @@ export default async function globalSetup() {
   process.env.BEDROCK_ENABLED = "false";
   process.env.MEDY_LEADS_FILE = join(dataDir, "leads.json");
   process.env.MEDY_ACTIONS_FILE = join(dataDir, "actions.json");
+  process.env.MEDY_CONVERSATIONAL_LEADS_FILE = join(
+    dataDir,
+    "conversational-leads.json",
+  );
 
   const { createApp } = await import("../../apps/api/src/app.js");
   const api = createApp({ serveFrontend: true }).listen(4281, "127.0.0.1");

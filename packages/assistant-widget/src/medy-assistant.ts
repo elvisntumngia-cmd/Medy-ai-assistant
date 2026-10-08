@@ -19,6 +19,7 @@ class MedyAssistantWidget extends HTMLElement {
   messages = el("div", "messages");
   panel = el("section", "panel");
   input = el("input");
+  conversationId = `medy-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   connectedCallback() {
     if (this.root.childElementCount) return;
     this.api = (
@@ -27,7 +28,7 @@ class MedyAssistantWidget extends HTMLElement {
       this.api
     ).replace(/\/$/, "");
     const style = el("style");
-    style.textContent = `:host{--blue:#1478d4;--navy:#071c34;font-family:system-ui;color:#172638;line-height:1.4}.launch{position:fixed;right:24px;bottom:24px;border:0;border-radius:999px;padding:15px 20px;background:var(--blue);color:#fff;font:700 16px system-ui;cursor:pointer;z-index:2147483646;box-shadow:0 10px 30px #001b3840}.panel{display:none;position:fixed;right:24px;bottom:24px;width:min(390px,calc(100vw - 48px));height:min(650px,calc(100vh - 48px));background:#fff;border:1px solid #dce5ec;border-radius:14px;box-shadow:0 24px 70px #001b3830;z-index:2147483647;overflow:hidden}.open{display:flex;flex-direction:column}header{background:var(--navy);color:#fff;padding:16px;display:flex;justify-content:space-between}header button{background:none;color:#fff;border:0;font-size:20px;cursor:pointer}.messages{flex:1;overflow:auto;padding:16px;background:#f5f8fb}.messages p{background:#fff;padding:10px;border-radius:8px}.actions,.suggestions{display:flex;flex-wrap:wrap;gap:6px}.actions button,.suggestions button{border:1px solid #b8d5ec;background:#fff;color:#0d64ad;border-radius:7px;padding:8px;cursor:pointer}.composer{display:flex;gap:7px;padding:12px}.composer input{flex:1;min-width:0;padding:10px}.composer button,.primary{border:0;background:var(--blue);color:#fff;border-radius:6px;padding:9px;cursor:pointer}.lead{padding:16px;overflow:auto}.lead label{display:flex;flex-direction:column;margin:8px 0;font-size:12px}.lead input,.lead select{padding:8px}.summary{white-space:pre-wrap;background:#f5f8fb;padding:10px}@media(max-width:500px){.panel{inset:0;width:100%;height:100%;border-radius:0}}`;
+    style.textContent = `:host{--blue:#1478d4;--navy:#071c34;font-family:system-ui;color:#172638;line-height:1.4}.launch{position:fixed;right:24px;bottom:24px;border:0;border-radius:999px;padding:15px 20px;background:var(--blue);color:#fff;font:700 16px system-ui;cursor:pointer;z-index:2147483646;box-shadow:0 10px 30px #001b3840}.panel{display:none;position:fixed;right:24px;bottom:24px;width:min(390px,calc(100vw - 48px));height:min(650px,calc(100vh - 48px));background:#fff;border:1px solid #dce5ec;border-radius:14px;box-shadow:0 24px 70px #001b3830;z-index:2147483647;overflow:hidden}.open{display:flex;flex-direction:column}header{background:var(--navy);color:#fff;padding:16px;display:flex;justify-content:space-between}header button{background:none;color:#fff;border:0;font-size:20px;cursor:pointer}.messages{flex:1;overflow:auto;padding:16px;background:#f5f8fb}.messages p{background:#fff;padding:10px;border-radius:8px}.actions,.suggestions,.form-actions{display:flex;flex-wrap:wrap;gap:6px}.actions button,.suggestions button{border:1px solid #b8d5ec;background:#fff;color:#0d64ad;border-radius:7px;padding:8px;cursor:pointer}.composer{display:flex;gap:7px;padding:12px}.composer input{flex:1;min-width:0;padding:10px}.composer button,.primary{border:0;background:var(--blue);color:#fff;border-radius:6px;padding:9px;cursor:pointer}.secondary{border:1px solid #789;background:#fff;color:#234;border-radius:6px;padding:9px;cursor:pointer}.lead{padding:16px;overflow:auto}.lead label{display:flex;flex-direction:column;margin:8px 0;font-size:12px}.lead input,.lead select{padding:8px}.summary{white-space:pre-wrap;background:#f5f8fb;padding:10px}@media(max-width:500px){.panel{inset:0;width:100%;height:100%;border-radius:0}}`;
     const launch = el("button", "launch", "Ask Medy");
     launch.setAttribute("aria-label", "Open Medy Assistant");
     const header = el("header");
@@ -45,7 +46,7 @@ class MedyAssistantWidget extends HTMLElement {
     this.panel.append(form);
     this.root.append(style, launch, this.panel);
     this.addMessage(
-      "Hello. I’m Medy Assistant. I can help with SecureMedy services or a demonstration service request.",
+      "Hi! I’m Medy, SecureMedy’s virtual assistant. I can help you explore our security services, find information or connect with the right team. How can I help?",
     );
     this.suggestions([
       "Request security services",
@@ -98,6 +99,7 @@ class MedyAssistantWidget extends HTMLElement {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode: "public",
+          conversationId: this.conversationId,
           messages: [{ role: "user", content: text }],
         }),
       });
@@ -187,7 +189,19 @@ class MedyAssistantWidget extends HTMLElement {
       summary.textContent = JSON.stringify(value, null, 2);
     };
     const submit = el("button", "primary", "Save request");
-    form.append(consentLabel, review, summary, submit);
+    const cancel = el("button", "secondary", "Cancel");
+    cancel.type = "button";
+    cancel.onclick = () => {
+      form.remove();
+      this.messages.hidden = false;
+      this.addMessage(
+        "Request form closed. You can continue asking questions.",
+      );
+      this.input.focus();
+    };
+    const formActions = el("div", "form-actions");
+    formActions.append(review, submit, cancel);
+    form.append(consentLabel, summary, formActions);
     form.onsubmit = async (e) => {
       e.preventDefault();
       const body = {

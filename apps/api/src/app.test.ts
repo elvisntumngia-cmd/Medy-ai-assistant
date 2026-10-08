@@ -77,7 +77,28 @@ describe("integrated API", () => {
     expect(r.status).toBe(200);
     expect(r.body.intent).toBe("services");
   });
-  it("keeps public knowledge separate", async () =>
+  it("answers each public message independently by conversation ID", async () => {
+    const conversationId = "api-warehouse-conversation";
+    const send = (content: string) =>
+      request(app)
+        .post("/api/chat")
+        .send({
+          mode: "public",
+          conversationId,
+          messages: [{ role: "user", content }],
+        });
+    const warehouse = await send("I need security for my warehouse");
+    expect(warehouse.body.intent).toBe("physical_security");
+    expect(warehouse.body.message).not.toMatch(/how many|what city/i);
+    expect(warehouse.body.actions).toContainEqual(
+      expect.objectContaining({ type: "start_form" }),
+    );
+    expect((await send("Are you hiring?")).body.intent).toBe("careers");
+    expect((await send("Do you install cameras?")).body.intent).toBe(
+      "electronic_security",
+    );
+  });
+  it("routes employee questions away from public knowledge", async () =>
     expect(
       (
         await request(app)
@@ -87,7 +108,7 @@ describe("integrated API", () => {
             messages: [{ role: "user", content: "payroll uniform employee" }],
           })
       ).body.intent,
-    ).toBe("restricted"));
+    ).toBe("employee_routing"));
   it("rejects employee chat without a session", async () =>
     expect(
       (
@@ -133,7 +154,7 @@ describe("integrated API", () => {
         role: "manager",
         messages: [{ role: "user", content: "payroll employee approvals" }],
       });
-    expect(r.body.intent).toBe("restricted");
+    expect(r.body.intent).toBe("employee_routing");
   });
   it("uses knowledge with source metadata", async () => {
     const r = await request(app)

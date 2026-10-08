@@ -21,6 +21,8 @@ import {
   MockAuthAdapter,
   employeeData,
 } from "./providers.js";
+import { PublicAssistantProvider } from "./public-assistant.js";
+import { createLeadWorkflow } from "./lead-workflow.js";
 
 type AppOptions = {
   serveFrontend?: boolean;
@@ -100,6 +102,7 @@ export function createApp(options: AppOptions = {}) {
   const knowledge = new LocalKnowledgeProvider();
   const mockAI = new MockAIProvider();
   const bedrock = new BedrockAIProvider();
+  const publicAssistant = new PublicAssistantProvider(createLeadWorkflow());
   const leads = new LocalLeadProvider();
   const actions = new MockActionProvider();
   const session = (req: express.Request) => req.header("x-demo-session");
@@ -153,26 +156,36 @@ export function createApp(options: AppOptions = {}) {
       const useBedrock =
         process.env.BEDROCK_ENABLED === "true" &&
         (body.provider || config.provider) === "bedrock";
-      const provider = useBedrock ? bedrock : mockAI;
+      const provider =
+        body.mode === "public" && !useBedrock
+          ? publicAssistant
+          : useBedrock
+            ? bedrock
+            : mockAI;
       res.json(
         await provider.chat(
           body.mode,
           body.messages,
           context,
           user || undefined,
+          body.conversationId,
         ),
       );
     } catch (error) {
       next(error);
     }
   });
-  app.post("/api/leads", (req, res, next) => {
-    try {
-      res.status(201).json(leads.create(LeadSchema.parse(req.body)));
-    } catch (error) {
-      next(error);
-    }
-  });
+  app.post(
+    "/api/leads",
+    rateLimit({ windowMs: 15 * 60_000, limit: 10 }),
+    (req, res, next) => {
+      try {
+        res.status(201).json(leads.create(LeadSchema.parse(req.body)));
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
   app.get("/api/leads", demoOnly, (_req, res) => res.json(leads.list()));
   app.get("/api/leads/:id", demoOnly, (req, res) => {
     const lead = leads.get(String(req.params.id));
@@ -277,6 +290,7 @@ export function createApp(options: AppOptions = {}) {
     if (body.leads) leads.reset();
     if (body.actions) actions.reset();
     if (body.session) auth.reset();
+    if (body.session) publicAssistant.reset();
     res.json({ reset: true, ...body });
   });
   app.use("/api", (_req, res) =>

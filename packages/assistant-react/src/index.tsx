@@ -6,8 +6,7 @@ import type {
   EmployeeProfile,
   Mode,
 } from "@medy/shared";
-// @ts-ignore
-import './styles.css';
+import "./styles.css";
 
 type Message = {
   role: "user" | "assistant";
@@ -45,7 +44,7 @@ export function MedyAssistant({
   const greeting =
     mode === "employee"
       ? `Hello, ${user?.firstName || "there"}. How can I help with M3dyHub today?`
-      : "Hello. I’m Medy Assistant. I can help with SecureMedy services or support requests.";
+      : "Hi! I’m Medy, SecureMedy’s virtual assistant. I can help you explore our security services, find information or connect with the right team. How can I help?";
   useEffect(
     () => setMessages([{ role: "assistant", content: greeting }]),
     [greeting],
@@ -194,11 +193,15 @@ export function MedyAssistant({
         <div className="medy-quick">
           {(
             quickActions || [
-              "My Requests",
-              "Payroll",
-              "Uniforms",
-              "Training",
-              "IT Support",
+              ...(mode === "public"
+                ? ["Explore services", "Request security services", "Careers"]
+                : [
+                    "My Requests",
+                    "Payroll",
+                    "Uniforms",
+                    "Training",
+                    "IT Support",
+                  ]),
             ]
           ).map((q) => (
             <button key={q} onClick={() => void send(q)}>
