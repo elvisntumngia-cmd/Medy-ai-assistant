@@ -180,11 +180,11 @@ export function createApp(options: AppOptions = {}) {
   app.get("/api/health", (_req, res) =>
     res.json({
       status: "ok",
+      publicProvider: openAI ? "openai" : "deterministic",
       ...(process.env.MEDY_LOCAL_AI === "true" &&
       process.env.NODE_ENV !== "production" &&
       process.env.RENDER !== "true"
         ? {
-            publicProvider: openAI ? "openai" : "deterministic",
             systemCA: /(?:^|\s)--use-system-ca(?:\s|$)/.test(
               process.env.NODE_OPTIONS || "",
             ),

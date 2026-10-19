@@ -272,7 +272,7 @@ describe("local API safety", () => {
   ])("blocks deployment setting %s", (key, value) => {
     enable();
     vi.stubEnv(key, value);
-    expect(() => createApp()).toThrow(/local development/);
+    expect(() => createApp()).toThrow(/MEDY_PRODUCTION_AI|local development/);
   });
   it("returns sanitized API failure without fallback", async () => {
     enable();
@@ -418,5 +418,179 @@ describe("contact privacy and unsupported claim rejection", () => {
     await expect(make().chat("public", chat, [])).rejects.toMatchObject({
       code: "AI_UNAVAILABLE",
     });
+  });
+});
+
+describe("explicit production OpenAI activation", () => {
+  const enableProduction = () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("RENDER", "true");
+    vi.stubEnv("AI_PROVIDER", "openai");
+    vi.stubEnv("MEDY_PRODUCTION_AI", "true");
+    vi.stubEnv("MEDY_LOCAL_AI", "false");
+    vi.stubEnv("OPENAI_API_KEY", "production-test-secret");
+    vi.stubEnv("OPENAI_MODEL", "gpt-4.1-mini");
+    vi.stubEnv("DEMO_MODE", "true");
+  };
+  it("keeps production deterministic when AI is not requested", async () => {
+    enableProduction();
+    vi.stubEnv("AI_PROVIDER", "deterministic");
+    vi.stubEnv("MEDY_PRODUCTION_AI", "false");
+    expect(configuredOpenAIProvider()).toBeUndefined();
+    const health = await request(createApp()).get("/api/health");
+    expect(health.body).toMatchObject({
+      provider: "mock",
+      publicProvider: "deterministic",
+    });
+    expect(mocks.create).not.toHaveBeenCalled();
+  });
+  it.each(["", "false", "TRUE", "1"])(
+    "rejects production requests without exact explicit opt-in: %s",
+    (value) => {
+      enableProduction();
+      vi.stubEnv("MEDY_PRODUCTION_AI", value);
+      expect(() => createApp()).toThrow(/MEDY_PRODUCTION_AI=true/);
+      expect(mocks.create).not.toHaveBeenCalled();
+    },
+  );
+  it.each([
+    ["production", "false"],
+    ["test", "true"],
+  ])(
+    "recognizes either production marker: %s / %s",
+    async (nodeEnv, render) => {
+      enableProduction();
+      vi.stubEnv("NODE_ENV", nodeEnv);
+      vi.stubEnv("RENDER", render);
+      expect(configuredOpenAIProvider()).toBeInstanceOf(OpenAIProvider);
+      const health = await request(createApp()).get("/api/health");
+      expect(health.status).toBe(200);
+      expect(health.body).toEqual({
+        status: "ok",
+        provider: "openai",
+        publicProvider: "openai",
+      });
+      expect(JSON.stringify(health.body)).not.toContain(
+        "production-test-secret",
+      );
+      expect(mocks.create).not.toHaveBeenCalled();
+    },
+  );
+  it.each(["", "   "])(
+    "fails startup safely when the production secret is missing: %s",
+    (key) => {
+      enableProduction();
+      vi.stubEnv("OPENAI_API_KEY", key);
+      expect(() => createApp()).toThrow(/OPENAI_API_KEY must be configured/);
+      expect(mocks.create).not.toHaveBeenCalled();
+    },
+  );
+  it("rejects conflicting production provider and local flags", () => {
+    enableProduction();
+    vi.stubEnv("AI_PROVIDER", "deterministic");
+    expect(() => createApp()).toThrow(/set AI_PROVIDER=openai/);
+    vi.stubEnv("AI_PROVIDER", "openai");
+    vi.stubEnv("MEDY_LOCAL_AI", "true");
+    expect(() => createApp()).toThrow(/unset MEDY_LOCAL_AI/);
+    expect(mocks.create).not.toHaveBeenCalled();
+  });
+  it("keeps local credential-free fallback and local opt-in independent of the production flag", () => {
+    enableProduction();
+    vi.stubEnv("NODE_ENV", "test");
+    vi.stubEnv("RENDER", "false");
+    expect(() => configuredOpenAIProvider()).toThrow(/MEDY_LOCAL_AI=true/);
+    vi.stubEnv("MEDY_LOCAL_AI", "true");
+    expect(configuredOpenAIProvider()).toBeInstanceOf(OpenAIProvider);
+    vi.stubEnv("OPENAI_API_KEY", "");
+    expect(configuredOpenAIProvider()).toBeUndefined();
+    expect(mocks.create).not.toHaveBeenCalled();
+  });
+  it("retains production per-IP limits", async () => {
+    enableProduction();
+    vi.stubEnv("AI_RATE_LIMIT_PER_MINUTE", "1");
+    const app = createApp();
+    const first = await request(app)
+      .post("/api/chat")
+      .send({ mode: "public", messages: chat });
+    const second = await request(app)
+      .post("/api/chat")
+      .send({ mode: "public", messages: chat });
+    expect(first.status).toBe(200);
+    expect(second.status).toBe(429);
+    expect(mocks.create).toHaveBeenCalledTimes(1);
+    expect(mocks.create.mock.calls[0][0]).toMatchObject({
+      model: "gpt-4.1-mini",
+      max_completion_tokens: 450,
+      store: false,
+    });
+    expect(mocks.create.mock.calls[0][1]).toMatchObject({
+      maxRetries: 0,
+      timeout: 15000,
+    });
+  });
+  it("retains production daily request and token budgets", async () => {
+    enableProduction();
+    vi.stubEnv("AI_RATE_LIMIT_PER_MINUTE", "100");
+    vi.stubEnv("AI_DAILY_REQUEST_BUDGET", "1");
+    const app = createApp();
+    expect(
+      (
+        await request(app)
+          .post("/api/chat")
+          .send({ mode: "public", messages: chat })
+      ).status,
+    ).toBe(200);
+    const exhausted = await request(app)
+      .post("/api/chat")
+      .send({ mode: "public", messages: chat });
+    expect(exhausted.status).toBe(429);
+    expect(exhausted.body.error.code).toBe("AI_DAILY_BUDGET");
+    vi.stubEnv("AI_DAILY_TOKEN_BUDGET", "1");
+    const tokens = await request(createApp())
+      .post("/api/chat")
+      .send({ mode: "public", messages: chat });
+    expect(tokens.status).toBe(429);
+    expect(tokens.body.error.code).toBe("AI_DAILY_BUDGET");
+    expect(mocks.create).toHaveBeenCalledTimes(1);
+  });
+  it("retains public isolation, input limits and consent in production", async () => {
+    enableProduction();
+    vi.stubEnv("AI_MAX_INPUT_LENGTH", "5");
+    const app = createApp();
+    expect(
+      (
+        await request(app)
+          .post("/api/chat")
+          .send({ mode: "public", messages: chat })
+      ).status,
+    ).toBe(400);
+    expect(
+      (
+        await request(app)
+          .post("/api/chat")
+          .send({ mode: "employee", messages: chat })
+      ).status,
+    ).toBe(404);
+    expect((await request(app).get("/api/demo/employee")).status).toBe(404);
+    expect(
+      (
+        await request(app)
+          .post("/api/leads")
+          .send({ fullName: "Test", consent: false })
+      ).status,
+    ).toBe(400);
+    expect(mocks.create).not.toHaveBeenCalled();
+  });
+  it("returns a safe provider failure without deterministic fallback in production", async () => {
+    enableProduction();
+    mocks.create.mockRejectedValue(new Error("production-test-secret"));
+    const response = await request(createApp())
+      .post("/api/chat")
+      .send({ mode: "public", messages: chat });
+    expect(response.status).toBe(503);
+    expect(response.body.error.code).toBe("AI_UNAVAILABLE");
+    expect(JSON.stringify(response.body)).not.toContain(
+      "production-test-secret",
+    );
   });
 });

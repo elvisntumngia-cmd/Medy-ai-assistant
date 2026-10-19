@@ -56,6 +56,7 @@ describe("integrated API", () => {
       expect(health.status).toBe(200);
       expect(health.body).toEqual({
         status: "ok",
+        publicProvider: "deterministic",
         provider: "mock",
       });
 

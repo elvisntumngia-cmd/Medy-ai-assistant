@@ -369,19 +369,39 @@ export class OpenAIProvider implements AIProvider {
   }
 }
 export function configuredOpenAIProvider() {
-  if (
-    process.env.AI_PROVIDER !== "openai" ||
-    !process.env.OPENAI_API_KEY?.trim()
-  )
-    return undefined;
-  if (
-    process.env.MEDY_LOCAL_AI !== "true" ||
-    process.env.NODE_ENV === "production" ||
-    process.env.RENDER === "true"
-  )
-    throw new Error("OpenAI is restricted to explicit local development");
+  const production =
+    process.env.NODE_ENV === "production" || process.env.RENDER === "true";
+  const requested = process.env.AI_PROVIDER === "openai";
+  const productionOptIn = process.env.MEDY_PRODUCTION_AI === "true";
+  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  if (production) {
+    if (!requested && !productionOptIn) return undefined;
+    if (!requested)
+      throw new Error(
+        "Production AI configuration error: set AI_PROVIDER=openai when MEDY_PRODUCTION_AI=true.",
+      );
+    if (!productionOptIn)
+      throw new Error(
+        "Production AI configuration error: OpenAI requires MEDY_PRODUCTION_AI=true.",
+      );
+    if (process.env.MEDY_LOCAL_AI === "true")
+      throw new Error(
+        "Production AI configuration error: unset MEDY_LOCAL_AI; it is for local development only.",
+      );
+    if (!apiKey)
+      throw new Error(
+        "Production AI configuration error: OPENAI_API_KEY must be configured as a server-side secret.",
+      );
+  } else {
+    // Preserve the existing credential-free local deterministic fallback.
+    if (!requested || !apiKey) return undefined;
+    if (process.env.MEDY_LOCAL_AI !== "true")
+      throw new Error(
+        "OpenAI requires MEDY_LOCAL_AI=true for local development.",
+      );
+  }
   return new OpenAIProvider(
-    new OpenAI({ apiKey: process.env.OPENAI_API_KEY, maxRetries: 0 }),
+    new OpenAI({ apiKey, maxRetries: 0 }),
     openAIConfig(),
   );
 }
