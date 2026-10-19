@@ -1,6 +1,7 @@
 import { publicBoundary, conflictBoundary } from "./public-policy.js";
 import {
   AssistantResponseSchema,
+  companyVoice,
   type AssistantAction,
   type AssistantResponse,
   type EmployeeProfile,
@@ -9,6 +10,7 @@ import {
 import type { AIProvider, KnowledgeMatch } from "./providers.js";
 import {
   PUBLIC_LINKS,
+  getPublishedJobs,
   publicKnowledgeById,
   type PublicKnowledgeItem,
 } from "./public-knowledge.js";
@@ -61,7 +63,7 @@ const reply = (
   } = {},
 ) =>
   AssistantResponseSchema.parse({
-    message,
+    message: companyVoice(message),
     intent,
     confidence: options.confidence ?? 0.96,
     actions: options.actions || [],
@@ -88,11 +90,11 @@ const fromKnowledge = (
   const item = publicKnowledgeById.get(id);
   if (!item)
     return reply(
-      "That information is not currently approved or needs refresh. Please contact SecureMedy to confirm.",
+      "That information is not currently approved or needs refresh. Please contact Securemedy to confirm.",
       intent,
       {
         actions: [
-          action("contact", "Contact SecureMedy", PUBLIC_LINKS.contact),
+          action("contact", "Contact Securemedy", PUBLIC_LINKS.contact),
         ],
       },
     );
@@ -462,7 +464,7 @@ export class PublicAssistantProvider implements AIProvider {
       )
     )
       return reply(
-        "I can't collect or disclose passwords, verification codes, access details, confidential security procedures, banking information or government identification numbers. Please use an authorized SecureMedy channel.",
+        "I can't collect or disclose passwords, verification codes, access details, confidential security procedures, banking information or government identification numbers. Please use an authorized Securemedy channel.",
         "sensitive_information",
       );
     if (
@@ -479,23 +481,23 @@ export class PublicAssistantProvider implements AIProvider {
             "Explore services",
             "Request security services",
             "Careers",
-            "Contact SecureMedy",
+            "Contact Securemedy",
           ],
         },
       );
     if (hasAny(q, ["who are you", "what are you", "are you a bot"]))
       return reply(
-        "I'm Medy, SecureMedy's virtual website assistant. I provide verified public information and links, but I don't access private records or dispatch services.",
+        "I'm Medy, Securemedy's virtual website assistant. I provide verified public information and links, but I don't access private records or dispatch services.",
         "assistant_identity",
-        { actions: [action("home", "SecureMedy Website", PUBLIC_LINKS.home)] },
+        { actions: [action("home", "Securemedy Website", PUBLIC_LINKS.home)] },
       );
     if (/\b(price|pricing|cost|rate|quote|estimate)\b/.test(q))
       return reply(
-        "Pricing depends on the service, location, schedule, staffing and risk requirements. Medy cannot quote a price, but SecureMedy's team can discuss your needs.",
+        "Pricing depends on the service, location, schedule, staffing and risk requirements. Medy cannot quote a price, but Securemedy's team can discuss your needs.",
         "pricing",
         {
           actions: [
-            action("contact-page", "Contact SecureMedy", PUBLIC_LINKS.contact),
+            action("contact-page", "Contact Securemedy", PUBLIC_LINKS.contact),
             requestAction(),
           ],
         },
@@ -513,11 +515,11 @@ export class PublicAssistantProvider implements AIProvider {
       ])
     )
       return reply(
-        "Please use SecureMedy's general Contact page for client, billing, contract, vendor, partnership or management inquiries. Medy does not have a verified department-specific public address for this request.",
+        "Please use Securemedy's general Contact page for client, billing, contract, vendor, partnership or management inquiries. Medy does not have a verified department-specific public address for this request.",
         "business_inquiry",
         {
           actions: [
-            action("contact-page", "Contact SecureMedy", PUBLIC_LINKS.contact),
+            action("contact-page", "Contact Securemedy", PUBLIC_LINKS.contact),
           ],
         },
       );
@@ -531,14 +533,14 @@ export class PublicAssistantProvider implements AIProvider {
       return fromKnowledge("leadership", "published_leadership");
     if (match?.intent === "founder_unknown")
       return reply(
-        "I don't have a verified public fact identifying SecureMedy's founder. The About Us page provides the approved company background, and the team can answer further questions.",
+        "I don't have a verified public fact identifying Securemedy's founder. The About Us page provides the approved company background, and the team can answer further questions.",
         match.intent,
         {
           confidence: match.confidence,
           source: publicKnowledgeById.get(match.knowledgeId),
           actions: [
-            action("about", "About SecureMedy", PUBLIC_LINKS.about),
-            action("contact", "Contact SecureMedy", PUBLIC_LINKS.contact),
+            action("about", "About Securemedy", PUBLIC_LINKS.about),
+            action("contact", "Contact Securemedy", PUBLIC_LINKS.contact),
           ],
         },
       );
@@ -561,17 +563,36 @@ export class PublicAssistantProvider implements AIProvider {
         "construction site",
       ]);
       const message = needsConfirmation
-        ? "SecureMedy provides physical security services, including armed and unarmed officers, access control and patrol solutions. This may fit the property or facility you described, but the team must confirm suitability, licensing and availability for the specific location."
-        : "SecureMedy provides physical security services, including armed and unarmed officers, access control and specialized patrol solutions. The team can discuss coverage requirements and confirm staffing, licensing and availability for your location.";
+        ? "Securemedy provides physical security services, including armed and unarmed officers, access control and patrol solutions. This may fit the property or facility you described, but the team must confirm suitability, licensing and availability for the specific location."
+        : "Securemedy provides physical security services, including armed and unarmed officers, access control and specialized patrol solutions. The team can discuss coverage requirements and confirm staffing, licensing and availability for your location.";
       return fromKnowledge(
         match.knowledgeId,
         match.intent,
         [
-          action("contact", "Contact SecureMedy", PUBLIC_LINKS.contact),
+          action("contact", "Contact Securemedy", PUBLIC_LINKS.contact),
           requestAction(),
         ],
         message,
       );
+    }
+    if (match?.intent === "careers") {
+      const jobs = getPublishedJobs().slice(0, 3);
+      if (jobs.length)
+        return fromKnowledge(
+          "careers",
+          "careers",
+          jobs.map((job) =>
+            action("job-" + job.id, job.action!.label, job.sourceUrl),
+          ),
+          "Our website lists these roles:\n" +
+            jobs
+              .map(
+                (job) =>
+                  "- " + job.answer.replace(/^Back to Opportunities /, ""),
+              )
+              .join("\n") +
+            "\nWe cannot confirm vacancies are still open: the website does not expose a reliable live status or expiry feed. Use the role buttons and Careers page for availability and application guidance.",
+        );
     }
     if (match?.intent === "services")
       return fromKnowledge(match.knowledgeId, match.intent, [requestAction()]);
@@ -580,21 +601,21 @@ export class PublicAssistantProvider implements AIProvider {
       return reply(
         "There is no active chat workflow to cancel. You can ask a new question at any time.",
         "conversation_reset",
-        { suggestions: ["Explore services", "Contact SecureMedy", "Careers"] },
+        { suggestions: ["Explore services", "Contact Securemedy", "Careers"] },
       );
     return reply(
-      "I don't have enough verified public information to answer that confidently. I can help with SecureMedy's services, company information, Careers, employee access or contacting the team.",
+      "I don't have enough verified public information to answer that confidently. I can help with Securemedy's services, company information, Careers, employee access or contacting the team.",
       "public_clarification",
       {
         confidence: 0.35,
         suggestions: [
           "What services do you offer?",
-          "Contact SecureMedy",
+          "Contact Securemedy",
           "Careers",
         ],
         actions: [
           action("services", "Explore Services", PUBLIC_LINKS.services),
-          action("contact", "Contact SecureMedy", PUBLIC_LINKS.contact),
+          action("contact", "Contact Securemedy", PUBLIC_LINKS.contact),
         ],
       },
     );

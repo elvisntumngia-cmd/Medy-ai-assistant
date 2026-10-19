@@ -4,7 +4,9 @@ import "./medy-assistant";
 
 afterEach(() => {
   document.body.replaceChildren();
+  sessionStorage.clear();
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 async function submitWith(response: unknown) {
@@ -16,7 +18,7 @@ async function submitWith(response: unknown) {
   document.body.append(widget);
   const root = widget.shadowRoot!;
   (root.querySelector(".launch") as HTMLButtonElement).click();
-  const input = root.querySelector("input")!;
+  const input = root.querySelector("textarea")!;
   input.value = "hello";
   root
     .querySelector("form")!
@@ -258,5 +260,131 @@ describe("public response presentation and recovery", () => {
       { role: "user", content: "Try again please" },
     ]);
     expect(widget.shadowRoot!.textContent).toContain("Bẹ́ẹ̀ni");
+  });
+});
+
+describe("polished public browsing session", () => {
+  const response = {
+    message: "We can discuss your warehouse.\nWhat coverage hours do you need?",
+    intent: "ai_public",
+    confidence: 0.8,
+    actions: [],
+  };
+  const mount = () => {
+    const widget = document.createElement("medy-assistant") as HTMLElement & {
+      send: (text: string) => Promise<void>;
+      reset: () => void;
+      conversationId: string;
+      history: unknown[];
+    };
+    document.body.append(widget);
+    return widget;
+  };
+  it("restores messages, context and conversation ID after refresh/navigation and clears them on reset", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue({ ok: true, json: async () => response });
+    vi.stubGlobal("fetch", fetchMock);
+    const first = mount();
+    await first.send("We have cameras at our warehouse.");
+    const id = first.conversationId;
+    first.remove();
+    const restored = mount();
+    expect(restored.conversationId).toBe(id);
+    expect(restored.shadowRoot!.textContent).toContain(
+      "cameras at our warehouse",
+    );
+    await restored.send("Weekends only.");
+    const body = JSON.parse(fetchMock.mock.calls[1][1].body);
+    expect(body.conversationId).toBe(id);
+    expect(body.messages[0].content).toContain("cameras");
+    restored.reset();
+    expect(restored.conversationId).not.toBe(id);
+    expect(restored.history).toEqual([]);
+    expect(sessionStorage.length).toBe(0);
+  });
+  it("supports Shift+Enter without submitting and Enter to send multiline text", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue({ ok: true, json: async () => response });
+    vi.stubGlobal("fetch", fetchMock);
+    const widget = mount();
+    const input = widget.shadowRoot!.querySelector("textarea")!;
+    input.value = "Warehouse\nNight coverage";
+    const shift = new KeyboardEvent("keydown", {
+      key: "Enter",
+      shiftKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    input.dispatchEvent(shift);
+    expect(shift.defaultPrevented).toBe(false);
+    expect(fetchMock).not.toHaveBeenCalled();
+    input.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        key: "Enter",
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    expect(
+      JSON.parse(fetchMock.mock.calls[0][1].body).messages.at(-1).content,
+    ).toBe("Warehouse\nNight coverage");
+    await vi.waitFor(() => expect(input.disabled).toBe(false));
+    expect(
+      widget.shadowRoot!.querySelector("article.user .bubble")!.textContent,
+    ).toContain("\n");
+  });
+  it("never resurrects a late response after New conversation", async () => {
+    let finish!: (value: unknown) => void;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        () =>
+          new Promise((resolve) => {
+            finish = resolve;
+          }),
+      ),
+    );
+    const widget = mount();
+    const request = widget.send("Hello");
+    expect(widget.shadowRoot!.querySelectorAll(".typing span")).toHaveLength(3);
+    widget.reset();
+    finish({
+      ok: true,
+      json: async () => ({ ...response, message: "Late response" }),
+    });
+    await request;
+    expect(widget.shadowRoot!.textContent).not.toContain("Late response");
+    expect(widget.history).toEqual([]);
+  });
+  it("survives unavailable browser storage", async () => {
+    vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
+      throw new Error("blocked");
+    });
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new Error("blocked");
+    });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: true, json: async () => response }),
+    );
+    const widget = mount();
+    await widget.send("Hi");
+    expect(widget.shadowRoot!.textContent).toContain("We can discuss");
+  });
+  it("welcomes visitors without placing the lengthy notice in the conversation", () => {
+    const widget = mount();
+    const root = widget.shadowRoot!;
+    expect(root.querySelector(".messages")!.textContent).toContain(
+      "Securemedy's AI assistant",
+    );
+    expect(root.querySelector(".messages")!.textContent).not.toContain(
+      "AI-assisted chat may use OpenAI",
+    );
+    expect(root.querySelector("details summary")!.textContent).toBe(
+      "Privacy & safety",
+    );
   });
 });

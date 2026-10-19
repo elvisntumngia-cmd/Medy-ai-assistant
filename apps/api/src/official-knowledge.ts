@@ -116,6 +116,33 @@ export function indexOfficialSources(file?: string) {
         else store.entries.push(entry);
       };
       chunks(source.text).forEach((answer, i) => put(prefix + i, answer));
+      if (url.pathname.startsWith("/careers/jobs/")) {
+        const end = source.text.indexOf(" Overview");
+        if (end > 0 && end < 2000) {
+          const id =
+            "official-job-" + url.pathname.split("/").filter(Boolean).at(-1);
+          put(id, source.text.slice(0, end));
+          const listing = store.entries.find((entry) => entry.id === id)!;
+          listing.aliases = [
+            "jobs",
+            "vacancies",
+            "careers",
+            source.title.slice(0, 100),
+          ];
+          listing.action = {
+            label: "View Role: " + source.title.split(/\s[\u2013|]\s/)[0],
+            url: source.url,
+          };
+          listing.expiresAt = new Date(
+            Math.min(
+              Date.parse(source.expiresAt),
+              Date.parse(source.retrievedAt) + 86400000,
+            ),
+          ).toISOString();
+          listing.uncertainty =
+            "Publicly listed role at the last refresh, not a confirmed current vacancy. No reliable live status or expiry feed is published. Confirm availability and application instructions on the official Careers page.";
+        }
+      }
       if (url.pathname === "/about-us/") {
         const start = source.text.indexOf("Leadership");
         const end = source.text.indexOf("Affiliations", start);

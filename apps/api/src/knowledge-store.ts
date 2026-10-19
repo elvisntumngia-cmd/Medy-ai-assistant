@@ -195,6 +195,10 @@ const words = (text: string) =>
           "leadership",
         )
         .replace(/\blicens(?:e|ed|es|ing)\b/g, "physical security")
+        .replace(
+          /\b(?:jobs|vacancies|openings|positions|recruiting)\b/g,
+          "career",
+        )
         .replace(/\bm3dyhub\b/g, "employee portal")
         .replace(
           /\b(?:unpaid|wages|salary|hr)\b|haven[’']?t been paid|have not been paid/g,

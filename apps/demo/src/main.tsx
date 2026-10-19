@@ -64,7 +64,7 @@ function PublicDemo() {
   return (
     <div className="public">
       <header className="public-header">
-        <a className="public-brand" href="#top" aria-label="SecureMedy home">
+        <a className="public-brand" href="#top" aria-label="Securemedy home">
           <img src="/securemedy-logo.png" alt="SecureMedy Incorporated" />
         </a>
         <nav aria-label="Main navigation">
@@ -117,7 +117,7 @@ function PublicDemo() {
           </div>
           <div className="intro-copy">
             <p>
-              SecureMedy was founded to establish a paradigm shift in the
+              Securemedy was founded to establish a paradigm shift in the
               physical security and emergency management industry.
             </p>
             <p>
@@ -212,7 +212,7 @@ function PublicDemo() {
           <img src="/securemedy-logo.png" alt="SecureMedy Incorporated" />
         </div>
         <div>
-          <strong>SecureMedy, Inc.</strong>
+          <strong>Securemedy</strong>
           <span>Physical security &amp; emergency management</span>
         </div>
         <div>

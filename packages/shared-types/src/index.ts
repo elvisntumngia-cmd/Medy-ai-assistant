@@ -1,3 +1,4 @@
+import { companyCopy, extractPublicLinks } from "./browser.js";
 import { z } from "zod";
 
 export const ModeSchema = z.enum(["public", "employee"]);
@@ -124,6 +125,15 @@ export type EmployeeProfile = {
 export function presentResponse(
   response: AssistantResponse,
 ): AssistantResponse {
+  const linked = extractPublicLinks(response.message);
+  response = {
+    ...response,
+    message: linked.message,
+    actions: [...response.actions, ...linked.actions].map((action) => ({
+      ...action,
+      label: companyCopy(action.label),
+    })),
+  };
   const destinations = new Set<string>();
   const ids = new Set<string>();
   const actions = response.actions.filter((action) => {
@@ -142,3 +152,5 @@ export function presentResponse(
   });
   return { ...response, actions, sources };
 }
+
+export * from "./browser.js";

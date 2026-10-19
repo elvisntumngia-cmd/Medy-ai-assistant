@@ -33,7 +33,7 @@ export function publicBoundary(message: string): AssistantResponse | undefined {
   )
     return AssistantResponseSchema.parse({
       message:
-        "I can't collect or disclose credentials, private employee records or sensitive security procedures. Please use an authorized SecureMedy channel.",
+        "I can't collect or disclose credentials, private employee records or sensitive security procedures. Please use an authorized Securemedy channel.",
       intent: "sensitive_information",
       confidence: 1,
     });
@@ -85,19 +85,19 @@ export function conflictBoundary(
       "address",
       /\baddress\b|headquarters|where.*(?:office|located|location)|main office|your office|20744|20745/,
       "contact_information",
-      "Public sources contain conflicting address details. Please confirm the current address with SecureMedy using the Contact page or verified phone number.",
+      "Public sources contain conflicting address details. Please confirm the current address with Securemedy using the Contact page or verified phone number.",
     ],
     [
       "state-coverage",
       /licens|what states|state coverage|coverage area|service area|(?:operate|serve|cover|available).*\b(?:virginia|maryland|va|md|state)\b/,
       "licensing",
-      "I can't confirm current state coverage or licensing from the approved information. SecureMedy must confirm availability for your location.",
+      "I can't confirm current state coverage or licensing from the approved information. Securemedy must confirm availability for your location.",
     ],
     [
       "licenses",
       /license number|license status/,
       "licensing",
-      "A dated license listing does not confirm current status. Please ask SecureMedy to confirm with the relevant regulator.",
+      "A dated license listing does not confirm current status. Please ask Securemedy to confirm with the relevant regulator.",
     ],
     [
       "certifications",
@@ -121,7 +121,7 @@ export function conflictBoundary(
       "entity",
       /nigeria|nigerian|legal entity|contracting entity/,
       "entity_review",
-      "The website entity and branding metadata is under review. Please confirm the contracting entity directly with SecureMedy; page metadata alone does not establish it.",
+      "The website entity and branding metadata is under review. Please confirm the contracting entity directly with Securemedy; page metadata alone does not establish it.",
     ],
   ];
   const open = new Set(openPublicConflicts().map((c) => c.factKey));
@@ -148,7 +148,7 @@ export function conflictBoundary(
                 {
                   id: "about-page",
                   type: "open_external" as const,
-                  label: "About SecureMedy",
+                  label: "About Securemedy",
                   target: PUBLIC_LINKS.about,
                   requiresConfirmation: false,
                 },
@@ -157,7 +157,7 @@ export function conflictBoundary(
           {
             id: "contact-page",
             type: "open_external",
-            label: "Contact SecureMedy",
+            label: "Contact Securemedy",
             target: PUBLIC_LINKS.contact,
             requiresConfirmation: false,
           },

@@ -37,3 +37,12 @@ export function openPublicConflicts() {
         : conflict,
     );
 }
+
+/** Only freshly refreshed public listings; these do not prove current hiring status. */
+export function getPublishedJobs() {
+  return getPublicKnowledge().filter(
+    (entry) =>
+      entry.id.startsWith("official-job-") &&
+      Date.parse(entry.retrievedAt) > Date.now() - 86400000,
+  );
+}

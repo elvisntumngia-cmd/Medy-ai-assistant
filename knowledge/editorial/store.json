@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 131,
+  "revision": 148,
   "entries": [
     {
       "id": "company-overview",
@@ -2516,13 +2516,13 @@
       "factKeys": [
         "active-vacancies"
       ],
-      "retrievedAt": "2026-10-19T15:19:10.758Z",
+      "retrievedAt": "2026-10-19T19:25:17.612Z",
       "contentHash": "a6c6623519ccdd8b5f70f03dd011826588ce9b85000b65a72e8f53923badcee5",
-      "expiresAt": "2026-11-18T13:39:19.640Z",
+      "expiresAt": "2026-11-18T19:25:17.689Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.538Z",
+          "at": "2026-10-19T19:25:24.516Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "a6c6623519ccdd8b5f70f03dd011826588ce9b85000b65a72e8f53923badcee5",
@@ -2559,13 +2559,13 @@
         "address",
         "active-vacancies"
       ],
-      "retrievedAt": "2026-10-19T15:19:10.758Z",
+      "retrievedAt": "2026-10-19T19:25:17.612Z",
       "contentHash": "3bf67390177c8a4537c268cb349512fd7f9732e5375f92d4c484863448c107ee",
-      "expiresAt": "2026-11-18T13:39:19.640Z",
+      "expiresAt": "2026-11-18T19:25:17.689Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.539Z",
+          "at": "2026-10-19T19:25:24.516Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "3bf67390177c8a4537c268cb349512fd7f9732e5375f92d4c484863448c107ee",
@@ -5865,13 +5865,13 @@
         "founding-year",
         "licenses"
       ],
-      "retrievedAt": "2026-10-19T15:19:31.053Z",
+      "retrievedAt": "2026-10-19T19:25:18.356Z",
       "contentHash": "ee0ee3fd9792e1084af1a894e61b332f23566c46f9fb0556dd89654c348a2cdd",
-      "expiresAt": "2026-11-18T15:19:31.072Z",
+      "expiresAt": "2026-11-18T19:25:18.403Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.556Z",
+          "at": "2026-10-19T19:25:24.528Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "ee0ee3fd9792e1084af1a894e61b332f23566c46f9fb0556dd89654c348a2cdd",
@@ -5907,13 +5907,13 @@
       "factKeys": [
         "certifications"
       ],
-      "retrievedAt": "2026-10-19T15:19:31.053Z",
+      "retrievedAt": "2026-10-19T19:25:18.356Z",
       "contentHash": "36adb30611ad9976840a01bf6452933c1dc7c08c3b3060355db4835e3c5905b0",
-      "expiresAt": "2026-11-18T15:19:31.072Z",
+      "expiresAt": "2026-11-18T19:25:18.403Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.556Z",
+          "at": "2026-10-19T19:25:24.528Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "36adb30611ad9976840a01bf6452933c1dc7c08c3b3060355db4835e3c5905b0",
@@ -5950,13 +5950,13 @@
         "founding-year",
         "licenses"
       ],
-      "retrievedAt": "2026-10-19T15:19:32.286Z",
+      "retrievedAt": "2026-10-19T19:25:19.409Z",
       "contentHash": "604aa574e299dbc47495bd41d86308b765d19673a2553a3a4aaac0adcde8bc76",
-      "expiresAt": "2026-11-18T15:19:32.304Z",
+      "expiresAt": "2026-11-18T19:25:19.459Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.556Z",
+          "at": "2026-10-19T19:25:24.528Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "604aa574e299dbc47495bd41d86308b765d19673a2553a3a4aaac0adcde8bc76",
@@ -5993,13 +5993,13 @@
         "licenses",
         "certifications"
       ],
-      "retrievedAt": "2026-10-19T15:19:33.261Z",
+      "retrievedAt": "2026-10-19T19:25:20.379Z",
       "contentHash": "5b2b1c7028cbbc08a0cca30f39d2752661cb45e789a559624c131118af0ed9ba",
-      "expiresAt": "2026-11-18T15:19:33.278Z",
+      "expiresAt": "2026-11-18T19:25:20.411Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.556Z",
+          "at": "2026-10-19T19:25:24.528Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "5b2b1c7028cbbc08a0cca30f39d2752661cb45e789a559624c131118af0ed9ba",
@@ -6035,13 +6035,13 @@
       "factKeys": [
         "certifications"
       ],
-      "retrievedAt": "2026-10-19T15:19:33.261Z",
+      "retrievedAt": "2026-10-19T19:25:20.379Z",
       "contentHash": "e80c598ee61180f77f164d81e06f2ccc8df12dd0ec71021fb880728552684082",
-      "expiresAt": "2026-11-18T15:19:33.278Z",
+      "expiresAt": "2026-11-18T19:25:20.411Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.556Z",
+          "at": "2026-10-19T19:25:24.529Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "e80c598ee61180f77f164d81e06f2ccc8df12dd0ec71021fb880728552684082",
@@ -6078,13 +6078,13 @@
         "address",
         "certifications"
       ],
-      "retrievedAt": "2026-10-19T15:19:34.340Z",
+      "retrievedAt": "2026-10-19T19:25:21.379Z",
       "contentHash": "c4a078d62eacf76aa5db5266290168ba5d85182d3a122dc0201c1597f0f3a35c",
-      "expiresAt": "2026-11-18T15:19:34.354Z",
+      "expiresAt": "2026-11-18T19:25:21.411Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.556Z",
+          "at": "2026-10-19T19:25:24.529Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "c4a078d62eacf76aa5db5266290168ba5d85182d3a122dc0201c1597f0f3a35c",
@@ -6120,13 +6120,13 @@
       "factKeys": [
         "licenses"
       ],
-      "retrievedAt": "2026-10-19T15:19:34.806Z",
+      "retrievedAt": "2026-10-19T19:25:22.393Z",
       "contentHash": "a69e710ba56a9420c4a2e06f9ff2977a478af52271ff373d31008af37fdb2c4d",
-      "expiresAt": "2026-11-18T15:19:34.821Z",
+      "expiresAt": "2026-11-18T19:25:22.426Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.557Z",
+          "at": "2026-10-19T19:25:24.529Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "a69e710ba56a9420c4a2e06f9ff2977a478af52271ff373d31008af37fdb2c4d",
@@ -6163,13 +6163,13 @@
         "founding-year",
         "certifications"
       ],
-      "retrievedAt": "2026-10-19T15:19:36.099Z",
+      "retrievedAt": "2026-10-19T19:25:23.446Z",
       "contentHash": "d706a09746a5cafa4eefe1fd0619e3714bb8ef78738244f1ff8cc403f91aa5b0",
-      "expiresAt": "2026-11-18T15:19:36.121Z",
+      "expiresAt": "2026-11-18T19:25:23.477Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.557Z",
+          "at": "2026-10-19T19:25:24.530Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "d706a09746a5cafa4eefe1fd0619e3714bb8ef78738244f1ff8cc403f91aa5b0",
@@ -6203,13 +6203,13 @@
       "lastVerifiedAt": "2026-10-19",
       "state": "approved",
       "factKeys": [],
-      "retrievedAt": "2026-10-19T15:19:36.099Z",
+      "retrievedAt": "2026-10-19T19:25:23.446Z",
       "contentHash": "8f2a5f90c548c20bad34dcea92bcd49b72e924c76200cef10a475162a4b4dbe9",
-      "expiresAt": "2026-11-18T15:19:36.121Z",
+      "expiresAt": "2026-11-18T19:25:23.477Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.557Z",
+          "at": "2026-10-19T19:25:24.530Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "8f2a5f90c548c20bad34dcea92bcd49b72e924c76200cef10a475162a4b4dbe9",
@@ -6243,13 +6243,13 @@
       "lastVerifiedAt": "2026-10-19",
       "state": "approved",
       "factKeys": [],
-      "retrievedAt": "2026-10-19T15:19:37.103Z",
+      "retrievedAt": "2026-10-19T19:25:24.430Z",
       "contentHash": "fdeb768f0e98e4ce30e53075c8384183c364281f440b9be689913b8bf25b9b83",
-      "expiresAt": "2026-11-18T15:19:37.118Z",
+      "expiresAt": "2026-11-18T19:25:24.469Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.557Z",
+          "at": "2026-10-19T19:25:24.530Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "fdeb768f0e98e4ce30e53075c8384183c364281f440b9be689913b8bf25b9b83",
@@ -6285,13 +6285,13 @@
       "factKeys": [
         "certifications"
       ],
-      "retrievedAt": "2026-10-19T15:19:37.103Z",
+      "retrievedAt": "2026-10-19T19:25:24.430Z",
       "contentHash": "de78d31fe2877f93f6b1618ce82b7fa790a598a64a76918c9c00a03a4665697d",
-      "expiresAt": "2026-11-18T15:19:37.118Z",
+      "expiresAt": "2026-11-18T19:25:24.469Z",
       "refreshDays": 30,
       "versions": [
         {
-          "at": "2026-10-19T15:20:13.557Z",
+          "at": "2026-10-19T19:25:24.530Z",
           "actor": "owner-authorized-website-index",
           "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
           "hash": "de78d31fe2877f93f6b1618ce82b7fa790a598a64a76918c9c00a03a4665697d",
@@ -6587,6 +6587,309 @@
           "answer": "Consulting Need a tailored security plan? Our advisors specialize in multi-vector threat assessments for complex federal and commercial environments. Engage our team to secure your operational continuity. Request Proposal View Case Studies"
         }
       ]
+    },
+    {
+      "id": "official-job-armed-security-officer-cleared",
+      "topic": "careers",
+      "answer": "Back to Opportunities Armed Security Officer — Cleared Washington, D.C. Full-Time Physical Security Secret (Active)",
+      "sourceUrl": "https://securemedy.ng/careers/jobs/armed-security-officer-cleared/",
+      "sourceTitle": "Armed Security Officer — Cleared – Securemedy Nigeria Limited",
+      "verifiedAt": "2026-10-19",
+      "visibility": "public",
+      "reviewStatus": "website_verified",
+      "examples": [
+        "Armed Security Officer — Cleared – Securemedy Nigeria Limited"
+      ],
+      "aliases": [
+        "jobs",
+        "vacancies",
+        "careers",
+        "Armed Security Officer — Cleared – Securemedy Nigeria Limited"
+      ],
+      "action": {
+        "label": "View Role: Armed Security Officer — Cleared",
+        "url": "https://securemedy.ng/careers/jobs/armed-security-officer-cleared/"
+      },
+      "uncertainty": "Publicly listed role at the last refresh, not a confirmed current vacancy. No reliable live status or expiry feed is published. Confirm availability and application instructions on the official Careers page.",
+      "approvalBasis": "official_website",
+      "officialSourceHash": "533c7fc34fdae28bf7dacbbb935877a082b7f626347a2482228b733ccb96fd8b",
+      "lastVerifiedAt": "2026-10-19",
+      "state": "approved",
+      "factKeys": [],
+      "retrievedAt": "2026-10-19T19:25:18.356Z",
+      "contentHash": "c2d316e58dfa220922cba5fca60c5512fcf1c7a934197e6d594e5317aa284221",
+      "expiresAt": "2026-10-20T19:25:18.356Z",
+      "refreshDays": 30,
+      "versions": [
+        {
+          "at": "2026-10-19T19:25:24.528Z",
+          "actor": "owner-authorized-website-index",
+          "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
+          "hash": "c2d316e58dfa220922cba5fca60c5512fcf1c7a934197e6d594e5317aa284221",
+          "state": "approved",
+          "answer": "Back to Opportunities Armed Security Officer — Cleared Washington, D.C. Full-Time Physical Security Secret (Active)"
+        }
+      ]
+    },
+    {
+      "id": "official-job-uniformed-protection-officer-critical-infrastructure",
+      "topic": "careers",
+      "answer": "Back to Opportunities Uniformed Protection Officer — Critical Infrastructure Arlington, VA Full-Time Physical Security Top Secret (Active)",
+      "sourceUrl": "https://securemedy.ng/careers/jobs/uniformed-protection-officer-critical-infrastructure/",
+      "sourceTitle": "Uniformed Protection Officer — Critical Infrastructure – Securemedy Nigeria Limited",
+      "verifiedAt": "2026-10-19",
+      "visibility": "public",
+      "reviewStatus": "website_verified",
+      "examples": [
+        "Uniformed Protection Officer — Critical Infrastructure – Securemedy Nigeria Limited"
+      ],
+      "aliases": [
+        "jobs",
+        "vacancies",
+        "careers",
+        "Uniformed Protection Officer — Critical Infrastructure – Securemedy Nigeria Limited"
+      ],
+      "action": {
+        "label": "View Role: Uniformed Protection Officer — Critical Infrastructure",
+        "url": "https://securemedy.ng/careers/jobs/uniformed-protection-officer-critical-infrastructure/"
+      },
+      "uncertainty": "Publicly listed role at the last refresh, not a confirmed current vacancy. No reliable live status or expiry feed is published. Confirm availability and application instructions on the official Careers page.",
+      "approvalBasis": "official_website",
+      "officialSourceHash": "604aa574e299dbc47495bd41d86308b765d19673a2553a3a4aaac0adcde8bc76",
+      "lastVerifiedAt": "2026-10-19",
+      "state": "approved",
+      "factKeys": [],
+      "retrievedAt": "2026-10-19T19:25:19.409Z",
+      "contentHash": "f2b262d0d819c0f903fb3225f1a74dca52f0ec229e355bb39de3bb9761f23718",
+      "expiresAt": "2026-10-20T19:25:19.409Z",
+      "refreshDays": 30,
+      "versions": [
+        {
+          "at": "2026-10-19T19:25:24.528Z",
+          "actor": "owner-authorized-website-index",
+          "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
+          "hash": "f2b262d0d819c0f903fb3225f1a74dca52f0ec229e355bb39de3bb9761f23718",
+          "state": "approved",
+          "answer": "Back to Opportunities Uniformed Protection Officer — Critical Infrastructure Arlington, VA Full-Time Physical Security Top Secret (Active)"
+        }
+      ]
+    },
+    {
+      "id": "official-job-risk-assessment-specialist",
+      "topic": "careers",
+      "answer": "Back to Opportunities Risk Assessment Specialist Remote / Travel Required Full-Time Risk Management Secret preferred",
+      "sourceUrl": "https://securemedy.ng/careers/jobs/risk-assessment-specialist/",
+      "sourceTitle": "Risk Assessment Specialist – Securemedy Nigeria Limited",
+      "verifiedAt": "2026-10-19",
+      "visibility": "public",
+      "reviewStatus": "website_verified",
+      "examples": [
+        "Risk Assessment Specialist – Securemedy Nigeria Limited"
+      ],
+      "aliases": [
+        "jobs",
+        "vacancies",
+        "careers",
+        "Risk Assessment Specialist – Securemedy Nigeria Limited"
+      ],
+      "action": {
+        "label": "View Role: Risk Assessment Specialist",
+        "url": "https://securemedy.ng/careers/jobs/risk-assessment-specialist/"
+      },
+      "uncertainty": "Publicly listed role at the last refresh, not a confirmed current vacancy. No reliable live status or expiry feed is published. Confirm availability and application instructions on the official Careers page.",
+      "approvalBasis": "official_website",
+      "officialSourceHash": "604fae95a1949a91a4183cd2078758d85b3f920c3a6feea1887bbcc49d3f9b22",
+      "lastVerifiedAt": "2026-10-19",
+      "state": "approved",
+      "factKeys": [],
+      "retrievedAt": "2026-10-19T19:25:20.379Z",
+      "contentHash": "c2bccafcf933897508ea63313c2677c88e5505d3d48fd21bf276c1e73952046d",
+      "expiresAt": "2026-10-20T19:25:20.379Z",
+      "refreshDays": 30,
+      "versions": [
+        {
+          "at": "2026-10-19T19:25:24.529Z",
+          "actor": "owner-authorized-website-index",
+          "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
+          "hash": "c2bccafcf933897508ea63313c2677c88e5505d3d48fd21bf276c1e73952046d",
+          "state": "approved",
+          "answer": "Back to Opportunities Risk Assessment Specialist Remote / Travel Required Full-Time Risk Management Secret preferred"
+        }
+      ]
+    },
+    {
+      "id": "official-job-emergency-management-coordinator",
+      "topic": "careers",
+      "answer": "Back to Opportunities Emergency Management Coordinator Oxon Hill, MD (Headquarters) Full-Time Emergency Management Public Trust required",
+      "sourceUrl": "https://securemedy.ng/careers/jobs/emergency-management-coordinator/",
+      "sourceTitle": "Emergency Management Coordinator – Securemedy Nigeria Limited",
+      "verifiedAt": "2026-10-19",
+      "visibility": "public",
+      "reviewStatus": "website_verified",
+      "examples": [
+        "Emergency Management Coordinator – Securemedy Nigeria Limited"
+      ],
+      "aliases": [
+        "jobs",
+        "vacancies",
+        "careers",
+        "Emergency Management Coordinator – Securemedy Nigeria Limited"
+      ],
+      "action": {
+        "label": "View Role: Emergency Management Coordinator",
+        "url": "https://securemedy.ng/careers/jobs/emergency-management-coordinator/"
+      },
+      "uncertainty": "Publicly listed role at the last refresh, not a confirmed current vacancy. No reliable live status or expiry feed is published. Confirm availability and application instructions on the official Careers page.",
+      "approvalBasis": "official_website",
+      "officialSourceHash": "c4a078d62eacf76aa5db5266290168ba5d85182d3a122dc0201c1597f0f3a35c",
+      "lastVerifiedAt": "2026-10-19",
+      "state": "approved",
+      "factKeys": [
+        "address"
+      ],
+      "retrievedAt": "2026-10-19T19:25:21.379Z",
+      "contentHash": "3e3537574b319e2d49e22f51386e9287058366dc9524f21dca0fbeb2c18293dc",
+      "expiresAt": "2026-10-20T19:25:21.379Z",
+      "refreshDays": 30,
+      "versions": [
+        {
+          "at": "2026-10-19T19:25:24.529Z",
+          "actor": "owner-authorized-website-index",
+          "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
+          "hash": "3e3537574b319e2d49e22f51386e9287058366dc9524f21dca0fbeb2c18293dc",
+          "state": "approved",
+          "answer": "Back to Opportunities Emergency Management Coordinator Oxon Hill, MD (Headquarters) Full-Time Emergency Management Public Trust required"
+        }
+      ]
+    },
+    {
+      "id": "official-job-executive-protection-agent",
+      "topic": "careers",
+      "answer": "Back to Opportunities Executive Protection Agent New York, NY Full-Time Executive Protection Background investigation required",
+      "sourceUrl": "https://securemedy.ng/careers/jobs/executive-protection-agent/",
+      "sourceTitle": "Executive Protection Agent – Securemedy Nigeria Limited",
+      "verifiedAt": "2026-10-19",
+      "visibility": "public",
+      "reviewStatus": "website_verified",
+      "examples": [
+        "Executive Protection Agent – Securemedy Nigeria Limited"
+      ],
+      "aliases": [
+        "jobs",
+        "vacancies",
+        "careers",
+        "Executive Protection Agent – Securemedy Nigeria Limited"
+      ],
+      "action": {
+        "label": "View Role: Executive Protection Agent",
+        "url": "https://securemedy.ng/careers/jobs/executive-protection-agent/"
+      },
+      "uncertainty": "Publicly listed role at the last refresh, not a confirmed current vacancy. No reliable live status or expiry feed is published. Confirm availability and application instructions on the official Careers page.",
+      "approvalBasis": "official_website",
+      "officialSourceHash": "a69e710ba56a9420c4a2e06f9ff2977a478af52271ff373d31008af37fdb2c4d",
+      "lastVerifiedAt": "2026-10-19",
+      "state": "approved",
+      "factKeys": [],
+      "retrievedAt": "2026-10-19T19:25:22.393Z",
+      "contentHash": "c3e2ffe5c89e84fd9c7314cd1529c6f148be62185ddd768d6c535a89a13a1869",
+      "expiresAt": "2026-10-20T19:25:22.393Z",
+      "refreshDays": 30,
+      "versions": [
+        {
+          "at": "2026-10-19T19:25:24.529Z",
+          "actor": "owner-authorized-website-index",
+          "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
+          "hash": "c3e2ffe5c89e84fd9c7314cd1529c6f148be62185ddd768d6c535a89a13a1869",
+          "state": "approved",
+          "answer": "Back to Opportunities Executive Protection Agent New York, NY Full-Time Executive Protection Background investigation required"
+        }
+      ]
+    },
+    {
+      "id": "official-job-security-operations-center-soc-analyst",
+      "topic": "careers",
+      "answer": "Back to Opportunities Security Operations Center (SOC) Analyst Baltimore, MD Full-Time Electronic Security Public Trust (ability to obtain)",
+      "sourceUrl": "https://securemedy.ng/careers/jobs/security-operations-center-soc-analyst/",
+      "sourceTitle": "Security Operations Center (SOC) Analyst – Securemedy Nigeria Limited",
+      "verifiedAt": "2026-10-19",
+      "visibility": "public",
+      "reviewStatus": "website_verified",
+      "examples": [
+        "Security Operations Center (SOC) Analyst – Securemedy Nigeria Limited"
+      ],
+      "aliases": [
+        "jobs",
+        "vacancies",
+        "careers",
+        "Security Operations Center (SOC) Analyst – Securemedy Nigeria Limited"
+      ],
+      "action": {
+        "label": "View Role: Security Operations Center (SOC) Analyst",
+        "url": "https://securemedy.ng/careers/jobs/security-operations-center-soc-analyst/"
+      },
+      "uncertainty": "Publicly listed role at the last refresh, not a confirmed current vacancy. No reliable live status or expiry feed is published. Confirm availability and application instructions on the official Careers page.",
+      "approvalBasis": "official_website",
+      "officialSourceHash": "db2e1d1d43659acb10902606967a48d02d0393ea2f3c69dba4d0859bdf14c714",
+      "lastVerifiedAt": "2026-10-19",
+      "state": "approved",
+      "factKeys": [],
+      "retrievedAt": "2026-10-19T19:25:23.446Z",
+      "contentHash": "abcd665fb6ab211f91e60e7175b1c52545b1111a6cf10d258d6a8d0694103864",
+      "expiresAt": "2026-10-20T19:25:23.446Z",
+      "refreshDays": 30,
+      "versions": [
+        {
+          "at": "2026-10-19T19:25:24.530Z",
+          "actor": "owner-authorized-website-index",
+          "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
+          "hash": "abcd665fb6ab211f91e60e7175b1c52545b1111a6cf10d258d6a8d0694103864",
+          "state": "approved",
+          "answer": "Back to Opportunities Security Operations Center (SOC) Analyst Baltimore, MD Full-Time Electronic Security Public Trust (ability to obtain)"
+        }
+      ]
+    },
+    {
+      "id": "official-job-personnel-security-specialist-adjudications-support",
+      "topic": "careers",
+      "answer": "Back to Opportunities Personnel Security Specialist — Adjudications Support Washington, D.C. Full-Time Personnel Security Top Secret/SCI eligible required",
+      "sourceUrl": "https://securemedy.ng/careers/jobs/personnel-security-specialist-adjudications-support/",
+      "sourceTitle": "Personnel Security Specialist — Adjudications Support – Securemedy Nigeria Limited",
+      "verifiedAt": "2026-10-19",
+      "visibility": "public",
+      "reviewStatus": "website_verified",
+      "examples": [
+        "Personnel Security Specialist — Adjudications Support – Securemedy Nigeria Limited"
+      ],
+      "aliases": [
+        "jobs",
+        "vacancies",
+        "careers",
+        "Personnel Security Specialist — Adjudications Support – Securemedy Nigeria Limited"
+      ],
+      "action": {
+        "label": "View Role: Personnel Security Specialist — Adjudications Support",
+        "url": "https://securemedy.ng/careers/jobs/personnel-security-specialist-adjudications-support/"
+      },
+      "uncertainty": "Publicly listed role at the last refresh, not a confirmed current vacancy. No reliable live status or expiry feed is published. Confirm availability and application instructions on the official Careers page.",
+      "approvalBasis": "official_website",
+      "officialSourceHash": "108cad8514b6c0b3d8d1de7c690d51e580de7ef1edbc40017b6be7967cc308c5",
+      "lastVerifiedAt": "2026-10-19",
+      "state": "approved",
+      "factKeys": [],
+      "retrievedAt": "2026-10-19T19:25:24.430Z",
+      "contentHash": "64ace113d7d933539c2ba35a8a62a69e83d302b3a8246159154da3d37601672a",
+      "expiresAt": "2026-10-20T19:25:24.430Z",
+      "refreshDays": 30,
+      "versions": [
+        {
+          "at": "2026-10-19T19:25:24.530Z",
+          "actor": "owner-authorized-website-index",
+          "reason": "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.",
+          "hash": "64ace113d7d933539c2ba35a8a62a69e83d302b3a8246159154da3d37601672a",
+          "state": "approved",
+          "answer": "Back to Opportunities Personnel Security Specialist — Adjudications Support Washington, D.C. Full-Time Personnel Security Top Secret/SCI eligible required"
+        }
+      ]
     }
   ],
   "sources": [
@@ -6794,13 +7097,13 @@
       "url": "https://securemedy.ng/careers/",
       "title": "Careers – Securemedy Nigeria Limited",
       "category": "careers",
-      "retrievedAt": "2026-10-19T15:19:10.758Z",
+      "retrievedAt": "2026-10-19T19:25:17.612Z",
       "contentHash": "b816f3e5b6026dfbd5d88f31233c19b907d97f7ae1e8bad4321401a8f5a87a25",
       "text": "Now Recruiting Elite Security Careers Join our ranks of battle-tested security personnel. We deploy rigorous federal standards and offer exceptional opportunities for cleared professionals who demand excellence. View Open Deployments Learn About Our Mission Why Securemedy Core Values & Benefits We demand excellence and reward it with comprehensive support, rigorous training, and institutional stability. Rigorous Standards Uncompromising institutional standards for all uniformed personnel, ensuring elite operational readiness in every environment. Federal Opportunities Opportunities to serve in federal and high-stakes commercial environments requiring specialized security clearance. Ongoing Training Continuous tactical and strategic intelligence training to maintain superiority in evolving security landscapes. Comprehensive Benefits Full medical, dental, and structured retirement plans for our operators and their dependents. Current Postings Recent Job Opportunities Select a deployment to view requirements and initiate your application. Armed Security Officer — Cleared Washington, D.C. Physical Security Full-Time Seeking experienced armed security professionals for a high-profile federal facility in Washington, D.C. Requires current Secret clearance and minimum 5+ years armed military or law enforcement experience. Apply Now Uniformed Protection Officer — Critical Infrastructure Arlington, VA Physical Security Full-Time Elite protection detail for critical infrastructure in the Arlington, VA corridor. Active Top Secret clearance required prior to deployment. Apply Now Risk Assessment Specialist Remote / Travel Required Risk Management Full-Time Analytical role focusing on vulnerability assessments for commercial and government clients. Extensive background in physical security audits required. 50% travel. Apply Now Emergency Management Coordinator Oxon Hill, MD (Headquarters) Emergency Management Full-Time Lead disaster preparedness and continuity of operations planning for federal and commercial clients across the Mid-Atlantic region. Apply Now Executive Protection Agent New York, NY Executive Protection Full-Time Low-profile or high-visibility protection assignments for corporate executives and government dignitaries in the New York metropolitan area. Apply Now Security Operations Center (SOC) Analyst Baltimore, MD Electronic Security Full-Time Monitor and analyze security systems, CCTV, and alarm networks across a portfolio of federal facilities from our Baltimore-area SOC. Apply Now Personnel Security Specialist — Adjudications Support Washington, D.C. Personnel Security Full-Time Support federal personnel security programs including background investigation processing, case management, and adjudication support for a major DoD component. Apply Now",
       "state": "approved",
       "verifiedAt": "2026-10-19",
       "refreshDays": 30,
-      "expiresAt": "2026-11-18T13:39:19.640Z",
+      "expiresAt": "2026-11-18T19:25:17.689Z",
       "status": 200,
       "versions": [
         {
@@ -7244,13 +7547,13 @@
       "url": "https://securemedy.ng/careers/jobs/armed-security-officer-cleared/",
       "title": "Armed Security Officer — Cleared – Securemedy Nigeria Limited",
       "category": "careers",
-      "retrievedAt": "2026-10-19T15:19:31.053Z",
+      "retrievedAt": "2026-10-19T19:25:18.356Z",
       "contentHash": "533c7fc34fdae28bf7dacbbb935877a082b7f626347a2482228b733ccb96fd8b",
       "text": "Back to Opportunities Armed Security Officer — Cleared Washington, D.C. Full-Time Physical Security Secret (Active) Overview Securemedy Incorporated is seeking highly disciplined Armed Security Officers to support critical federal operations in the Washington, D.C. metropolitan area. Selected personnel will be responsible for maintaining access control, deterring unauthorized entry, and responding to emergency situations with swift and professional judgment. This is a direct-hire position supporting a high-priority government client requiring the utmost professionalism and operational security awareness. Responsibilities Provide armed security coverage at federal facility entrance points and interior posts Conduct thorough vehicle and personnel inspections per established SOPs Maintain detailed security logs and submit accurate incident reports Coordinate with federal agency security staff on all security matters Respond to emergencies, medical incidents, and security breaches Enforce access control protocols and verify credentials Requirements Active Secret security clearance (transferable) Minimum 5 years armed military or law enforcement experience Valid Maryland or Virginia armed security officer license (or ability to obtain within 30 days) Strong written and verbal communication skills Ability to stand for extended periods and respond to physical incidents Preferred Qualifications Military service (honorable discharge) strongly preferred Prior federal contract security experience CPR/First Aid certification Benefits Comprehensive medical, dental, and vision insurance Paid time off (vacation, sick, holidays) Retirement plan with employer contribution Ongoing professional training and certification reimbursement Uniform and equipment provided",
       "state": "approved",
       "verifiedAt": "2026-10-19",
       "refreshDays": 30,
-      "expiresAt": "2026-11-18T15:19:31.072Z",
+      "expiresAt": "2026-11-18T19:25:18.403Z",
       "status": 200,
       "versions": [
         {
@@ -7266,13 +7569,13 @@
       "url": "https://securemedy.ng/careers/jobs/uniformed-protection-officer-critical-infrastructure/",
       "title": "Uniformed Protection Officer — Critical Infrastructure – Securemedy Nigeria Limited",
       "category": "careers",
-      "retrievedAt": "2026-10-19T15:19:32.286Z",
+      "retrievedAt": "2026-10-19T19:25:19.409Z",
       "contentHash": "604aa574e299dbc47495bd41d86308b765d19673a2553a3a4aaac0adcde8bc76",
       "text": "Back to Opportunities Uniformed Protection Officer — Critical Infrastructure Arlington, VA Full-Time Physical Security Top Secret (Active) Overview We are recruiting experienced Uniformed Protection Officers for a prestigious critical infrastructure assignment in Arlington, Virginia. Candidates must demonstrate exceptional situational awareness, composure under pressure, and a proven track record in federal security environments. Responsibilities Perform access control duties at all facility entry/exit points Conduct patrol of interior and exterior areas per established schedule Interpret and enforce facility security policies Document and report all security incidents Assist in emergency evacuations and crisis response Requirements Active Top Secret security clearance Minimum 3 years uniformed security experience Current armed guard license in Virginia Physically fit — must pass fitness assessment High school diploma or GED required; associate degree preferred Preferred Qualifications Experience in federal, DoD, or intelligence community facilities Proficiency with security monitoring technologies Benefits Medical, dental, and vision coverage Paid federal holidays Life insurance Tuition assistance program Career advancement pathways within Securemedy",
       "state": "approved",
       "verifiedAt": "2026-10-19",
       "refreshDays": 30,
-      "expiresAt": "2026-11-18T15:19:32.304Z",
+      "expiresAt": "2026-11-18T19:25:19.459Z",
       "status": 200,
       "versions": [
         {
@@ -7288,13 +7591,13 @@
       "url": "https://securemedy.ng/careers/jobs/risk-assessment-specialist/",
       "title": "Risk Assessment Specialist – Securemedy Nigeria Limited",
       "category": "careers",
-      "retrievedAt": "2026-10-19T15:19:33.261Z",
+      "retrievedAt": "2026-10-19T19:25:20.379Z",
       "contentHash": "604fae95a1949a91a4183cd2078758d85b3f920c3a6feea1887bbcc49d3f9b22",
       "text": "Back to Opportunities Risk Assessment Specialist Remote / Travel Required Full-Time Risk Management Secret preferred Overview Securemedy is expanding its risk management division and is seeking a skilled Risk Assessment Specialist to conduct comprehensive security vulnerability assessments for our diverse federal and commercial client portfolio. Responsibilities Conduct on-site physical security assessments at client facilities Identify vulnerabilities in access control, perimeter security, and surveillance systems Produce detailed written assessment reports with prioritized recommendations Present findings to client leadership and agency officials Develop and deliver security awareness training Maintain assessment database and track remediation progress Requirements Bachelor's degree in Criminal Justice, Security Management, or related field Minimum 5 years physical security or risk management experience Proficiency with security assessment frameworks (ASIS, NIST, CPP) Excellent technical writing skills Valid driver's license and reliable transportation Ability to obtain and maintain Secret clearance Preferred Qualifications Certified Protection Professional (CPP) or Physical Security Professional (PSP) certification Federal government contracting experience Benefits Competitive salary with performance bonuses Full benefits package (medical, dental, vision, 401k) Professional certification reimbursement Flexible schedule with remote work options",
       "state": "approved",
       "verifiedAt": "2026-10-19",
       "refreshDays": 30,
-      "expiresAt": "2026-11-18T15:19:33.278Z",
+      "expiresAt": "2026-11-18T19:25:20.411Z",
       "status": 200,
       "versions": [
         {
@@ -7310,13 +7613,13 @@
       "url": "https://securemedy.ng/careers/jobs/emergency-management-coordinator/",
       "title": "Emergency Management Coordinator – Securemedy Nigeria Limited",
       "category": "careers",
-      "retrievedAt": "2026-10-19T15:19:34.340Z",
+      "retrievedAt": "2026-10-19T19:25:21.379Z",
       "contentHash": "c4a078d62eacf76aa5db5266290168ba5d85182d3a122dc0201c1597f0f3a35c",
       "text": "Back to Opportunities Emergency Management Coordinator Oxon Hill, MD (Headquarters) Full-Time Emergency Management Public Trust required Overview As an Emergency Management Coordinator, you will work with Securemedy’s growing emergency preparedness division, developing COOP plans, training programs, and incident response protocols for government and commercial clients. Responsibilities Develop and maintain Continuity of Operations (COOP) plans Conduct emergency preparedness exercises and tabletop drills Coordinate with federal and local emergency management agencies Assist clients in developing Incident Command System (ICS) procedures Train facility staff on emergency response protocols Evaluate and document exercise outcomes Requirements Bachelor's degree in Emergency Management, Public Administration, or related field FEMA Professional Development Series completion or FEMA EMI coursework Minimum 3 years emergency management experience Knowledge of ICS/NIMS frameworks Strong project management and communication skills Preferred Qualifications Certified Emergency Manager (CEM) credential preferred Prior federal agency coordination experience Benefits Full health benefits package Generous PTO policy Continued education and FEMA training support Flexible work schedule",
       "state": "approved",
       "verifiedAt": "2026-10-19",
       "refreshDays": 30,
-      "expiresAt": "2026-11-18T15:19:34.354Z",
+      "expiresAt": "2026-11-18T19:25:21.411Z",
       "status": 200,
       "versions": [
         {
@@ -7332,13 +7635,13 @@
       "url": "https://securemedy.ng/careers/jobs/executive-protection-agent/",
       "title": "Executive Protection Agent – Securemedy Nigeria Limited",
       "category": "careers",
-      "retrievedAt": "2026-10-19T15:19:34.806Z",
+      "retrievedAt": "2026-10-19T19:25:22.393Z",
       "contentHash": "a69e710ba56a9420c4a2e06f9ff2977a478af52271ff373d31008af37fdb2c4d",
       "text": "Back to Opportunities Executive Protection Agent New York, NY Full-Time Executive Protection Background investigation required Overview Securemedy’s executive protection division is recruiting seasoned protection agents to support high-net-worth individuals, corporate executives, and visiting dignitaries in the New York metropolitan area. Responsibilities Provide close personal protection during principal's activities Conduct advance work and threat assessments for all movement Coordinate with law enforcement and venue security teams Operate and maintain armored and standard protective vehicles Prepare and execute protection plans for domestic and international travel Maintain detailed security logs and daily activity reports Requirements Minimum 8 years protective services or law enforcement experience Valid New York state armed guard license Completion of formal Executive Protection training program Current valid U.S. Passport Clean driving record; advanced driving training preferred Excellent physical fitness — must pass annual fitness evaluation Preferred Qualifications Prior U.S. Secret Service, U.S. Marshal, or military special operations background preferred Multilingual capability a strong asset Benefits Top-tier compensation with duty pay and overtime Health, dental, vision, life insurance Retirement plan Travel and accommodation provided for assignments",
       "state": "approved",
       "verifiedAt": "2026-10-19",
       "refreshDays": 30,
-      "expiresAt": "2026-11-18T15:19:34.821Z",
+      "expiresAt": "2026-11-18T19:25:22.426Z",
       "status": 200,
       "versions": [
         {
@@ -7354,13 +7657,13 @@
       "url": "https://securemedy.ng/careers/jobs/security-operations-center-soc-analyst/",
       "title": "Security Operations Center (SOC) Analyst – Securemedy Nigeria Limited",
       "category": "careers",
-      "retrievedAt": "2026-10-19T15:19:36.099Z",
+      "retrievedAt": "2026-10-19T19:25:23.446Z",
       "contentHash": "db2e1d1d43659acb10902606967a48d02d0393ea2f3c69dba4d0859bdf14c714",
       "text": "Back to Opportunities Security Operations Center (SOC) Analyst Baltimore, MD Full-Time Electronic Security Public Trust (ability to obtain) Overview Securemedy is building out its 24/7 Security Operations Center capability and is seeking SOC Analysts to join our growing technology-driven security division. This role offers excellent growth potential as our electronic security division expands. Responsibilities Monitor CCTV, access control, and intrusion detection systems across multiple sites Triage and respond to alarms in accordance with established protocols Coordinate emergency response with on-site officers and law enforcement Document all incidents in the security event management system Generate shift reports and escalate anomalies to operations management Support integration and testing of new security technologies Requirements Associate degree in IT, Criminal Justice, or Security Management — or equivalent experience Familiarity with CCTV, access control, and alarm management systems Excellent attention to detail and multitasking capability Ability to work overnight, weekend, and holiday shifts Preferred Qualifications Experience with Lenel, Genetec, Avigilon, or similar platforms preferred Security+ or related IT security certification a plus Benefits Health insurance and dental coverage Shift differentials for nights and weekends Paid training on security technology platforms Clear advancement pathway to senior analyst and supervisory roles",
       "state": "approved",
       "verifiedAt": "2026-10-19",
       "refreshDays": 30,
-      "expiresAt": "2026-11-18T15:19:36.121Z",
+      "expiresAt": "2026-11-18T19:25:23.477Z",
       "status": 200,
       "versions": [
         {
@@ -7376,13 +7679,13 @@
       "url": "https://securemedy.ng/careers/jobs/personnel-security-specialist-adjudications-support/",
       "title": "Personnel Security Specialist — Adjudications Support – Securemedy Nigeria Limited",
       "category": "careers",
-      "retrievedAt": "2026-10-19T15:19:37.103Z",
+      "retrievedAt": "2026-10-19T19:25:24.430Z",
       "contentHash": "108cad8514b6c0b3d8d1de7c690d51e580de7ef1edbc40017b6be7967cc308c5",
       "text": "Back to Opportunities Personnel Security Specialist — Adjudications Support Washington, D.C. Full-Time Personnel Security Top Secret/SCI eligible required Overview Securemedy is seeking a Personnel Security Specialist to join our growing government services team supporting a major Department of Defense client in the Washington, D.C. area. This position requires a meticulous, detail-oriented professional with experience navigating federal security clearance processes. Responsibilities Review and process security clearance applications and supporting documentation Conduct preliminary reviews of background investigation reports Provide case management support throughout the clearance lifecycle Interface with government adjudicators and Defense Counterintelligence and Security Agency (DCSA) Maintain accurate case tracking records in government security systems Respond to employee inquiries regarding clearance status Requirements Bachelor's degree in Criminal Justice, National Security, or related field Minimum 3 years experience in personnel security or adjudications Familiarity with SF-86, DISS, and NBIS systems Strong analytical and documentation skills Active Top Secret clearance with SCI eligibility Preferred Qualifications JPAS/DISS proficiency Knowledge of DoD 5200.02-R and ICD 704 adjudicative guidelines Benefits Competitive salary and full benefits Paid federal holidays 401(k) with employer match Professional development support including security certification reimbursement",
       "state": "approved",
       "verifiedAt": "2026-10-19",
       "refreshDays": 30,
-      "expiresAt": "2026-11-18T15:19:37.118Z",
+      "expiresAt": "2026-11-18T19:25:24.469Z",
       "status": 200,
       "versions": [
         {
@@ -7706,12 +8009,6 @@
       "finalUrl": "https://securemedy.ng/industries-served/"
     },
     {
-      "url": "https://securemedy.ng/careers/",
-      "checkedAt": "2026-10-19T15:19:10.758Z",
-      "status": 200,
-      "finalUrl": "https://securemedy.ng/careers/"
-    },
-    {
       "url": "https://securemedy.ng/contact/",
       "checkedAt": "2026-10-19T15:19:11.777Z",
       "status": 200,
@@ -7820,48 +8117,6 @@
       "finalUrl": "https://securemedy.ng/announcement/"
     },
     {
-      "url": "https://securemedy.ng/careers/jobs/armed-security-officer-cleared/",
-      "checkedAt": "2026-10-19T15:19:31.053Z",
-      "status": 200,
-      "finalUrl": "https://securemedy.ng/careers/jobs/armed-security-officer-cleared/"
-    },
-    {
-      "url": "https://securemedy.ng/careers/jobs/uniformed-protection-officer-critical-infrastructure/",
-      "checkedAt": "2026-10-19T15:19:32.286Z",
-      "status": 200,
-      "finalUrl": "https://securemedy.ng/careers/jobs/uniformed-protection-officer-critical-infrastructure/"
-    },
-    {
-      "url": "https://securemedy.ng/careers/jobs/risk-assessment-specialist/",
-      "checkedAt": "2026-10-19T15:19:33.261Z",
-      "status": 200,
-      "finalUrl": "https://securemedy.ng/careers/jobs/risk-assessment-specialist/"
-    },
-    {
-      "url": "https://securemedy.ng/careers/jobs/emergency-management-coordinator/",
-      "checkedAt": "2026-10-19T15:19:34.340Z",
-      "status": 200,
-      "finalUrl": "https://securemedy.ng/careers/jobs/emergency-management-coordinator/"
-    },
-    {
-      "url": "https://securemedy.ng/careers/jobs/executive-protection-agent/",
-      "checkedAt": "2026-10-19T15:19:34.806Z",
-      "status": 200,
-      "finalUrl": "https://securemedy.ng/careers/jobs/executive-protection-agent/"
-    },
-    {
-      "url": "https://securemedy.ng/careers/jobs/security-operations-center-soc-analyst/",
-      "checkedAt": "2026-10-19T15:19:36.099Z",
-      "status": 200,
-      "finalUrl": "https://securemedy.ng/careers/jobs/security-operations-center-soc-analyst/"
-    },
-    {
-      "url": "https://securemedy.ng/careers/jobs/personnel-security-specialist-adjudications-support/",
-      "checkedAt": "2026-10-19T15:19:37.103Z",
-      "status": 200,
-      "finalUrl": "https://securemedy.ng/careers/jobs/personnel-security-specialist-adjudications-support/"
-    },
-    {
       "url": "https://securemedy.ng/service/special-events-security/",
       "checkedAt": "2026-10-19T15:19:38.102Z",
       "status": 200,
@@ -7884,6 +8139,54 @@
       "checkedAt": "2026-10-19T15:19:41.150Z",
       "status": 200,
       "finalUrl": "https://securemedy.ng/division/emergency-management/"
+    },
+    {
+      "url": "https://securemedy.ng/careers/",
+      "checkedAt": "2026-10-19T19:25:17.612Z",
+      "status": 200,
+      "finalUrl": "https://securemedy.ng/careers/"
+    },
+    {
+      "url": "https://securemedy.ng/careers/jobs/armed-security-officer-cleared/",
+      "checkedAt": "2026-10-19T19:25:18.356Z",
+      "status": 200,
+      "finalUrl": "https://securemedy.ng/careers/jobs/armed-security-officer-cleared/"
+    },
+    {
+      "url": "https://securemedy.ng/careers/jobs/uniformed-protection-officer-critical-infrastructure/",
+      "checkedAt": "2026-10-19T19:25:19.409Z",
+      "status": 200,
+      "finalUrl": "https://securemedy.ng/careers/jobs/uniformed-protection-officer-critical-infrastructure/"
+    },
+    {
+      "url": "https://securemedy.ng/careers/jobs/risk-assessment-specialist/",
+      "checkedAt": "2026-10-19T19:25:20.379Z",
+      "status": 200,
+      "finalUrl": "https://securemedy.ng/careers/jobs/risk-assessment-specialist/"
+    },
+    {
+      "url": "https://securemedy.ng/careers/jobs/emergency-management-coordinator/",
+      "checkedAt": "2026-10-19T19:25:21.379Z",
+      "status": 200,
+      "finalUrl": "https://securemedy.ng/careers/jobs/emergency-management-coordinator/"
+    },
+    {
+      "url": "https://securemedy.ng/careers/jobs/executive-protection-agent/",
+      "checkedAt": "2026-10-19T19:25:22.393Z",
+      "status": 200,
+      "finalUrl": "https://securemedy.ng/careers/jobs/executive-protection-agent/"
+    },
+    {
+      "url": "https://securemedy.ng/careers/jobs/security-operations-center-soc-analyst/",
+      "checkedAt": "2026-10-19T19:25:23.446Z",
+      "status": 200,
+      "finalUrl": "https://securemedy.ng/careers/jobs/security-operations-center-soc-analyst/"
+    },
+    {
+      "url": "https://securemedy.ng/careers/jobs/personnel-security-specialist-adjudications-support/",
+      "checkedAt": "2026-10-19T19:25:24.430Z",
+      "status": 200,
+      "finalUrl": "https://securemedy.ng/careers/jobs/personnel-security-specialist-adjudications-support/"
     }
   ]
 }

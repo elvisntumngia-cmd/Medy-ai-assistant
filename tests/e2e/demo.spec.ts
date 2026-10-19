@@ -135,7 +135,7 @@ test("policy lookup is labeled", async ({ page }) => {
     .fill("Find attendance policy");
   await page.getByRole("button", { name: "Send" }).click();
   await expect(
-    page.getByText(/NOT AN OFFICIAL SECUREMEDY POLICY/),
+    page.getByText(/NOT AN OFFICIAL Securemedy POLICY/),
   ).toBeVisible();
 });
 test("implemented data, department contact, and escalation actions respond", async ({
@@ -251,7 +251,7 @@ test("standalone widget loads on an independent host and calls the public API", 
 }) => {
   await page.goto("/wordpress-host.html");
   await page.getByRole("button", { name: "Open Medy Assistant" }).click();
-  await expect(page.getByText(/I’m Medy/)).toBeVisible();
+  await expect(page.getByText(/Hi! I.m Medy, Securemedy/)).toBeVisible();
   await page
     .getByLabel("Message Medy Assistant")
     .fill("What services do you offer?");
@@ -402,4 +402,136 @@ test("public widget deduplicates destinations and recovers an unanswered languag
     { role: "user", content: "How about Yoruba?" },
     { role: "user", content: "Try again please" },
   ]);
+});
+
+for (const width of [1280, 390])
+  test(
+    "public session, wrapping and reset at " + width + "px",
+    async ({ page }) => {
+      await page.setViewportSize({ width, height: 850 });
+      const calls: {
+        conversationId: string;
+        messages: { role: string; content: string }[];
+      }[] = [];
+      await page.route("**/api/chat", async (route) => {
+        calls.push(route.request().postDataJSON());
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            message:
+              "We can help with the warehouse.\n\n- Keep your existing cameras.\n- Let us discuss coverage.\n" +
+              "LongWord".repeat(45),
+            intent: "ai_public",
+            confidence: 0.8,
+            actions: [
+              {
+                id: "services",
+                type: "open_external",
+                label: "View Our Services",
+                target: "https://securemedy.ng/services/",
+              },
+            ],
+            sources: [],
+          }),
+        });
+      });
+      await page.goto("/wordpress-host.html");
+      await page.getByRole("button", { name: "Open Medy Assistant" }).click();
+      const input = page.getByLabel("Message Medy Assistant");
+      await input.fill("Warehouse in New York");
+      await input.press("Shift+Enter");
+      await input.press("End");
+      await input.type("Night coverage");
+      expect(calls).toHaveLength(0);
+      await input.press("Enter");
+      await expect(
+        page.getByRole("button", { name: "View Our Services" }),
+      ).toBeVisible();
+      const layout = await page.locator("medy-assistant").evaluate((host) => {
+        const root = host.shadowRoot!;
+        const log = root.querySelector(".messages")!;
+        const user = root.querySelector("article.user .bubble")!;
+        return {
+          overflow: log.scrollWidth > log.clientWidth + 1,
+          whiteSpace: getComputedStyle(user).whiteSpace,
+          textarea: root.querySelector("textarea")!.value,
+          notice: root.querySelector("details")!.open,
+        };
+      });
+      expect(layout.overflow).toBe(false);
+      expect(layout.whiteSpace).toBe("pre-wrap");
+      expect(layout.notice).toBe(false);
+      expect(calls[0].messages.at(-1)?.content).toContain("\n");
+      await page.screenshot({
+        path: "test-results/medy-public-" + width + ".png",
+      });
+      const firstId = calls[0].conversationId;
+      await page.reload();
+      await expect(
+        page.getByRole("button", { name: "View Our Services" }),
+      ).toBeVisible();
+      await page.goto("/wordpress-host.html?another-page=1");
+      await expect(
+        page.getByText("We can help with the warehouse.", { exact: false }),
+      ).toBeVisible();
+      await input.fill("Actually, weekends only");
+      await input.press("Enter");
+      await expect.poll(() => calls.length).toBe(2);
+      expect(calls[1].conversationId).toBe(firstId);
+      expect(calls[1].messages[0].content).toContain("Warehouse in New York");
+      await expect(input).toBeEnabled();
+      await page.getByRole("button", { name: "New conversation" }).click();
+      await expect(
+        page.getByText("We can help with the warehouse.", { exact: false }),
+      ).toHaveCount(0);
+      await input.fill("Hello again");
+      await input.press("Enter");
+      await expect.poll(() => calls.length).toBe(3);
+      expect(calls[2].conversationId).not.toBe(firstId);
+      expect(calls[2].messages).toHaveLength(1);
+    },
+  );
+test("public typing respects reduced motion and cancels on reset", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  let finish!: () => void;
+  await page.route("**/api/chat", async (route) => {
+    await new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+    await route
+      .fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          message: "This late response must disappear.",
+          intent: "test",
+          confidence: 1,
+        }),
+      })
+      .catch(() => {});
+  });
+  await page.goto("/wordpress-host.html");
+  await page.getByRole("button", { name: "Open Medy Assistant" }).click();
+  await page.getByLabel("Message Medy Assistant").fill("Hello");
+  await page.getByRole("button", { name: "Send", exact: true }).click();
+  await expect(
+    page.getByRole("status", { name: "Medy is typing" }),
+  ).toBeVisible();
+  const animation = await page
+    .locator("medy-assistant")
+    .evaluate(
+      (host) =>
+        getComputedStyle(host.shadowRoot!.querySelector(".typing span")!)
+          .animationName,
+    );
+  expect(animation).toBe("none");
+  await page.getByRole("button", { name: "New conversation" }).click();
+  finish();
+  await expect(
+    page.getByText("This late response must disappear."),
+  ).toHaveCount(0);
+  await expect(page.getByLabel("Message Medy Assistant")).toBeEnabled();
 });

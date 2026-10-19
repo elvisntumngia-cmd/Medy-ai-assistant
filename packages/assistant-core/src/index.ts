@@ -1,6 +1,7 @@
 import {
   AssistantResponseSchema,
   presentResponse,
+  safeSessionText,
   DemoConfigSchema,
   type AssistantResponse,
   type DemoConfig,
@@ -16,6 +17,9 @@ export class ApiClient {
   ) {
     this.conversationId = `medy-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   }
+  setConversationId(value: string) {
+    this.conversationId = value;
+  }
   private headers() {
     return {
       "Content-Type": "application/json",
@@ -26,14 +30,22 @@ export class ApiClient {
     mode: Mode,
     messages: { role: "user" | "assistant"; content: string }[],
     config?: Partial<DemoConfig>,
+    signal?: AbortSignal,
   ): Promise<AssistantResponse> {
     const body = {
       mode,
-      messages: messages.slice(-20),
+      messages: messages
+        .slice(-20)
+        .map((message, index, all) =>
+          mode === "public" && index < all.length - 1
+            ? { ...message, content: safeSessionText(message.content) }
+            : message,
+        ),
       conversationId: this.conversationId,
       ...config,
     };
     const response = await fetch(`${this.apiUrl}/chat`, {
+      signal,
       method: "POST",
       headers: this.headers(),
       body: JSON.stringify(body),

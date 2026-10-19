@@ -10,7 +10,7 @@
   {
     "id": "ownership",
     "turns": [
-      "Who owns SecureMedy?"
+      "Who owns Securemedy?"
     ],
     "knowledge": "leadership",
     "message": "Current ownership is not verified in the approved information.",
@@ -19,10 +19,10 @@
   {
     "id": "founder",
     "turns": [
-      "Who founded SecureMedy?"
+      "Who founded Securemedy?"
     ],
     "knowledge": "leadership",
-    "message": "SecureMedy’s About Us page describes Olabanji O. Folayan as establishing the company and identifies him as Chairman. That does not establish current legal ownership.",
+    "message": "Securemedy’s About Us page describes Olabanji O. Folayan as establishing the company and identifies him as Chairman. That does not establish current legal ownership.",
     "sources": [
       "leadership"
     ]
@@ -30,10 +30,10 @@
   {
     "id": "about",
     "turns": [
-      "Tell me about SecureMedy"
+      "Tell me about Securemedy"
     ],
     "knowledge": "company-overview",
-    "message": "SecureMedy provides security and emergency-management services for government and commercial organizations.",
+    "message": "We provide security and emergency-management services for government and commercial organizations.",
     "sources": [
       "company-overview"
     ]
@@ -44,7 +44,7 @@
       "Tell me about your leadership"
     ],
     "knowledge": "leadership",
-    "message": "SecureMedy’s About Us page identifies Olabanji O. Folayan as Chairman.",
+    "message": "Securemedy’s About Us page identifies Olabanji O. Folayan as Chairman.",
     "sources": [
       "leadership"
     ],

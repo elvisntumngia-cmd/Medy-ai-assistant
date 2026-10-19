@@ -19,6 +19,7 @@ import {
   ChatRequestSchema,
   DemoConfigSchema,
   LeadSchema,
+  companyCopy,
 } from "@medy/shared";
 import {
   BedrockAIProvider,
@@ -291,6 +292,11 @@ export function createApp(options: AppOptions = {}) {
               (action.type === "start_form" &&
                 action.id === "request-security-services"),
           );
+          answer.message = companyCopy(answer.message);
+          answer.actions = answer.actions.map((action) => ({
+            ...action,
+            label: companyCopy(action.label),
+          }));
           answer.data = undefined;
           answer.sources = answer.sources.flatMap((source) => {
             const entry = approved.find((e) => e.id === source.id);

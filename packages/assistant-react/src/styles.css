@@ -150,3 +150,119 @@
     border-radius: 0;
   }
 }
+
+.medy-assistant,
+.medy-assistant * {
+  box-sizing: border-box;
+}
+.medy-messages {
+  overflow-x: hidden;
+}
+.medy-messages article {
+  max-width: 95%;
+  position: relative;
+  padding-left: 31px;
+  min-width: 0;
+}
+.medy-messages article.user {
+  margin-left: auto;
+  max-width: 86%;
+  padding-left: 0;
+}
+.medy-messages p,
+.medy-messages pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+  min-width: 0;
+}
+.medy-messages .user p {
+  border-radius: 14px 3px 14px 14px;
+}
+.medy-messages .assistant p {
+  border-radius: 3px 14px 14px 14px;
+}
+.medy-avatar {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  background: #deebf8;
+  color: #124a79;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+.medy-assistant form textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  max-height: 120px;
+  resize: vertical;
+  padding: 10px;
+  border: 1px solid #a7b8c7;
+  border-radius: 8px;
+  font: inherit;
+  line-height: 1.4;
+}
+.medy-actions button,
+.medy-source a {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.medy-source a {
+  display: inline-block;
+  border: 1px solid #9fc4e4;
+  border-radius: 8px;
+  color: #104e83;
+  background: white;
+  padding: 7px 10px;
+  text-decoration: none;
+  margin: 4px 0;
+}
+.medy-disclosure {
+  padding: 5px 12px;
+  font-size: 11px;
+  border-top: 1px solid #e1e9f0;
+}
+.medy-disclosure summary {
+  cursor: pointer;
+}
+.medy-typing {
+  display: flex;
+  gap: 5px;
+  width: 65px;
+}
+.medy-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #577895;
+  animation: medy-react-dot 900ms ease-in-out infinite;
+}
+.medy-typing span:nth-child(2) {
+  animation-delay: 150ms;
+}
+.medy-typing span:nth-child(3) {
+  animation-delay: 300ms;
+}
+@keyframes medy-react-dot {
+  50% {
+    opacity: 0.35;
+    transform: translateY(-3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .medy-typing span {
+    animation: none;
+  }
+}
+@media (max-width: 600px) {
+  .medy-assistant form textarea {
+    font-size: 16px;
+  }
+}

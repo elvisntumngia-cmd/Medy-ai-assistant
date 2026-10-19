@@ -1,10 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { ApiClient, type NavigationAdapter } from "@medy/assistant-core";
-import type {
-  AssistantAction,
-  AssistantResponse,
-  EmployeeProfile,
-  Mode,
+import {
+  welcome,
+  companyCopy,
+  supportedPublicUrl,
+  sessionKey,
+  loadChatSession,
+  saveChatSession,
+  clearChatSession,
+  newConversationId,
+  revealText,
+  type ChatTurn,
+  type AssistantAction,
+  type AssistantResponse,
+  type EmployeeProfile,
+  type Mode,
 } from "@medy/shared";
 import "./styles.css";
 
@@ -43,18 +53,58 @@ export function MedyAssistant({
   const [busy, setBusy] = useState(false);
   const [busyActions, setBusyActions] = useState<string[]>([]);
   const [error, setError] = useState("");
+  const requestRef = useRef<AbortController | undefined>(undefined);
+  const messagesRef = useRef<HTMLDivElement>(null);
+  const idRef = useRef(newConversationId());
+  const key = mode === "public" ? sessionKey(apiUrl) : "";
   const greeting =
     mode === "employee"
       ? `Hello, ${user?.firstName || "there"}. How can I help with M3dyHub today?`
-      : "Hi! I’m Medy, SecureMedy’s virtual assistant. I can help you explore our security services, find information or connect with the right team. How can I help?";
-  useEffect(
-    () => setMessages([{ role: "assistant", content: greeting }]),
-    [greeting],
-  );
+      : welcome;
+  useEffect(() => {
+    const saved = key ? loadChatSession(key) : undefined;
+    if (saved) {
+      idRef.current = saved.id;
+      client.setConversationId(saved.id);
+      setMessages([{ role: "assistant", content: greeting }, ...saved.turns]);
+    } else {
+      client.setConversationId(idRef.current);
+      setMessages([{ role: "assistant", content: greeting }]);
+    }
+    return () => {
+      requestRef.current?.abort();
+    };
+  }, [greeting, key, client]);
+  useEffect(() => {
+    messagesRef.current?.scrollTo?.(0, messagesRef.current.scrollHeight);
+  }, [messages, busy]);
+  const persist = (turns: Message[]) => {
+    if (key)
+      saveChatSession(key, {
+        id: idRef.current,
+        turns: turns.slice(1) as ChatTurn[],
+        savedAt: Date.now(),
+        open: true,
+      });
+  };
+  function reset() {
+    requestRef.current?.abort();
+    requestRef.current = undefined;
+    idRef.current = newConversationId();
+    client.setConversationId(idRef.current);
+    if (key) clearChatSession(key);
+    setMessages([{ role: "assistant", content: greeting }]);
+    setBusy(false);
+    setInput("");
+    setError("");
+  }
   async function send(text = input) {
-    if (!text.trim() || busy) return;
+    if (!text.trim() || requestRef.current) return;
+    const controller = new AbortController();
+    requestRef.current = controller;
     const next = [...messages, { role: "user" as const, content: text }];
     setMessages(next);
+    persist(next);
     setInput("");
     setBusy(true);
     setError("");
@@ -62,18 +112,61 @@ export function MedyAssistant({
       const response = await client.chat(
         mode,
         next.map(({ role, content }) => ({ role, content })),
+        undefined,
+        controller.signal,
       );
-      setMessages((v) => [
-        ...v,
-        { role: "assistant", content: response.message, response },
-      ]);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Assistant unavailable");
+      if (controller.signal.aborted) return;
+      const complete = [
+        ...next,
+        { role: "assistant" as const, content: response.message, response },
+      ];
+      const node = document.createElement("span");
+      const observer = new MutationObserver(() => {
+        if (!controller.signal.aborted)
+          setMessages([
+            ...next,
+            { role: "assistant", content: node.textContent || "" },
+          ]);
+      });
+      observer.observe(node, {
+        childList: true,
+        characterData: true,
+        subtree: true,
+      });
+      try {
+        await revealText(node, response.message, controller.signal);
+      } finally {
+        observer.disconnect();
+      }
+      if (controller.signal.aborted) return;
+      setMessages(complete);
+      persist(complete);
+    } catch (error) {
+      if (!controller.signal.aborted)
+        setError(
+          error instanceof Error ? error.message : "Assistant unavailable",
+        );
     } finally {
-      setBusy(false);
+      if (requestRef.current === controller) {
+        requestRef.current = undefined;
+        setBusy(false);
+      }
     }
   }
   async function act(action: AssistantAction) {
+    if (
+      mode === "public" &&
+      !(
+        action.type === "start_form" &&
+        action.id === "request-security-services"
+      ) &&
+      !(
+        action.type === "open_external" &&
+        action.target &&
+        supportedPublicUrl(action.target)
+      )
+    )
+      return;
     if (action.type === "start_form") {
       if (onRequestServices) onRequestServices();
       else navigation.openExternal("https://securemedy.ng/contact/");
@@ -81,8 +174,21 @@ export function MedyAssistant({
     }
     if (action.type === "navigate" && action.target)
       return navigation.navigate(action.target);
-    if (action.type === "open_external" && action.target)
+    if (
+      action.type === "open_external" &&
+      action.target &&
+      supportedPublicUrl(action.target)
+    ) {
+      if (
+        mode === "public" &&
+        new URL(action.target).origin === location.origin
+      ) {
+        persist(messages);
+        location.assign(action.target);
+        return;
+      }
       return navigation.openExternal(action.target);
+    }
     if (
       action.requiresConfirmation &&
       !window.confirm("This is a simulated write action. Continue?")
@@ -149,7 +255,7 @@ export function MedyAssistant({
         <div>
           <strong>Medy Assistant</strong>
           <small>
-            {mode === "employee" ? "Employee support" : "SecureMedy support"}
+            {mode === "employee" ? "Employee support" : "Securemedy support"}
           </small>
         </div>
         {variant === "floating" && (
@@ -158,10 +264,20 @@ export function MedyAssistant({
           </button>
         )}
       </header>
-      <div className="medy-messages" aria-live="polite">
+      <div
+        ref={messagesRef}
+        className="medy-messages"
+        aria-live="polite"
+        role="log"
+      >
         {messages.map((m, i) => (
           <article key={i} className={m.role}>
-            <p>{m.content}</p>
+            {m.role === "assistant" && (
+              <span className="medy-avatar" aria-hidden="true">
+                M
+              </span>
+            )}
+            <p>{companyCopy(m.content)}</p>
             {m.response?.data && (
               <pre>{JSON.stringify(m.response.data, null, 2)}</pre>
             )}
@@ -172,18 +288,23 @@ export function MedyAssistant({
                   disabled={busyActions.includes(a.id)}
                   onClick={() => void act(a)}
                 >
-                  {a.label}
+                  {companyCopy(a.label)}
                 </button>
               ))}
             </div>
             {m.response?.sources.map((s) => (
-              <small key={s.id}>
+              <small className="medy-source" key={s.id}>
                 Source:{" "}
-                {s.url &&
-                /^https:\/\/(?:www\.)?(?:securemedy\.ng|securemedy\.com)\//.test(
-                  s.url,
-                ) ? (
-                  <a href={s.url} target="_blank" rel="noopener noreferrer">
+                {s.url && supportedPublicUrl(s.url) ? (
+                  <a
+                    href={s.url}
+                    target={
+                      new URL(s.url).origin === location.origin
+                        ? "_self"
+                        : "_blank"
+                    }
+                    rel="noopener noreferrer"
+                  >
                     {s.title}
                   </a>
                 ) : (
@@ -203,7 +324,13 @@ export function MedyAssistant({
             {m.response?.escalation && <aside>{m.response.escalation}</aside>}
           </article>
         ))}
-        {busy && <p>Reviewing your request…</p>}
+        {busy && messages.at(-1)?.role === "user" && (
+          <p className="medy-typing" role="status" aria-label="Medy is typing">
+            <span />
+            <span />
+            <span />
+          </p>
+        )}
         {error && <p className="medy-error">{error}</p>}
       </div>
       {messages.length === 1 && (
@@ -233,7 +360,18 @@ export function MedyAssistant({
           void send();
         }}
       >
-        <input
+        <textarea
+          rows={2}
+          onKeyDown={(event) => {
+            if (
+              event.key === "Enter" &&
+              !event.shiftKey &&
+              !event.nativeEvent.isComposing
+            ) {
+              event.preventDefault();
+              void send();
+            }
+          }}
           maxLength={2000}
           aria-label="Message Medy Assistant"
           value={input}
@@ -241,16 +379,27 @@ export function MedyAssistant({
           placeholder="Type your question…"
         />
         <button disabled={busy}>Send</button>
-        <button
-          type="button"
-          onClick={() => {
-            setMessages([{ role: "assistant", content: greeting }]);
-            setError("");
-          }}
-        >
-          Reset
+        <button type="button" onClick={reset}>
+          New conversation
         </button>
       </form>
+      {mode === "public" && (
+        <details className="medy-disclosure">
+          <summary>Privacy &amp; safety</summary>
+          <p>
+            AI-assisted chat may use OpenAI. Keep questions public; use the
+            consent form for contact details. For immediate danger, call local
+            emergency services. Medy cannot dispatch help.
+          </p>
+          <a
+            href="https://securemedy.ng/privacy-policy/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Privacy Policy
+          </a>
+        </details>
+      )}
     </section>
   );
 }
