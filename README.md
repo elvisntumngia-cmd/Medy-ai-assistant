@@ -129,3 +129,15 @@ Lead administration, action audit access, configuration, provider/error controls
 This repository does not contain production M3dyHub authentication, live employee data, a CRM, durable database, email/SMS, emergency dispatch, or approved SecureMedy policy content. Employee endpoints now require an explicitly provisioned fictional session (`stakeholder-demo`, `demo-officer`, `demo-manager`, or `demo-hr-admin`), but these identifiers are not production credentials. Local JSON persistence and demo-session identity are demonstration mechanisms only. Production requires privacy and security review, authoritative authentication/authorization, encrypted durable storage, retention/deletion controls, secrets management, monitoring, WAF/abuse protection, accessibility testing, model evaluation, human escalation, disaster recovery, and penetration testing.
 
 The requested reference HTML, Word, and PDF assets were not present in the supplied workspace. Their absence and the resulting design limitation are documented in `docs/reference/README.md` and `docs/architecture/REFERENCE_FINDINGS.md`; no claim of exact reference parity is made.
+
+## Local OpenAI integration
+
+See [OpenAI local development](docs/openai-local-development.md) for opt-in configuration, controls, tests and limitations, and [dependency audit](docs/dependency-audit.md) for the current findings. Production and Render activation are blocked.
+
+For reliable Windows startup, use `npm run dev:openai` (or `npm run dev` for the configured provider). Both servers run in the background; repeated calls reuse them. Stop with `npm run dev:stop`. See [development workflow and verification](docs/dev-workflow.md) for ownership checks, restart options and current OpenAI smoke-test results.
+
+## Public assistant candidate and editorial workflow
+
+See [candidate handoff](docs/public-candidate.md), [source inventory and unresolved facts](docs/source-manifest.md), [local editor procedure](docs/public-editor-guide.md), and [production activation proposal](docs/public-release-proposal.md). New crawl/seed content is review-only. OpenAI activation remains local-only; no paid model evaluation or deployment is authorized by these files.
+
+Current Public v1 status, official-site refresh policy and final acceptance: [Final knowledge and personality update](docs/public-v1-final.md).

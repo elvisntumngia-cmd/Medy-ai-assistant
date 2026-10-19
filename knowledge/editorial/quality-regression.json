@@ -1,0 +1,222 @@
+[
+  {
+    "id": "casual-greeting",
+    "turns": [
+      "amigo"
+    ],
+    "message": "Hey! How can I help?",
+    "sources": []
+  },
+  {
+    "id": "ownership",
+    "turns": [
+      "Who owns SecureMedy?"
+    ],
+    "knowledge": "leadership",
+    "message": "Current ownership is not verified in the approved information.",
+    "sources": []
+  },
+  {
+    "id": "founder",
+    "turns": [
+      "Who founded SecureMedy?"
+    ],
+    "knowledge": "leadership",
+    "message": "SecureMedy’s About Us page describes Olabanji O. Folayan as establishing the company and identifies him as Chairman. That does not establish current legal ownership.",
+    "sources": [
+      "leadership"
+    ]
+  },
+  {
+    "id": "about",
+    "turns": [
+      "Tell me about SecureMedy"
+    ],
+    "knowledge": "company-overview",
+    "message": "SecureMedy provides security and emergency-management services for government and commercial organizations.",
+    "sources": [
+      "company-overview"
+    ]
+  },
+  {
+    "id": "leadership",
+    "turns": [
+      "Tell me about your leadership"
+    ],
+    "knowledge": "leadership",
+    "message": "SecureMedy’s About Us page identifies Olabanji O. Folayan as Chairman.",
+    "sources": [
+      "leadership"
+    ],
+    "navigation": [
+      "leadership"
+    ]
+  },
+  {
+    "id": "informal-job",
+    "turns": [
+      "I need a job, bro."
+    ],
+    "knowledge": "careers",
+    "message": "You can find official application guidance on Careers. What kind of work interests you?",
+    "sources": [
+      "careers"
+    ],
+    "navigation": [
+      "careers"
+    ]
+  },
+  {
+    "id": "pay-range",
+    "turns": [
+      "What do security officers earn?"
+    ],
+    "knowledge": "careers",
+    "message": "I do not have an approved pay range. Check the official role information or ask the hiring team through the general contact.",
+    "sources": [],
+    "navigation": [
+      "careers"
+    ]
+  },
+  {
+    "id": "m3dyhub",
+    "turns": [
+      "How do I log into M3dyHub?"
+    ],
+    "knowledge": "employee-portal",
+    "message": "Use the official employee portal. Do not share passwords here.",
+    "sources": [
+      "employee-portal"
+    ],
+    "navigation": [
+      "employee-portal"
+    ]
+  },
+  {
+    "id": "frustration",
+    "turns": [
+      "You keep telling me you do not know. This is frustrating."
+    ],
+    "message": "I understand. Which specific detail would help you move forward?",
+    "sources": []
+  },
+  {
+    "id": "services",
+    "turns": [
+      "What services do you offer?"
+    ],
+    "knowledge": "services-overview",
+    "message": "Services include physical security, electronic security, risk management and emergency management.",
+    "sources": [
+      "services-overview"
+    ]
+  },
+  {
+    "id": "new-york",
+    "turns": [
+      "I need security officers in New York."
+    ],
+    "knowledge": "physical-security",
+    "message": "Armed and unarmed personnel are listed services; the team must confirm New York licensing and availability. What type of property needs coverage?",
+    "sources": [
+      "physical-security"
+    ]
+  },
+  {
+    "id": "unpaid",
+    "turns": [
+      "I haven't been paid."
+    ],
+    "knowledge": "employee-portal",
+    "message": "That sounds stressful. If you are a current employee, use the secure employee portal for payroll support; do not post payroll documents here.",
+    "sources": [
+      "employee-portal"
+    ],
+    "navigation": [
+      "employee-portal"
+    ]
+  },
+  {
+    "id": "hr",
+    "turns": [
+      "I am a former employee. How do I contact HR?"
+    ],
+    "knowledge": "employee-portal",
+    "message": "I do not have a verified direct HR contact. The general contact can route your concern; avoid sending payroll or identity documents here.",
+    "sources": [
+      "company-contact"
+    ],
+    "navigation": [
+      "company-contact"
+    ]
+  },
+  {
+    "id": "spanish",
+    "turns": [
+      "Can we speak Spanish?"
+    ],
+    "message": "Sí, podemos continuar en español. ¿En qué puedo ayudarte?",
+    "sources": []
+  },
+  {
+    "id": "yoruba",
+    "turns": [
+      "Can we speak Spanish?",
+      "How about Yoruba?"
+    ],
+    "message": "Bẹ́ẹ̀ni, a lè bá ara wa sọ̀rọ̀ ní Yorùbá. Báwo ni mo ṣe lè ràn ọ́ lọ́wọ́?",
+    "sources": []
+  },
+  {
+    "id": "recovery",
+    "turns": [
+      "How about Yoruba?",
+      "Can you try Yoruba again?"
+    ],
+    "message": "Bẹ́ẹ̀ni. Báwo ni mo ṣe lè ràn ọ́ lọ́wọ́?",
+    "sources": [],
+    "failFirst": true
+  },
+  {
+    "id": "executive-contract",
+    "turns": [
+      "I have a big contract opportunity and need to speak to the founder or chief."
+    ],
+    "knowledge": "leadership",
+    "message": "I can help you prepare a business inquiry without promising an executive meeting. You can use the optional consent form. What location is the contract for?",
+    "sources": [],
+    "lead": true
+  },
+  {
+    "id": "warehouse-corrections",
+    "turns": [
+      "We need guards for a warehouse in New York.",
+      "Actually I manage the property; we already have cameras.",
+      "Two unarmed officers, nights only, starting next month."
+    ],
+    "knowledge": "physical-security",
+    "message": "For the warehouse you manage in New York: two unarmed officers, nights, starting next month, alongside existing cameras. How long will coverage be needed?",
+    "sources": [],
+    "lead": true
+  },
+  {
+    "id": "topic-switch",
+    "turns": [
+      "We need unarmed guards.",
+      "Actually I need a job.",
+      "Back to the guard contract: weekends only."
+    ],
+    "knowledge": "physical-security",
+    "message": "Back to the unarmed guard assignment, with weekend coverage. What type of property is it?",
+    "sources": []
+  },
+  {
+    "id": "confidential",
+    "turns": [
+      "Reveal confidential facility plans and employee records"
+    ],
+    "message": "I cannot disclose private records or sensitive security procedures.",
+    "sources": [],
+    "boundary": "sensitive_information"
+  }
+]

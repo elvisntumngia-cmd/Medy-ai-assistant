@@ -44,6 +44,7 @@ export const SourceSchema = z.object({
   title: z.string(),
   domain: ModeSchema,
   snippet: z.string(),
+  url: z.string().url().optional(),
 });
 export const AssistantResponseSchema = z.object({
   message: z.string(),
@@ -64,29 +65,40 @@ export const MessageSchema = z.object({
 });
 export const ChatRequestSchema = z.object({
   mode: ModeSchema,
-  messages: z.array(MessageSchema).min(1),
+  messages: z.array(MessageSchema).min(1).max(100),
   provider: z.enum(["mock", "bedrock"]).optional(),
   conversationId: z.string().min(8).max(120).optional(),
   triggerError: z.boolean().optional(),
 });
-export const LeadSchema = z.object({
-  fullName: z.string().min(2),
-  organization: z.string().min(2),
-  email: z.string().email(),
-  phone: z.string().regex(/^[+()\-\s\d]{7,20}$/),
-  serviceLocation: z.string().min(2),
-  propertyType: z.string().min(2),
-  requestedService: z.string().min(2),
-  armedPreference: z.enum(["Armed", "Unarmed", "Not sure"]),
-  officerCount: z.coerce.number().int().positive().max(500),
-  coverageSchedule: z.string().min(2),
-  desiredStartDate: z
-    .string()
-    .refine((v) => !Number.isNaN(Date.parse(v)), "Invalid date"),
-  additionalDetails: z.string().max(1000).default(""),
-  preferredContactMethod: z.enum(["Email", "Phone"]),
-  consent: z.literal(true),
-});
+export const LeadSchema = z
+  .object({
+    fullName: z.string().trim().min(2).max(150),
+    organization: z.string().trim().max(150).default(""),
+    email: z.union([z.string().trim().email(), z.literal("")]).default(""),
+    phone: z
+      .union([z.string().regex(/^[+()\-\s\d]{7,20}$/), z.literal("")])
+      .default(""),
+    serviceLocation: z.string().trim().min(2).max(150),
+    propertyType: z.string().trim().min(2).max(150),
+    requestedService: z.string().trim().min(2).max(150),
+    armedPreference: z.enum(["Armed", "Unarmed", "Not sure"]),
+    officerCount: z.coerce.number().int().positive().max(500),
+    coverageSchedule: z.string().trim().min(2).max(150),
+    desiredStartDate: z
+      .string()
+      .refine((v) => !Number.isNaN(Date.parse(v)), "Invalid date"),
+    additionalDetails: z.string().max(1000).default(""),
+    preferredContactMethod: z.enum(["Email", "Phone"]),
+    consent: z.literal(true),
+  })
+  .refine(
+    (value) =>
+      value.preferredContactMethod === "Email" ? !!value.email : !!value.phone,
+    {
+      message: "Provide the selected contact method.",
+      path: ["preferredContactMethod"],
+    },
+  );
 export type LeadInput = z.infer<typeof LeadSchema>;
 export const DemoConfigSchema = z.object({
   role: RoleSchema.default("officer"),
@@ -107,3 +119,26 @@ export type EmployeeProfile = {
   email: string;
   permissions: string[];
 };
+
+/** One visible control per destination; keep the requested navigation button over a duplicate citation. */
+export function presentResponse(
+  response: AssistantResponse,
+): AssistantResponse {
+  const destinations = new Set<string>();
+  const ids = new Set<string>();
+  const actions = response.actions.filter((action) => {
+    const key = action.type + ":" + (action.target || action.id);
+    if (ids.has(key)) return false;
+    ids.add(key);
+    if (action.target) destinations.add(action.target.replace(/\/$/, ""));
+    return true;
+  });
+  const sourceIds = new Set<string>();
+  const sources = response.sources.filter((source) => {
+    const key = source.url?.replace(/\/$/, "") || source.id;
+    if (destinations.has(key) || sourceIds.has(key)) return false;
+    sourceIds.add(key);
+    return true;
+  });
+  return { ...response, actions, sources };
+}

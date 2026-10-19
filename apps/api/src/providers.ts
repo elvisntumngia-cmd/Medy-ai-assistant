@@ -1,3 +1,4 @@
+import { retrievePublicKnowledge } from "./public-knowledge.js";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -116,40 +117,34 @@ export class MockAuthAdapter implements AuthAdapter {
 }
 
 export class LocalKnowledgeProvider implements KnowledgeProvider {
-  constructor(
-    private root = fs.existsSync(path.resolve(process.cwd(), "knowledge"))
-      ? path.resolve(process.cwd(), "knowledge")
-      : path.resolve(process.cwd(), "../../knowledge"),
-  ) {}
-  async search(mode: Mode, query: string) {
-    const terms = [
-      ...new Set(query.toLowerCase().match(/[a-z0-9]+/g) || []),
-    ].filter((x) => x.length > 2);
-    const dir = path.join(this.root, mode);
-    if (!fs.existsSync(dir)) return [];
-    return fs
-      .readdirSync(dir)
-      .filter((x) => x.endsWith(".md"))
-      .map((file) => {
-        const text = fs.readFileSync(path.join(dir, file), "utf8");
-        const score = terms.reduce(
-          (n, t) => n + (text.toLowerCase().split(t).length - 1),
-          0,
-        );
-        return {
-          id: file,
-          title: text.match(/^# (.+)$/m)?.[1] || file,
-          domain: mode,
-          snippet: text
-            .replace(/^# .+$/m, "")
-            .trim()
-            .slice(0, 420),
-          score,
-        };
-      })
-      .filter((x) => x.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3);
+  constructor(_legacyRoot?: string) {}
+  async search(mode: Mode, query: string): Promise<KnowledgeMatch[]> {
+    if (mode === "public")
+      return retrievePublicKnowledge(query).map((e) => ({
+        id: e.id,
+        title: e.sourceTitle,
+        domain: "public",
+        snippet: e.answer,
+        score: 1,
+      }));
+    if (
+      process.env.DEMO_MODE !== "true" ||
+      process.env.NODE_ENV === "production" ||
+      process.env.RENDER === "true"
+    )
+      throw new Error(
+        "Employee retrieval requires authenticated internal infrastructure",
+      );
+    return [
+      {
+        id: "local-fixture",
+        title: "Fictional local demonstration",
+        domain: "employee",
+        score: 1,
+        snippet:
+          "Local demonstration routing only. No employee document or official policy has been retrieved. Use the authorized employee portal for official guidance.",
+      },
+    ];
   }
 }
 
@@ -472,37 +467,80 @@ export class LocalLeadProvider {
         "data/leads.json",
       ),
   ) {}
-  private read() {
+  private read(): (LeadInput & {
+    id: string;
+    status: string;
+    createdAt: string;
+    expiresAt?: string;
+  })[] {
+    if (!fs.existsSync(this.file)) return [];
+    const value = JSON.parse(fs.readFileSync(this.file, "utf8"));
+    if (!Array.isArray(value)) throw new Error("Invalid lead storage");
+    return value.filter(
+      (x) => !x.expiresAt || Date.parse(x.expiresAt) > Date.now(),
+    );
+  }
+  private write(value: unknown[]) {
+    fs.mkdirSync(path.dirname(this.file), { recursive: true });
+    const temp = this.file + "." + crypto.randomUUID() + ".tmp";
     try {
-      return JSON.parse(fs.readFileSync(this.file, "utf8"));
-    } catch {
-      return [];
+      fs.writeFileSync(temp, JSON.stringify(value, null, 2), { mode: 0o600 });
+      fs.renameSync(temp, this.file);
+    } finally {
+      if (fs.existsSync(temp)) fs.unlinkSync(temp);
     }
   }
-  private write(v: unknown[]) {
+  create(input: LeadInput) {
+    const value = LeadSchema.parse(input);
+    if (
+      (process.env.NODE_ENV === "production" ||
+        process.env.RENDER === "true") &&
+      (!process.env.MEDY_LEADS_FILE ||
+        !path.isAbsolute(process.env.MEDY_LEADS_FILE))
+    )
+      throw new Error("An explicitly configured durable lead path is required");
+    const retention = Number(process.env.MEDY_LEAD_RETENTION_DAYS || 30);
+    if (!Number.isInteger(retention) || retention < 1 || retention > 90)
+      throw new Error("Invalid retention");
     fs.mkdirSync(path.dirname(this.file), { recursive: true });
-    fs.writeFileSync(this.file, JSON.stringify(v, null, 2));
-  }
-  create(v: LeadInput) {
-    const lead = {
-      ...LeadSchema.parse(v),
-      id: `MEDY-${Date.now().toString().slice(-7)}`,
-      status: "New",
-      createdAt: new Date().toISOString(),
-    };
-    this.write([lead, ...this.read()]);
-    return lead;
+    const lock = this.file + ".lock";
+    const fd = fs.openSync(lock, "wx");
+    try {
+      const previous = this.read();
+      const duplicate = previous.find(
+        (x) =>
+          Date.now() - Date.parse(x.createdAt) < 86400000 &&
+          x.email.toLowerCase() === value.email.toLowerCase() &&
+          x.phone === value.phone &&
+          x.requestedService.toLowerCase() ===
+            value.requestedService.toLowerCase(),
+      );
+      if (duplicate) return duplicate;
+      const lead = {
+        ...value,
+        id: "MEDY-" + crypto.randomUUID(),
+        status: "New",
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + retention * 86400000).toISOString(),
+      };
+      this.write([lead, ...previous]);
+      return lead;
+    } finally {
+      fs.closeSync(fd);
+      fs.unlinkSync(lock);
+    }
   }
   list() {
     return this.read();
   }
   get(id: string) {
-    return this.read().find((x: { id: string }) => x.id === id);
+    return this.read().find((x) => x.id === id);
   }
   reset() {
     this.write([]);
   }
 }
+
 export const employeeData = (user: EmployeeProfile) => ({
   profile: user,
   leave: { id: "LV-1042", status: "Pending manager review" },

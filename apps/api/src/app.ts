@@ -1,4 +1,12 @@
 import express from "express";
+import crypto from "node:crypto";
+import {
+  retrievePublicKnowledge,
+  getPublicKnowledge,
+} from "./public-knowledge.js";
+import { readStore } from "./knowledge-store.js";
+import { usableLink } from "./public-crawler.js";
+import { publicBoundary, conflictBoundary } from "./public-policy.js";
 import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
@@ -22,7 +30,8 @@ import {
   employeeData,
 } from "./providers.js";
 import { PublicAssistantProvider } from "./public-assistant.js";
-import { createLeadWorkflow } from "./lead-workflow.js";
+
+import { AIControlError, configuredOpenAIProvider } from "./openai-provider.js";
 
 type AppOptions = {
   serveFrontend?: boolean;
@@ -101,13 +110,35 @@ export function createApp(options: AppOptions = {}) {
   const auth = new MockAuthAdapter();
   const knowledge = new LocalKnowledgeProvider();
   const mockAI = new MockAIProvider();
+  const openAI = configuredOpenAIProvider();
+  const aiLimit = rateLimit({
+    windowMs: 60_000,
+    limit: z.coerce
+      .number()
+      .int()
+      .min(1)
+      .max(100)
+      .parse(process.env.AI_RATE_LIMIT_PER_MINUTE || 10),
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+    message: {
+      error: {
+        code: "AI_RATE_LIMIT",
+        message: "Please wait before sending another AI request.",
+      },
+    },
+  });
   const bedrock = new BedrockAIProvider();
-  const publicAssistant = new PublicAssistantProvider(createLeadWorkflow());
+  const publicAssistant = new PublicAssistantProvider();
   const leads = new LocalLeadProvider();
   const actions = new MockActionProvider();
   const session = (req: express.Request) => req.header("x-demo-session");
+  const localDemo =
+    process.env.DEMO_MODE === "true" &&
+    process.env.NODE_ENV !== "production" &&
+    process.env.RENDER !== "true";
   const demoOnly: express.RequestHandler = (_req, res, next) => {
-    if (process.env.DEMO_MODE !== "true")
+    if (!localDemo)
       return res.status(404).json({
         error: { code: "NOT_FOUND", message: "Route not found" },
       });
@@ -119,68 +150,183 @@ export function createApp(options: AppOptions = {}) {
       origin: resolveAllowedOrigins(),
     }),
   );
+  app.use((req, res, next) => {
+    const origin = req.header("origin");
+    if (origin && !resolveAllowedOrigins().includes(origin))
+      return res.status(403).json({
+        error: { code: "ORIGIN_REJECTED", message: "Origin is not allowed." },
+      });
+    const requestId = crypto.randomUUID();
+    const started = Date.now();
+    res.setHeader("X-Request-ID", requestId);
+    res.on("finish", () => {
+      if (process.env.MEDY_METRICS === "true")
+        console.info(
+          JSON.stringify({
+            event: "http_request",
+            requestId,
+            route: ["/api/chat", "/api/leads", "/api/health"].includes(req.path)
+              ? req.path
+              : "other",
+            status: res.statusCode,
+            durationMs: Date.now() - started,
+          }),
+        );
+    });
+    next();
+  });
   app.use(express.json({ limit: "100kb" }));
   app.use("/api", rateLimit({ windowMs: 60_000, limit: 120 }));
   app.get("/api/health", (_req, res) =>
     res.json({
       status: "ok",
-      provider:
-        process.env.BEDROCK_ENABLED === "true" ? "bedrock-enabled" : "mock",
+      ...(process.env.MEDY_LOCAL_AI === "true" &&
+      process.env.NODE_ENV !== "production" &&
+      process.env.RENDER !== "true"
+        ? {
+            publicProvider: openAI ? "openai" : "deterministic",
+            systemCA: /(?:^|\s)--use-system-ca(?:\s|$)/.test(
+              process.env.NODE_OPTIONS || "",
+            ),
+          }
+        : {}),
+      provider: openAI
+        ? "openai"
+        : process.env.BEDROCK_ENABLED === "true"
+          ? "bedrock-enabled"
+          : "mock",
     }),
   );
-  app.post("/api/chat", async (req, res, next) => {
-    try {
-      const body = ChatRequestSchema.parse(req.body);
-      const user =
-        body.mode === "employee" ? await auth.getUser(session(req)) : undefined;
-      if (body.mode === "employee" && !user)
-        return res.status(401).json({
-          error: {
-            code: "UNAUTHENTICATED",
-            message: "Employee demo identity required",
-          },
-        });
-      const config = auth.getConfig(session(req)) || {
-        role: "officer" as const,
-        provider: "mock" as const,
-        delay: false,
-        providerError: false,
-      };
-      if (config.delay) await new Promise((r) => setTimeout(r, 800));
-      if (config.providerError || body.triggerError)
-        throw new Error("Triggered provider error");
-      const context = await knowledge.search(
-        body.mode,
-        body.messages.at(-1)!.content,
-      );
-      const useBedrock =
-        process.env.BEDROCK_ENABLED === "true" &&
-        (body.provider || config.provider) === "bedrock";
-      const provider =
-        body.mode === "public" && !useBedrock
-          ? publicAssistant
-          : useBedrock
-            ? bedrock
-            : mockAI;
-      res.json(
-        await provider.chat(
+  app.post(
+    "/api/chat",
+    (req, res, next) => {
+      if (openAI && req.body?.mode === "public") return aiLimit(req, res, next);
+      next();
+    },
+    async (req, res, next) => {
+      try {
+        const body = ChatRequestSchema.parse(req.body);
+        if (body.mode === "employee" && !localDemo)
+          return res.status(404).json({
+            error: {
+              code: "NOT_FOUND",
+              message: "Employee mode is outside the public API.",
+            },
+          });
+        if (body.mode === "public") {
+          const boundary =
+            publicBoundary(body.messages.at(-1)!.content) ||
+            (!openAI && conflictBoundary(body.messages.at(-1)!.content));
+          if (boundary) {
+            const store = readStore();
+            boundary.actions = boundary.actions.filter(
+              (action) =>
+                action.type === "start_form" ||
+                (action.type === "open_external" &&
+                  !!action.target &&
+                  usableLink(action.target, store)),
+            );
+            return res.json(boundary);
+          }
+        }
+        const user =
+          body.mode === "employee"
+            ? await auth.getUser(session(req))
+            : undefined;
+        if (body.mode === "employee" && !user)
+          return res.status(401).json({
+            error: {
+              code: "UNAUTHENTICATED",
+              message: "Employee demo identity required",
+            },
+          });
+        const config = auth.getConfig(session(req)) || {
+          role: "officer" as const,
+          provider: "mock" as const,
+          delay: false,
+          providerError: false,
+        };
+        if (config.delay) await new Promise((r) => setTimeout(r, 800));
+        if (config.providerError || body.triggerError)
+          throw new Error("Triggered provider error");
+        const context =
+          body.mode === "public"
+            ? retrievePublicKnowledge(body.messages.at(-1)!.content).map(
+                (e) => ({
+                  id: e.id,
+                  title: e.sourceTitle,
+                  domain: "public" as const,
+                  snippet: e.answer,
+                  score: 1,
+                }),
+              )
+            : await knowledge.search(body.mode, body.messages.at(-1)!.content);
+        const useBedrock =
+          body.mode === "public" &&
+          localDemo &&
+          process.env.BEDROCK_ENABLED === "true" &&
+          (body.provider || config.provider) === "bedrock";
+        const provider =
+          body.mode === "public" && !useBedrock
+            ? openAI || publicAssistant
+            : useBedrock
+              ? bedrock
+              : mockAI;
+        const answer = await provider.chat(
           body.mode,
           body.messages,
           context,
           user || undefined,
           body.conversationId,
-        ),
-      );
-    } catch (error) {
-      next(error);
-    }
-  });
+        );
+        if (body.mode === "public") {
+          const store = readStore();
+          const approved = getPublicKnowledge();
+          answer.actions = answer.actions.filter(
+            (action) =>
+              (action.type === "open_external" &&
+                !!action.target &&
+                usableLink(action.target, store)) ||
+              (action.type === "start_form" &&
+                action.id === "request-security-services"),
+          );
+          answer.data = undefined;
+          answer.sources = answer.sources.flatMap((source) => {
+            const entry = approved.find((e) => e.id === source.id);
+            return entry
+              ? [
+                  {
+                    id: entry.id,
+                    title: entry.sourceTitle,
+                    domain: "public" as const,
+                    snippet: entry.answer,
+                    ...(usableLink(entry.sourceUrl, store)
+                      ? { url: entry.sourceUrl }
+                      : {}),
+                  },
+                ]
+              : [];
+          });
+        }
+        res.json(answer);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
   app.post(
     "/api/leads",
     rateLimit({ windowMs: 15 * 60_000, limit: 10 }),
     (req, res, next) => {
       try {
-        res.status(201).json(leads.create(LeadSchema.parse(req.body)));
+        const lead = leads.create(LeadSchema.parse(req.body));
+        res.status(201).json({
+          id: lead.id,
+          status: lead.status,
+          createdAt: lead.createdAt,
+          persistence: "local_simulation",
+          notificationStatus: "not_configured",
+        });
       } catch (error) {
         next(error);
       }
@@ -208,16 +354,16 @@ export function createApp(options: AppOptions = {}) {
         });
       res.json(employeeData(user)[key]);
     };
-  app.get("/api/demo/employee", employeeRoute("profile"));
-  app.get("/api/demo/employee/profile", employeeRoute("profile"));
-  app.get("/api/demo/employee/leave", employeeRoute("leave"));
-  app.get("/api/demo/employee/requests", employeeRoute("requests"));
-  app.get("/api/demo/employee/training", employeeRoute("training"));
-  app.get("/api/demo/employee/approvals", employeeRoute("approvals"));
-  app.get("/api/demo/employee/uniform", employeeRoute("uniform"));
-  app.get("/api/demo/employee/equipment", employeeRoute("equipment"));
-  app.get("/api/demo/employee/license", employeeRoute("license"));
-  app.get("/api/demo/employee/recent", employeeRoute("recent"));
+  app.get("/api/demo/employee", demoOnly, employeeRoute("profile"));
+  app.get("/api/demo/employee/profile", demoOnly, employeeRoute("profile"));
+  app.get("/api/demo/employee/leave", demoOnly, employeeRoute("leave"));
+  app.get("/api/demo/employee/requests", demoOnly, employeeRoute("requests"));
+  app.get("/api/demo/employee/training", demoOnly, employeeRoute("training"));
+  app.get("/api/demo/employee/approvals", demoOnly, employeeRoute("approvals"));
+  app.get("/api/demo/employee/uniform", demoOnly, employeeRoute("uniform"));
+  app.get("/api/demo/employee/equipment", demoOnly, employeeRoute("equipment"));
+  app.get("/api/demo/employee/license", demoOnly, employeeRoute("license"));
+  app.get("/api/demo/employee/recent", demoOnly, employeeRoute("recent"));
   app.get("/api/demo/config", demoOnly, (req, res) => {
     const config = auth.getConfig(session(req));
     return config
@@ -306,15 +452,35 @@ export function createApp(options: AppOptions = {}) {
       _next: express.NextFunction,
     ) => {
       const validation = error instanceof ZodError;
-      res.status(validation ? 400 : 503).json({
-        error: {
-          code: validation ? "VALIDATION_ERROR" : "PROVIDER_ERROR",
-          message: validation
-            ? "Please check the submitted information."
-            : "Medy Assistant is temporarily unavailable. Please try again.",
-          details: validation ? error.flatten() : undefined,
-        },
-      });
+      res
+        .status(
+          error instanceof AIControlError
+            ? error.status
+            : validation
+              ? 400
+              : 503,
+        )
+        .json({
+          error: {
+            code:
+              error instanceof AIControlError
+                ? error.code
+                : validation
+                  ? "VALIDATION_ERROR"
+                  : "PROVIDER_ERROR",
+            message:
+              error instanceof AIControlError &&
+              error.code === "AI_DAILY_BUDGET"
+                ? "Medy has reached its daily AI limit. Please use the SecureMedy Contact page or try again after 00:00 UTC."
+                : error instanceof AIControlError &&
+                    error.code === "AI_INPUT_LIMIT"
+                  ? "Please shorten your message or start a new conversation."
+                  : validation
+                    ? "Please check the submitted information."
+                    : "Medy Assistant is temporarily unavailable. Please try again.",
+            details: validation ? error.flatten() : undefined,
+          },
+        });
     },
   );
   const serveFrontend =

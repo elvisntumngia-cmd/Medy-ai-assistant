@@ -1,5 +1,6 @@
 import {
   AssistantResponseSchema,
+  presentResponse,
   type AssistantAction as Action,
   type AssistantResponse as Reply,
 } from "@medy/shared";
@@ -35,11 +36,28 @@ class MedyAssistantWidget extends HTMLElement {
     header.append(el("strong", "", "Medy Assistant"));
     const close = el("button", "", "×");
     close.setAttribute("aria-label", "Close Medy Assistant");
-    header.append(close);
+    const reset = el("button", "", "Reset chat");
+    reset.onclick = () => {
+      if (this.input.disabled) return;
+      this.history = [];
+      this.panel.querySelector(".lead")?.remove();
+      this.messages.hidden = false;
+      this.messages.replaceChildren();
+      this.addMessage("Conversation cleared. What can I help you with?");
+      this.input.focus();
+    };
+    header.append(reset, close);
     this.panel.setAttribute("aria-label", "Medy Assistant");
+    this.messages.setAttribute("role", "log");
+    this.messages.setAttribute("aria-live", "polite");
+    this.messages.setAttribute("aria-relevant", "additions");
+    this.panel.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") close.click();
+    });
     this.panel.append(header, this.messages);
     const form = el("form", "composer");
     this.input.setAttribute("aria-label", "Message Medy Assistant");
+    this.input.maxLength = 2000;
     this.input.placeholder = "Type your question…";
     const send = el("button", "", "Send");
     form.append(this.input, send);
@@ -47,6 +65,9 @@ class MedyAssistantWidget extends HTMLElement {
     this.root.append(style, launch, this.panel);
     this.addMessage(
       "Hi! I’m Medy, SecureMedy’s virtual assistant. I can help you explore our security services, find information or connect with the right team. How can I help?",
+    );
+    this.addMessage(
+      "Please keep chat to public, non-sensitive questions. AI-assisted chat may use OpenAI; contact details belong only in the optional consent form. For immediate danger, call 911 or local emergency services; Medy cannot dispatch help.",
     );
     this.suggestions([
       "Request security services",
@@ -82,8 +103,27 @@ class MedyAssistantWidget extends HTMLElement {
     });
     this.messages.append(row);
   }
+  history: { role: "user" | "assistant"; content: string }[] = [];
+  lastActivity = Date.now();
   async send(text: string) {
-    if (!text.trim()) return;
+    if (!text.trim() || this.input.disabled) return;
+    if (
+      /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|(?:\+?1[- .]?)?\(?\d{3}\)?[- .]\d{3}[- .]\d{4}|\b\d{10,15}\b|\+\d[\d ()-]{6,18}\d/i.test(
+        text,
+      )
+    ) {
+      this.input.value = "";
+      this.addMessage(
+        "Please use the optional consent form before sharing contact details. No request was sent.",
+      );
+      const button = el("button", "primary", "Request Security Services");
+      button.onclick = () => this.leadForm();
+      this.messages.append(button);
+      return;
+    }
+    if (Date.now() - this.lastActivity > 15 * 60_000) this.history = [];
+    this.lastActivity = Date.now();
+    this.messages.setAttribute("aria-busy", "true");
     this.addMessage(text);
     this.input.value = "";
     this.input.disabled = true;
@@ -100,12 +140,28 @@ class MedyAssistantWidget extends HTMLElement {
         body: JSON.stringify({
           mode: "public",
           conversationId: this.conversationId,
-          messages: [{ role: "user", content: text }],
+          messages: [...this.history, { role: "user", content: text }],
         }),
       });
       const payload: unknown = await r.json();
-      if (!r.ok) throw new Error();
-      const reply: Reply = AssistantResponseSchema.parse(payload);
+      if (!r.ok) {
+        const code = (payload as { error?: { code?: string } }).error?.code;
+        throw new Error(
+          code === "AI_DAILY_BUDGET"
+            ? "Medy has reached its daily AI limit. Please use the Contact page."
+            : r.status === 429
+              ? "Please wait before sending another message."
+              : "Medy Assistant is temporarily unavailable. Please try again.",
+        );
+      }
+      const reply: Reply = presentResponse(
+        AssistantResponseSchema.parse(payload),
+      );
+      this.history = [
+        ...this.history,
+        { role: "user" as const, content: text },
+        { role: "assistant" as const, content: reply.message },
+      ].slice(-20);
       loading.remove();
       this.addMessage(reply.message);
       const actions = el("div", "actions");
@@ -116,18 +172,63 @@ class MedyAssistantWidget extends HTMLElement {
         actions.append(b);
       });
       this.messages.append(actions);
+      for (const source of reply.sources) {
+        if (source.url && this.safeLink(source.url)) {
+          const link = el("a", "source", "Source: " + source.title);
+          link.href = source.url;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          this.messages.append(link);
+        }
+      }
       this.suggestions(reply.suggestedQuestions || []);
-    } catch {
+    } catch (error) {
+      // Preserve the unanswered user turn, never an invented assistant answer.
+      this.history = [
+        ...this.history,
+        { role: "user" as const, content: text },
+      ].slice(-19);
+      loading.setAttribute("role", "alert");
       loading.textContent =
-        "Medy Assistant is temporarily unavailable. Please try again.";
+        error instanceof Error &&
+        [
+          "Medy has reached its daily AI limit. Please use the Contact page.",
+          "Please wait before sending another message.",
+        ].includes(error.message)
+          ? error.message
+          : "Medy Assistant is temporarily unavailable. Please try again.";
     } finally {
+      this.messages.setAttribute("aria-busy", "false");
       this.input.disabled = false;
       this.input.focus();
     }
   }
+  safeLink(value: string) {
+    try {
+      const url = new URL(value);
+      return (
+        url.protocol === "https:" &&
+        !url.username &&
+        !url.password &&
+        [
+          "securemedy.ng",
+          "www.securemedy.ng",
+          "securemedy.com",
+          "www.securemedy.com",
+          "my.securemedy.com",
+        ].includes(url.hostname)
+      );
+    } catch {
+      return false;
+    }
+  }
   action(action: Action) {
     if (action.type === "start_form") return this.leadForm();
-    if (action.type === "open_external" && action.target)
+    if (
+      action.type === "open_external" &&
+      action.target &&
+      this.safeLink(action.target)
+    )
       return window.open(action.target, "_blank", "noopener");
     if (action.type === "escalate")
       this.addMessage(
@@ -139,6 +240,13 @@ class MedyAssistantWidget extends HTMLElement {
     const old = this.panel.querySelector(".lead");
     old?.remove();
     const form = el("form", "lead");
+    form.append(
+      el(
+        "p",
+        "",
+        "Provide only city/state and general requirements. Details stay in this browser until you consent and submit; do not include access codes or sensitive security information.",
+      ),
+    );
     const fields = [
       ["fullName", "Full name"],
       ["organization", "Organization"],
@@ -159,7 +267,15 @@ class MedyAssistantWidget extends HTMLElement {
       const wrap = el("label", "", label);
       const input = el("input");
       input.name = name;
-      input.required = name !== "additionalDetails";
+      input.required = ![
+        "additionalDetails",
+        "organization",
+        "email",
+        "phone",
+      ].includes(name);
+      input.maxLength = name === "additionalDetails" ? 1000 : 150;
+      if (name === "phone") input.type = "tel";
+      if (name === "serviceLocation") input.placeholder = "City and state";
       if (name === "email") input.type = "email";
       if (name === "officerCount") input.type = "number";
       if (name === "desiredStartDate") input.type = "date";
@@ -180,6 +296,8 @@ class MedyAssistantWidget extends HTMLElement {
     );
     consentLabel.prepend(consent);
     const summary = el("pre", "summary");
+    summary.setAttribute("role", "status");
+    summary.setAttribute("aria-live", "polite");
     const review = el("button", "primary", "Review request");
     review.type = "button";
     review.onclick = () => {
@@ -204,27 +322,45 @@ class MedyAssistantWidget extends HTMLElement {
     form.append(consentLabel, summary, formActions);
     form.onsubmit = async (e) => {
       e.preventDefault();
-      const body = {
-        ...Object.fromEntries(
-          Object.entries(inputs).map(([k, v]) => [k, v.value]),
-        ),
-        consent: consent.checked,
-      };
-      const r = await fetch(`${this.api}/leads`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const data = await r.json();
-      if (!r.ok) {
-        summary.textContent = "Please correct the highlighted information.";
+      if (submit.disabled) return;
+      if (!consent.checked) {
+        summary.textContent =
+          "Please consent before submitting contact details.";
         return;
       }
-      form.remove();
-      this.messages.hidden = false;
-      this.addMessage(
-        `Demonstration request ${data.id} was saved locally. No real service was dispatched.`,
-      );
+      if (!form.reportValidity()) return;
+      submit.disabled = true;
+      try {
+        const body = {
+          ...Object.fromEntries(
+            Object.entries(inputs).map(([k, v]) => [k, v.value]),
+          ),
+          consent: consent.checked,
+        };
+        const r = await fetch(`${this.api}/leads`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const data = await r.json();
+        if (!r.ok) {
+          summary.textContent =
+            "Please check the form fields, consent and your selected contact method.";
+          return;
+        }
+        if (typeof data.id !== "string")
+          throw new Error("Missing acknowledgment");
+        form.remove();
+        this.messages.hidden = false;
+        this.addMessage(
+          `Request ${data.id} was saved locally. No email notification or service dispatch has occurred.`,
+        );
+      } catch {
+        summary.textContent =
+          "We could not confirm that your request was saved. Please try again or use the Contact page.";
+      } finally {
+        submit.disabled = false;
+      }
     };
     this.panel.insertBefore(form, this.panel.querySelector(".composer"));
     inputs.fullName.focus();

@@ -10,3 +10,9 @@ test-results/
 .agents/
 sources/
 AGENTS.md
+
+.env.*
+!.env.example
+.npm-cache/
+
+.medy-dev/

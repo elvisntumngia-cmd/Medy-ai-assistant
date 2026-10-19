@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-19",
+  "unitTests": {
+    "passed": 188,
+    "files": 10,
+    "ai": "mocked"
+  },
+  "browserTests": {
+    "passed": 18,
+    "ai": "mocked"
+  },
+  "build": "passed",
+  "typecheck": "passed",
+  "lint": "passed with existing module-type warning",
+  "changedFileFormatting": "passed",
+  "diffCheck": "passed",
+  "startup": {
+    "command": "npm run dev:openai",
+    "apiPort": 4180,
+    "frontendPort": 5180,
+    "apiPID": 28184,
+    "vitePID": 3464,
+    "publicProvider": "openai",
+    "systemCA": true,
+    "endpoints": {
+      "health": 200,
+      "demo": 200,
+      "wordpressHost": 200
+    }
+  },
+  "paidRequests": 0,
+  "productionReady": false,
+  "originalYorubaFailureCause": "unestablished",
+  "ownerFactsApproved": 0
+}

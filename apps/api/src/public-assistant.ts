@@ -1,3 +1,4 @@
+import { publicBoundary, conflictBoundary } from "./public-policy.js";
 import {
   AssistantResponseSchema,
   type AssistantAction,
@@ -73,6 +74,7 @@ const reply = (
             title: options.source.sourceTitle,
             domain: "public",
             snippet: options.source.answer,
+            url: options.source.sourceUrl,
           },
         ]
       : [],
@@ -83,7 +85,17 @@ const fromKnowledge = (
   extraActions: AssistantAction[] = [],
   message?: string,
 ) => {
-  const item = publicKnowledgeById.get(id)!;
+  const item = publicKnowledgeById.get(id);
+  if (!item)
+    return reply(
+      "That information is not currently approved or needs refresh. Please contact SecureMedy to confirm.",
+      intent,
+      {
+        actions: [
+          action("contact", "Contact SecureMedy", PUBLIC_LINKS.contact),
+        ],
+      },
+    );
   return reply(message || item.answer, intent, {
     source: item,
     actions: [
@@ -431,7 +443,10 @@ export class PublicAssistantProvider implements AIProvider {
   ): Promise<AssistantResponse> {
     if (mode !== "public")
       throw new Error("The public assistant only accepts public conversations");
-    const q = ` ${normalize(messages.at(-1)?.content || "")} `;
+    const latest = messages.at(-1)?.content || "";
+    const boundary = publicBoundary(latest) || conflictBoundary(latest);
+    if (boundary) return boundary;
+    const q = ` ${normalize(latest)} `;
     if (
       /\b(911|active shooter|immediate danger|life threatening|weapon|fire|severe bleeding|not breathing)\b/.test(
         q,
@@ -451,11 +466,13 @@ export class PublicAssistantProvider implements AIProvider {
         "sensitive_information",
       );
     if (
-      /\b(hi|hello|hey|good morning|good afternoon|good evening)\b/.test(q) &&
+      /\b(hi|hello|hey|amigo|what s up|good morning|good afternoon|good evening)\b/.test(
+        q,
+      ) &&
       q.trim().split(" ").length <= 3
     )
       return reply(
-        "Hi! I'm Medy, SecureMedy's virtual website assistant. I can help with services, public company information, Careers, employee access and contact options.",
+        "Hey! What brings you by—security services, a job, or just checking us out?",
         "greeting",
         {
           suggestions: [
@@ -496,7 +513,7 @@ export class PublicAssistantProvider implements AIProvider {
       ])
     )
       return reply(
-        "Please use SecureMedy's general Contact page or call (240) 419-3125 for client, billing, contract, vendor, partnership or management inquiries. Medy does not have a verified department-specific public address for this request.",
+        "Please use SecureMedy's general Contact page for client, billing, contract, vendor, partnership or management inquiries. Medy does not have a verified department-specific public address for this request.",
         "business_inquiry",
         {
           actions: [
@@ -506,6 +523,12 @@ export class PublicAssistantProvider implements AIProvider {
       );
 
     const match = interpret(q);
+    if (
+      match?.intent === "founder_unknown" &&
+      publicKnowledgeById.get("leadership")?.approvalBasis ===
+        "official_website"
+    )
+      return fromKnowledge("leadership", "published_leadership");
     if (match?.intent === "founder_unknown")
       return reply(
         "I don't have a verified public fact identifying SecureMedy's founder. The About Us page provides the approved company background, and the team can answer further questions.",
@@ -527,7 +550,7 @@ export class PublicAssistantProvider implements AIProvider {
         match.knowledgeId,
         match.intent,
         [],
-        "SecureMedy is licensed in 16 states and counting, but I can't confirm current coverage in that specific state from the approved public information. Please contact the team to confirm availability.",
+        "I can't confirm current coverage in that specific state from the approved public information. Please contact the team to confirm availability.",
       );
     if (match?.intent === "physical_security") {
       const needsConfirmation = hasAny(q, [

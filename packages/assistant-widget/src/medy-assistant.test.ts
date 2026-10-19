@@ -77,3 +77,186 @@ describe("standalone widget response validation", () => {
     expect(root.textContent).toContain("form closed");
   });
 });
+
+describe("standalone widget conversation context", () => {
+  it("sends successful previous turns and prevents parallel sends", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        message: "Please confirm with the team.",
+        intent: "ai_public",
+        confidence: 0.7,
+        actions: [],
+      }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    const widget = document.createElement("medy-assistant") as HTMLElement & {
+      send: (text: string) => Promise<void>;
+    };
+    document.body.append(widget);
+    const first = widget.send("I need unarmed officers in Maryland");
+    await widget.send("duplicate click");
+    await first;
+    await widget.send("Actually cameras; same location");
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body).messages).toEqual([
+      { role: "user", content: "I need unarmed officers in Maryland" },
+      { role: "assistant", content: "Please confirm with the team." },
+      { role: "user", content: "Actually cameras; same location" },
+    ]);
+  });
+});
+
+describe("public widget privacy and accessible failures", () => {
+  it("renders source links safely and clears bounded context on reset", async () => {
+    const root = await submitWith({
+      message: "A public answer",
+      intent: "ai_public",
+      confidence: 0.7,
+      actions: [],
+      sources: [
+        {
+          id: "s",
+          title: "SecureMedy Services",
+          domain: "public",
+          snippet: "Services",
+          url: "https://securemedy.ng/services/",
+        },
+      ],
+    });
+    await vi.waitFor(() =>
+      expect(root.querySelector("a.source")?.getAttribute("href")).toBe(
+        "https://securemedy.ng/services/",
+      ),
+    );
+    expect(root.querySelector(".messages")?.getAttribute("role")).toBe("log");
+    (root.querySelector("header button") as HTMLButtonElement).click();
+    expect(root.textContent).toContain("Conversation cleared");
+  });
+  it("blocks unsafe external targets", () => {
+    const widget = document.createElement("medy-assistant") as HTMLElement & {
+      action: (a: unknown) => void;
+    };
+    document.body.append(widget);
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    widget.action({ type: "open_external", target: "javascript:alert(1)" });
+    widget.action({
+      type: "open_external",
+      target: "https://securemedy.ng.evil.test/",
+    });
+    expect(open).not.toHaveBeenCalled();
+  });
+  it("retains the form and announces a network failure without inventing persistence", async () => {
+    const fetchMock = vi.fn().mockRejectedValue(new Error("network"));
+    vi.stubGlobal("fetch", fetchMock);
+    const widget = document.createElement("medy-assistant") as HTMLElement & {
+      leadForm: () => void;
+    };
+    document.body.append(widget);
+    widget.leadForm();
+    const root = widget.shadowRoot!;
+    const form = root.querySelector(".lead") as HTMLFormElement;
+    const values: Record<string, string> = {
+      fullName: "Test Visitor",
+      email: "test@example.test",
+      serviceLocation: "City State",
+      propertyType: "Warehouse",
+      requestedService: "Cameras",
+      coverageSchedule: "Weekdays",
+      desiredStartDate: "2026-12-01",
+    };
+    for (const [name, value] of Object.entries(values))
+      (form.querySelector('[name="' + name + '"]') as HTMLInputElement).value =
+        value;
+    (form.querySelector('[type="checkbox"]') as HTMLInputElement).checked =
+      true;
+    form.dispatchEvent(new Event("submit", { cancelable: true }));
+    await vi.waitFor(() =>
+      expect(root.textContent).toContain("could not confirm"),
+    );
+    expect(root.querySelector(".lead")).not.toBeNull();
+    expect(root.textContent).not.toContain("was saved locally");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("public response presentation and recovery", () => {
+  it("shows each destination once across navigation and citations", async () => {
+    const root = await submitWith({
+      message: "Official pages",
+      intent: "ai_public",
+      confidence: 0.7,
+      actions: [
+        {
+          id: "careers",
+          type: "open_external",
+          label: "View Careers",
+          target: "https://securemedy.ng/careers/",
+        },
+        {
+          id: "duplicate",
+          type: "open_external",
+          label: "Careers again",
+          target: "https://securemedy.ng/careers/",
+        },
+      ],
+      sources: [
+        {
+          id: "one",
+          title: "Careers",
+          domain: "public",
+          snippet: "Applications",
+          url: "https://securemedy.ng/careers/",
+        },
+        {
+          id: "two",
+          title: "Services",
+          domain: "public",
+          snippet: "Services",
+          url: "https://securemedy.ng/services/",
+        },
+        {
+          id: "three",
+          title: "Services again",
+          domain: "public",
+          snippet: "Services",
+          url: "https://securemedy.ng/services",
+        },
+      ],
+    });
+    await vi.waitFor(() =>
+      expect(root.textContent).toContain("Official pages"),
+    );
+    expect(root.querySelectorAll(".actions button")).toHaveLength(1);
+    expect(root.querySelectorAll("a.source")).toHaveLength(1);
+  });
+  it("preserves an unanswered language request without inserting an earlier answer", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 503,
+        json: async () => ({ error: { code: "AI_UNAVAILABLE" } }),
+      })
+      .mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          message: "Bẹ́ẹ̀ni",
+          intent: "ai_public",
+          confidence: 0.7,
+        }),
+      });
+    vi.stubGlobal("fetch", fetchMock);
+    const widget = document.createElement("medy-assistant") as HTMLElement & {
+      send: (text: string) => Promise<void>;
+    };
+    document.body.append(widget);
+    await widget.send("How about Yoruba?");
+    await widget.send("Try again please");
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body).messages).toEqual([
+      { role: "user", content: "How about Yoruba?" },
+      { role: "user", content: "Try again please" },
+    ]);
+    expect(widget.shadowRoot!.textContent).toContain("Bẹ́ẹ̀ni");
+  });
+});

@@ -21,6 +21,7 @@ export type MedyAssistantProps = {
   navigation: NavigationAdapter;
   variant?: "floating" | "workspace";
   quickActions?: string[];
+  onRequestServices?: () => void;
 };
 export function MedyAssistant({
   mode,
@@ -30,6 +31,7 @@ export function MedyAssistant({
   navigation,
   variant = "floating",
   quickActions,
+  onRequestServices,
 }: MedyAssistantProps) {
   const client = useMemo(
     () => new ApiClient(apiUrl, sessionId),
@@ -72,6 +74,11 @@ export function MedyAssistant({
     }
   }
   async function act(action: AssistantAction) {
+    if (action.type === "start_form") {
+      if (onRequestServices) onRequestServices();
+      else navigation.openExternal("https://securemedy.ng/contact/");
+      return;
+    }
     if (action.type === "navigate" && action.target)
       return navigation.navigate(action.target);
     if (action.type === "open_external" && action.target)
@@ -171,7 +178,17 @@ export function MedyAssistant({
             </div>
             {m.response?.sources.map((s) => (
               <small key={s.id}>
-                Source: {s.title} · demonstration content
+                Source:{" "}
+                {s.url &&
+                /^https:\/\/(?:www\.)?(?:securemedy\.ng|securemedy\.com)\//.test(
+                  s.url,
+                ) ? (
+                  <a href={s.url} target="_blank" rel="noopener noreferrer">
+                    {s.title}
+                  </a>
+                ) : (
+                  s.title
+                )}
               </small>
             ))}
             {m.response?.suggestedQuestions.map((q) => (
@@ -217,6 +234,7 @@ export function MedyAssistant({
         }}
       >
         <input
+          maxLength={2000}
           aria-label="Message Medy Assistant"
           value={input}
           onChange={(e) => setInput(e.target.value)}

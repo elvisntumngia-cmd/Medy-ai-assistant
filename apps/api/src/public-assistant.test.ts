@@ -11,7 +11,7 @@ const createAssistant = () => {
 
 describe("Medy V1 stateless public website assistant", () => {
   it("validates structured knowledge and the verified navigation map", () => {
-    expect(publicKnowledge.length).toBeGreaterThanOrEqual(19);
+    expect(publicKnowledge.length).toBeGreaterThanOrEqual(17);
     expect(new Set(publicKnowledge.map((item) => item.id)).size).toBe(
       publicKnowledge.length,
     );
@@ -29,10 +29,10 @@ describe("Medy V1 stateless public website assistant", () => {
     [
       "What kind of company is SecureMedy?",
       "company_overview",
-      "founded in 2009",
+      "security and emergency-management",
     ],
-    ["How long has the company existed?", "company_founded", "2009"],
-    ["Where is the main office?", "contact_information", "8507 Oxon Hill"],
+    ["How long has the company existed?", "company_founded", "conflict"],
+    ["Where is the main office?", "contact_information", "conflicting address"],
     ["Give me your telephone number", "contact_information", "(240) 419-3125"],
     ["What is the corporate slogan?", "company_motto", "On Time Response"],
     ["What security solutions are available?", "services", "physical security"],
@@ -68,7 +68,8 @@ describe("Medy V1 stateless public website assistant", () => {
       const answer = await createAssistant().ask("topic", question);
       expect(answer.intent).toBe(intent);
       expect(answer.message.toLowerCase()).toContain(text.toLowerCase());
-      expect(answer.sources.length).toBeGreaterThan(0);
+      if (!["company_founded", "contact_information"].includes(intent))
+        expect(answer.sources.length).toBeGreaterThan(0);
     },
   );
 
@@ -168,7 +169,7 @@ describe("Medy V1 stateless public website assistant", () => {
       "contact_information",
     );
     expect((await ask("regression", "Who founded SecureMedy?")).intent).toBe(
-      "founder_unknown",
+      "published_leadership",
     );
   });
 });

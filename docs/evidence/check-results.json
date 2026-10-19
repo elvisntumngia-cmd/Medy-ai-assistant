@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-19",
+  "baselineCommit": "43a4bf5",
+  "unitIntegration": {
+    "passed": 160,
+    "files": 9,
+    "openai": "mocked"
+  },
+  "conversationFixtures": {
+    "passed": 13,
+    "retrievalAndContext": 9,
+    "policyBoundaries": 4,
+    "semanticQualityVerified": false
+  },
+  "browser": {
+    "passed": 17,
+    "modelCalls": "mocked or disabled",
+    "coverage": [
+      "mobile",
+      "WordPress independent host",
+      "AI citations",
+      "contact privacy",
+      "lead persistence and consent",
+      "fictional employee workflows"
+    ]
+  },
+  "lint": "passed (existing module-type warning)",
+  "typecheck": "passed",
+  "build": "passed (existing React Router use-client warnings)",
+  "startupSafety": "passed",
+  "localStartup": {
+    "command": "npm run dev:openai",
+    "ports": [
+      4180,
+      5180
+    ],
+    "result": "existing verified servers reused; health reports openai",
+    "paidRequestMade": false
+  },
+  "audit": {
+    "baselineAffectedDevelopmentPackages": 18,
+    "finalFull": 0,
+    "finalProduction": 0,
+    "forcedFix": false
+  },
+  "formatCheck": {
+    "passed": false,
+    "reason": "Existing formatting differences in seven untouched files"
+  },
+  "paidModelCallsThisTask": 0,
+  "committed": false,
+  "pushed": false,
+  "deployed": false,
+  "ownerApprovalRequired": true
+}

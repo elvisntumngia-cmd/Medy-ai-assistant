@@ -264,3 +264,142 @@ test("captured lead is visible in the local admin view", async ({ page }) => {
   await page.goto("/admin/leads");
   await expect(page.getByText("Alex Morgan")).toBeVisible();
 });
+
+test("WordPress widget renders AI citations and retains corrections with a mocked API", async ({
+  page,
+}) => {
+  const sent: { messages: { role: string; content: string }[] }[] = [];
+  await page.route("**/api/chat", async (route) => {
+    sent.push(route.request().postDataJSON());
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        message:
+          "Electronic-security services include CCTV and access-control systems. The team can confirm suitability.",
+        intent: "ai_public",
+        confidence: 0.7,
+        actions: [],
+        sources: [
+          {
+            id: "electronic-security",
+            title: "Electronic Security",
+            domain: "public",
+            snippet: "Approved services",
+            url: "https://securemedy.ng/service/electronic-security/",
+          },
+        ],
+      }),
+    });
+  });
+  await page.goto("/wordpress-host.html");
+  await page.getByRole("button", { name: "Open Medy Assistant" }).click();
+  const input = page.getByLabel("Message Medy Assistant");
+  await input.fill("We already have cameras at the loading dock");
+  await page.getByRole("button", { name: "Send", exact: true }).click();
+  await expect(
+    page.getByRole("link", { name: "Source: Electronic Security" }),
+  ).toBeVisible();
+  await input.fill("Correction: I am the property manager, not the homeowner");
+  await page.getByRole("button", { name: "Send", exact: true }).click();
+  await expect.poll(() => sent.length).toBe(2);
+  expect(sent[1].messages.map((m) => m.content).join(" ")).toContain(
+    "already have cameras",
+  );
+  expect(sent[1].messages.at(-1)?.content).toContain("property manager");
+});
+test("mobile chat keeps volunteered contacts in the browser and offers the consent form", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  let calls = 0;
+  await page.route("**/api/chat", async (route) => {
+    calls++;
+    await route.abort();
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Open Medy Assistant" }).click();
+  await page
+    .getByLabel("Message Medy Assistant")
+    .fill("Email me at visitor@example.test");
+  await page.getByRole("button", { name: "Send", exact: true }).click();
+  await expect(
+    page.getByText(/optional consent form before sharing/),
+  ).toBeVisible();
+  expect(calls).toBe(0);
+  await page
+    .getByRole("button", { name: "Request Security Services", exact: true })
+    .click();
+  await expect(page.getByLabel("Full name")).toBeVisible();
+});
+
+test("public widget deduplicates destinations and recovers an unanswered language request", async ({
+  page,
+}) => {
+  const sent: { messages: { role: string; content: string }[] }[] = [];
+  await page.route("**/api/chat", async (route) => {
+    sent.push(route.request().postDataJSON());
+    if (sent.length === 1)
+      return route.fulfill({
+        status: 503,
+        contentType: "application/json",
+        body: JSON.stringify({ error: { code: "AI_UNAVAILABLE" } }),
+      });
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        message:
+          "Bẹ́ẹ̀ni. Use the official Careers page for application guidance.",
+        intent: "ai_public",
+        confidence: 0.7,
+        actions: [
+          {
+            id: "career",
+            type: "open_external",
+            label: "View Careers",
+            target: "https://securemedy.ng/careers/",
+          },
+          {
+            id: "career-again",
+            type: "open_external",
+            label: "Duplicate",
+            target: "https://securemedy.ng/careers/",
+          },
+        ],
+        sources: [
+          {
+            id: "careers",
+            title: "Careers",
+            domain: "public",
+            snippet: "Application guidance",
+            url: "https://securemedy.ng/careers/",
+          },
+        ],
+      }),
+    });
+  });
+  await page.goto("/wordpress-host.html");
+  await page.getByRole("button", { name: "Open Medy Assistant" }).click();
+  const input = page.getByLabel("Message Medy Assistant");
+  await input.fill("How about Yoruba?");
+  await page.getByRole("button", { name: "Send", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText(
+    "temporarily unavailable",
+  );
+  await input.fill("Try again please");
+  await page.getByRole("button", { name: "Send", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "View Careers", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Duplicate", exact: true }),
+  ).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Source: Careers" })).toHaveCount(
+    0,
+  );
+  expect(sent[1].messages).toEqual([
+    { role: "user", content: "How about Yoruba?" },
+    { role: "user", content: "Try again please" },
+  ]);
+});

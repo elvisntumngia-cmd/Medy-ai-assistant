@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-19",
+  "officialWebsiteApproval": "Owner authorized all public securemedy.ng content",
+  "indexedPages": 39,
+  "indexedExcerpts": 113,
+  "retrievableRecords": 131,
+  "crawl": {
+    "htmlPages": 40,
+    "requests": 49,
+    "excluded": "WordPress sample page",
+    "failed": "One article fetch; still-fresh earlier content retained"
+  },
+  "automatedTests": {
+    "passed": 193,
+    "files": 11,
+    "paidCalls": 0
+  },
+  "browserTests": {
+    "passed": 18,
+    "paidCalls": 0
+  },
+  "lint": "passed",
+  "typecheck": "passed",
+  "build": "passed",
+  "liveAcceptance": "pending explicit paid-test authorization",
+  "productionActivation": false
+}

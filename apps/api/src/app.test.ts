@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { createApp } from "./app.js";
 process.env.DEMO_MODE = "true";
+process.env.AI_PROVIDER = "deterministic"; // Regression tests must never call paid APIs.
 describe("integrated API", () => {
   const app = createApp();
   const session = { "x-demo-session": "demo-officer" };

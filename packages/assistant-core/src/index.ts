@@ -1,5 +1,6 @@
 import {
   AssistantResponseSchema,
+  presentResponse,
   DemoConfigSchema,
   type AssistantResponse,
   type DemoConfig,
@@ -28,7 +29,7 @@ export class ApiClient {
   ): Promise<AssistantResponse> {
     const body = {
       mode,
-      messages,
+      messages: messages.slice(-20),
       conversationId: this.conversationId,
       ...config,
     };
@@ -41,7 +42,9 @@ export class ApiClient {
       throw new Error(
         (await response.json()).error?.message || "Assistant unavailable",
       );
-    return AssistantResponseSchema.parse(await response.json());
+    return presentResponse(
+      AssistantResponseSchema.parse(await response.json()),
+    );
   }
   async get<T>(path: string): Promise<T> {
     const r = await fetch(`${this.apiUrl}${path}`, { headers: this.headers() });

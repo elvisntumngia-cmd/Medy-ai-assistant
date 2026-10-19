@@ -18,6 +18,7 @@ export default async function globalSetup() {
   process.env.CLIENT_ORIGIN = "http://127.0.0.1:5281";
   process.env.DEMO_MODE = "true";
   process.env.BEDROCK_ENABLED = "false";
+  process.env.AI_PROVIDER = "deterministic"; // Browser regressions never call paid APIs.
   process.env.MEDY_LEADS_FILE = join(dataDir, "leads.json");
   process.env.MEDY_ACTIONS_FILE = join(dataDir, "actions.json");
   process.env.MEDY_CONVERSATIONAL_LEADS_FILE = join(
