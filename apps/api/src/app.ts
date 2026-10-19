@@ -181,6 +181,7 @@ export function createApp(options: AppOptions = {}) {
     res.json({
       status: "ok",
       publicProvider: openAI ? "openai" : "deterministic",
+      ...(openAI ? { aiAccounting: "usage-reconciled-v1" } : {}),
       ...(process.env.MEDY_LOCAL_AI === "true" &&
       process.env.NODE_ENV !== "production" &&
       process.env.RENDER !== "true"

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import request from "supertest";
 import {
+  estimateInputTokens,
   OpenAIProvider,
   OpenAIConfigSchema,
   configuredOpenAIProvider,
@@ -203,7 +204,11 @@ describe("OpenAI provider contract and conversation grounding", () => {
     expect(mocks.create).not.toHaveBeenCalled();
   });
   it("reserves concurrent requests atomically", async () => {
-    const provider = make({ dailyRequests: 1 });
+    const probeLog = vi.fn();
+    await make({}, probeLog).chat("public", chat, []);
+    const reserved = probeLog.mock.calls[0][0].reservedTokens;
+    mocks.create.mockClear();
+    const provider = make({ dailyTokens: reserved + 100 });
     const results = await Promise.allSettled([
       provider.chat("public", chat, []),
       provider.chat("public", chat, []),
@@ -219,7 +224,13 @@ describe("OpenAI provider contract and conversation grounding", () => {
   });
   it("counts failures conservatively and resets at UTC midnight", async () => {
     let date = new Date("2026-10-16T23:59:59Z");
-    const provider = make({ dailyRequests: 1 }, vi.fn(), () => date);
+    const probeLog = vi.fn();
+    await make({}, probeLog).chat("public", chat, []);
+    const provider = make(
+      { dailyTokens: probeLog.mock.calls[0][0].reservedTokens + 100 },
+      vi.fn(),
+      () => date,
+    );
     mocks.create.mockRejectedValueOnce(new Error("network"));
     await expect(provider.chat("public", chat, [])).rejects.toMatchObject({
       status: 503,
@@ -469,6 +480,7 @@ describe("explicit production OpenAI activation", () => {
         status: "ok",
         provider: "openai",
         publicProvider: "openai",
+        aiAccounting: "usage-reconciled-v1",
       });
       expect(JSON.stringify(health.body)).not.toContain(
         "production-test-secret",
@@ -528,7 +540,7 @@ describe("explicit production OpenAI activation", () => {
       timeout: 15000,
     });
   });
-  it("retains production daily request and token budgets", async () => {
+  it("removes the shared request quota while retaining production token budgets", async () => {
     enableProduction();
     vi.stubEnv("AI_RATE_LIMIT_PER_MINUTE", "100");
     vi.stubEnv("AI_DAILY_REQUEST_BUDGET", "1");
@@ -543,15 +555,14 @@ describe("explicit production OpenAI activation", () => {
     const exhausted = await request(app)
       .post("/api/chat")
       .send({ mode: "public", messages: chat });
-    expect(exhausted.status).toBe(429);
-    expect(exhausted.body.error.code).toBe("AI_DAILY_BUDGET");
+    expect(exhausted.status).toBe(200);
     vi.stubEnv("AI_DAILY_TOKEN_BUDGET", "1");
     const tokens = await request(createApp())
       .post("/api/chat")
       .send({ mode: "public", messages: chat });
     expect(tokens.status).toBe(429);
     expect(tokens.body.error.code).toBe("AI_DAILY_BUDGET");
-    expect(mocks.create).toHaveBeenCalledTimes(1);
+    expect(mocks.create).toHaveBeenCalledTimes(2);
   });
   it("retains public isolation, input limits and consent in production", async () => {
     enableProduction();
@@ -592,5 +603,65 @@ describe("explicit production OpenAI activation", () => {
     expect(JSON.stringify(response.body)).not.toContain(
       "production-test-secret",
     );
+  });
+});
+
+describe("emergency token accounting", () => {
+  it("estimates English tokens without treating UTF-8 bytes as tokens", () => {
+    expect(estimateInputTokens("a".repeat(1200))).toBe(400);
+    expect(estimateInputTokens("Yor?b? ??")).toBeGreaterThan(0);
+  });
+  it("reconciles successful calls so unused reservations do not accumulate", async () => {
+    const log = vi.fn();
+    await make({}, log).chat("public", chat, []);
+    const reserved = log.mock.calls[0][0].reservedTokens;
+    const provider = make({ dailyTokens: reserved + 200 });
+    await provider.chat("public", chat, []);
+    await provider.chat("public", chat, []);
+    await expect(provider.chat("public", chat, [])).rejects.toMatchObject({
+      code: "AI_DAILY_BUDGET",
+    });
+  });
+  it("retains reservations when usage is unavailable", async () => {
+    const log = vi.fn();
+    await make({}, log).chat("public", chat, []);
+    const provider = make({
+      dailyTokens: log.mock.calls[0][0].reservedTokens + 100,
+    });
+    const c = completion();
+    delete (c as { usage?: unknown }).usage;
+    mocks.create.mockResolvedValue(c);
+    await provider.chat("public", chat, []);
+    await expect(provider.chat("public", chat, [])).rejects.toMatchObject({
+      code: "AI_DAILY_BUDGET",
+    });
+  });
+  it("does not refund old-day completions into the new day's counter", async () => {
+    const log = vi.fn();
+    await make({}, log).chat("public", chat, []);
+    let date = new Date("2026-10-16T23:59:59Z");
+    const provider = make(
+      { dailyTokens: log.mock.calls[0][0].reservedTokens + 100 },
+      vi.fn(),
+      () => date,
+    );
+    let finish!: (value: ReturnType<typeof completion>) => void;
+    mocks.create.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    );
+    const previous = provider.chat("public", chat, []);
+    date = new Date("2026-10-17T00:00:01Z");
+    mocks.create.mockRejectedValueOnce(new Error("uncertain network failure"));
+    await expect(provider.chat("public", chat, [])).rejects.toMatchObject({
+      code: "AI_UNAVAILABLE",
+    });
+    finish(completion());
+    await previous;
+    await expect(provider.chat("public", chat, [])).rejects.toMatchObject({
+      code: "AI_DAILY_BUDGET",
+    });
   });
 });

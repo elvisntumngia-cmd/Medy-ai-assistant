@@ -24,7 +24,6 @@ export const OpenAIConfigSchema = z.object({
   maxOutput: z.coerce.number().int().min(1).max(2000).default(450),
   timeout: z.coerce.number().int().min(1).max(60000).default(15000),
   temperature: z.coerce.number().min(0).max(1).default(0.2),
-  dailyRequests: z.coerce.number().int().nonnegative().default(100),
   dailyTokens: z.coerce.number().int().nonnegative().default(250000),
   inputPrice: z.coerce.number().nonnegative().default(0.4),
   outputPrice: z.coerce.number().nonnegative().default(1.6),
@@ -37,7 +36,6 @@ export function openAIConfig() {
     maxOutput: process.env.AI_MAX_OUTPUT_TOKENS,
     timeout: process.env.AI_TIMEOUT_MS,
     temperature: process.env.AI_TEMPERATURE,
-    dailyRequests: process.env.AI_DAILY_REQUEST_BUDGET,
     dailyTokens: process.env.AI_DAILY_TOKEN_BUDGET,
     inputPrice: process.env.AI_INPUT_USD_PER_MILLION,
     outputPrice: process.env.AI_OUTPUT_USD_PER_MILLION,
@@ -60,9 +58,18 @@ const instructions = [
   "Respond in the visitor’s requested language, including Spanish or Yoruba, when able. Acknowledge uncertainty about translation when necessary. A language follow-up such as How about Yoruba? changes language, not the business topic. JSON strings may contain Unicode; keep schema keys in English. Do not repeat introductions. A previous failed request is not an answered question; respond to the latest turn or ask a short clarification.",
 ].join("\n");
 
+/** ASCII prose/JSON is estimated at 3 characters/token; Unicode gets a conservative 4/codepoint. */
+export function estimateInputTokens(text: string) {
+  let ascii = 0;
+  let unicode = 0;
+  for (const character of text) {
+    if (character.codePointAt(0)! < 128) ascii++;
+    else unicode++;
+  }
+  return Math.ceil(ascii / 3) + unicode * 4;
+}
 export class OpenAIProvider implements AIProvider {
   private day = "";
-  private requests = 0;
   private tokens = 0;
   constructor(
     private client: CompletionClient,
@@ -135,23 +142,18 @@ export class OpenAIProvider implements AIProvider {
           navigationLabel: action?.label,
         })),
       );
-    // Conservative UTF-8 byte reservation with framing margin; failed requests are not refunded.
+    // Conservative estimate plus framing/schema margin and maximum output; reserve before awaiting.
     const reserved =
-      Buffer.byteLength(system + JSON.stringify(history), "utf8") +
+      estimateInputTokens(system + JSON.stringify(history)) +
       1024 +
       this.config.maxOutput;
     const day = this.now().toISOString().slice(0, 10);
     if (day !== this.day) {
       this.day = day;
-      this.requests = 0;
       this.tokens = 0;
     }
-    if (
-      this.requests >= this.config.dailyRequests ||
-      this.tokens + reserved > this.config.dailyTokens
-    )
+    if (this.tokens + reserved > this.config.dailyTokens)
       throw new AIControlError(429, "AI_DAILY_BUDGET");
-    this.requests++;
     this.tokens += reserved;
     try {
       const completion = await this.client.chat.completions.create(
@@ -214,6 +216,19 @@ export class OpenAIProvider implements AIProvider {
         },
       );
       const usage = completion.usage;
+      // Known billed usage replaces this request's reservation, even if output validation fails.
+      // Unknown/network failures retain their reservation. Old-day requests cannot debit a new day.
+      if (
+        usage &&
+        Number.isSafeInteger(usage.prompt_tokens) &&
+        usage.prompt_tokens >= 0 &&
+        Number.isSafeInteger(usage.completion_tokens) &&
+        usage.completion_tokens >= 0 &&
+        this.day === day
+      ) {
+        const actual = usage.prompt_tokens + usage.completion_tokens;
+        this.tokens += actual - reserved;
+      }
       this.log({
         event: "ai_usage",
         model: this.config.model,
