@@ -7,7 +7,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/src/server.js",
     "test:openai:live": "tsx src/openai-smoke.ts",
-    "knowledge": "node --use-system-ca --import tsx src/knowledge-cli.ts"
+    "knowledge": "node --use-system-ca --import tsx src/knowledge-cli.ts",
+    "prebuild": "npm run build -w @medy/shared"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.850.0",

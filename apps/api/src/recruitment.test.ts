@@ -8,12 +8,16 @@ import { PublicAssistantProvider } from "./public-assistant.js";
 import { OpenAIProvider, OpenAIConfigSchema } from "./openai-provider.js";
 let directory: string;
 beforeEach(() => {
+  // Match the verified fixture date; production expiry remains unchanged.
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-10-19T20:00:00Z"));
   directory = fs.mkdtempSync(path.join(os.tmpdir(), "medy-jobs-"));
   const file = path.join(directory, "store.json");
   fs.writeFileSync(file, JSON.stringify(readStore()));
   vi.stubEnv("MEDY_PUBLIC_KNOWLEDGE_FILE", file);
 });
 afterEach(() => {
+  vi.useRealTimers();
   vi.unstubAllEnvs();
   fs.rmSync(directory, { recursive: true, force: true });
 });
