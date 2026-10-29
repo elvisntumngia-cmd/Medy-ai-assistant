@@ -37,9 +37,12 @@ WordPress.com plans and some security plugins may strip script tags. In that cas
 The API explicitly permits browser API calls from:
 
 - `https://securemedy.ng`
+- `https://new.securemedy.com`
 - `https://www.securemedy.ng`
 - `https://medy-ai-assistant-demo.onrender.com`
 - the repository's approved localhost origins
+
+Both production domains are allowed in code; no Render environment-variable change is required for them.
 
 Additional comma-separated origins can be appended with `CLIENT_ORIGIN`; the configuration is not a wildcard. If WordPress sends a stricter Content Security Policy, add `https://medy-ai-assistant-demo.onrender.com` to at least `script-src` and `connect-src`. A representative policy addition is:
 
