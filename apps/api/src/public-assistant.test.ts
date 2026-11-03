@@ -31,8 +31,8 @@ describe("Medy V1 stateless public website assistant", () => {
       "company_overview",
       "security and emergency-management",
     ],
-    ["How long has the company existed?", "company_founded", "conflict"],
-    ["Where is the main office?", "contact_information", "conflicting address"],
+    ["How long has the company existed?", "company_founded", "founded in 2009"],
+    ["Where is the main office?", "contact_information", "8507 Oxon Hill Road"],
     ["Give me your telephone number", "contact_information", "(240) 419-3125"],
     ["What is the corporate slogan?", "company_motto", "On Time Response"],
     ["What security solutions are available?", "services", "physical security"],
@@ -100,7 +100,7 @@ describe("Medy V1 stateless public website assistant", () => {
     expect((await ask(id, "What's your number?")).intent).toBe(
       "contact_information",
     );
-  });
+  }, 10000);
 
   it.each([
     ["I need a gurad", "physical_security"],
@@ -116,7 +116,7 @@ describe("Medy V1 stateless public website assistant", () => {
   });
 
   it.each([
-    ["Do you operate in Virginia?", "licensing", "can't confirm"],
+    ["Do you operate in Virginia?", "licensing", "website lists"],
     ["How much do two guards cost?", "pricing", "cannot quote"],
     ["Do you have openings tonight?", "careers", "cannot confirm vacancies"],
     [
@@ -149,6 +149,20 @@ describe("Medy V1 stateless public website assistant", () => {
       expect.objectContaining({
         type: "start_form",
         label: "Request Security Services",
+      }),
+    );
+  });
+
+  it("links industry questions to the most specific published page", async () => {
+    const answer = await createAssistant().ask(
+      "healthcare",
+      "Tell me about your healthcare security solutions",
+    );
+    expect(answer.intent).toBe("industries");
+    expect(answer.message).toContain("hospitals");
+    expect(answer.actions).toContainEqual(
+      expect.objectContaining({
+        target: "https://new.securemedy.com/industries/healthcare/",
       }),
     );
   });

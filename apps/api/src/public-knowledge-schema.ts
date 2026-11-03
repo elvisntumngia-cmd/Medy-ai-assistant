@@ -5,16 +5,18 @@ export const PUBLIC_LINKS = {
   about: "https://new.securemedy.com/about/",
   services: "https://new.securemedy.com/services/",
   physicalSecurity: "https://new.securemedy.com/services/security-personnel/",
-  electronicSecurity: "https://new.securemedy.com/services/security-technology/",
+  electronicSecurity:
+    "https://new.securemedy.com/services/security-technology/",
   riskManagement: "https://new.securemedy.com/services/risk-management/",
   personnelSecurity: "https://new.securemedy.com/services/security-personnel/",
-  emergencyManagement: "https://new.securemedy.com/services/security-consulting/",
+  emergencyManagement:
+    "https://new.securemedy.com/services/security-consulting/",
   concierge: "https://new.securemedy.com/services/security-personnel/",
   industries: "https://new.securemedy.com/industries/",
   careers: "https://new.securemedy.com/careers/",
   contact: "https://new.securemedy.com/contact/",
-  privacy: "https://new.securemedy.com/privacy/",
-  terms: "https://new.securemedy.com/terms/",
+  privacy: "https://new.securemedy.com/m3dyhub-privacy-policy/",
+  terms: "https://new.securemedy.com/terms-and-conditions/",
   employeePortal: "https://my.securemedy.com/",
 } as const;
 

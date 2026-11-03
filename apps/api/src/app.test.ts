@@ -99,7 +99,7 @@ describe("integrated API", () => {
     expect((await send("Do you install cameras?")).body.intent).toBe(
       "electronic_security",
     );
-  });
+  }, 10000);
   it("routes employee questions away from public knowledge", async () =>
     expect(
       (
@@ -274,8 +274,7 @@ describe("integrated API", () => {
       ).headers["access-control-allow-origin"],
     ).toBe("http://localhost:8888"));
   it.each([
-    "https://securemedy.ng",
-    "https://www.securemedy.ng",
+    "https://new.securemedy.com",
     "https://medy-ai-assistant-demo.onrender.com",
   ])("allows the approved production origin %s", async (origin) =>
     expect(

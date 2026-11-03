@@ -122,13 +122,13 @@ describe("public widget privacy and accessible failures", () => {
           title: "SecureMedy Services",
           domain: "public",
           snippet: "Services",
-          url: "https://securemedy.ng/services/",
+          url: "https://new.securemedy.com/services/",
         },
       ],
     });
     await vi.waitFor(() =>
       expect(root.querySelector("a.source")?.getAttribute("href")).toBe(
-        "https://securemedy.ng/services/",
+        "https://new.securemedy.com/services/",
       ),
     );
     expect(root.querySelector(".messages")?.getAttribute("role")).toBe("log");
@@ -144,7 +144,7 @@ describe("public widget privacy and accessible failures", () => {
     widget.action({ type: "open_external", target: "javascript:alert(1)" });
     widget.action({
       type: "open_external",
-      target: "https://securemedy.ng.evil.test/",
+      target: "https://new.securemedy.com.evil.test/",
     });
     expect(open).not.toHaveBeenCalled();
   });
@@ -193,13 +193,13 @@ describe("public response presentation and recovery", () => {
           id: "careers",
           type: "open_external",
           label: "View Careers",
-          target: "https://securemedy.ng/careers/",
+          target: "https://new.securemedy.com/careers/",
         },
         {
           id: "duplicate",
           type: "open_external",
           label: "Careers again",
-          target: "https://securemedy.ng/careers/",
+          target: "https://new.securemedy.com/careers/",
         },
       ],
       sources: [
@@ -208,21 +208,21 @@ describe("public response presentation and recovery", () => {
           title: "Careers",
           domain: "public",
           snippet: "Applications",
-          url: "https://securemedy.ng/careers/",
+          url: "https://new.securemedy.com/careers/",
         },
         {
           id: "two",
           title: "Services",
           domain: "public",
           snippet: "Services",
-          url: "https://securemedy.ng/services/",
+          url: "https://new.securemedy.com/services/",
         },
         {
           id: "three",
           title: "Services again",
           domain: "public",
           snippet: "Services",
-          url: "https://securemedy.ng/services",
+          url: "https://new.securemedy.com/services",
         },
       ],
     });

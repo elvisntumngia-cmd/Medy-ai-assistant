@@ -51,7 +51,9 @@ try {
       .filter((s) => s.startsWith("https://"));
     const report = await crawlPublic(
       command === "refresh"
-        ? seeds.filter((seed) => new URL(seed).hostname === "new.securemedy.com")
+        ? seeds.filter(
+            (seed) => new URL(seed).hostname === "new.securemedy.com",
+          )
         : seeds,
       {
         maxPages: 80,
@@ -59,6 +61,22 @@ try {
         allowedHosts: ["new.securemedy.com"],
       },
     );
+    const extracted = new Set(
+      report.manifest
+        .filter((page) => page.status === "extracted")
+        .map((page) => page.url),
+    );
+    if (command === "refresh")
+      mutateStore((store) => {
+        for (const source of store.sources)
+          if (
+            new URL(source.url).hostname === "new.securemedy.com" &&
+            !extracted.has(source.url)
+          ) {
+            source.state = "withdrawn";
+            source.verifiedAt = null;
+          }
+      }, file);
     const indexed = command === "refresh" ? indexOfficialSources(file) : [];
     const sitemapInventory = [
       ...new Set(
@@ -68,24 +86,24 @@ try {
           .filter((url) => new URL(url).hostname === "new.securemedy.com"),
       ),
     ].sort();
-    const extracted = new Set(
-      report.manifest
-        .filter((page) => page.status === "extracted")
-        .map((page) => page.url),
-    );
     const missingFromExtraction = sitemapInventory.filter(
       (url) => !extracted.has(url),
     );
     fs.writeFileSync(
       path.join(repositoryRoot(), "knowledge/editorial/crawl-report.json"),
-      JSON.stringify({ at: new Date().toISOString(), ...report, indexed }, null, 2) + "\n",
+      JSON.stringify(
+        { at: new Date().toISOString(), ...report, indexed },
+        null,
+        2,
+      ) + "\n",
     );
     fs.writeFileSync(
       path.join(repositoryRoot(), "knowledge/editorial/source-manifest.json"),
       JSON.stringify(
         {
           at: new Date().toISOString(),
-          scope: "new.securemedy.com public sitemap and discovered public links",
+          scope:
+            "new.securemedy.com public sitemap and discovered public links",
           pages: report.manifest,
           sitemapInventory,
           missingFromExtraction,

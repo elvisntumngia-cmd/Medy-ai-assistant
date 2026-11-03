@@ -16,27 +16,27 @@ afterEach(() => {
 });
 describe("shared safe public presentation", () => {
   it("uses Securemedy branding while preserving official URLs", () => {
-    expect(companyCopy("SecureMedy: https://securemedy.ng/")).toBe(
-      "Securemedy: https://securemedy.ng/",
+    expect(companyCopy("SecureMedy: https://new.securemedy.com/")).toBe(
+      "Securemedy: https://new.securemedy.com/",
     );
   });
   it("turns supported text links into inert navigation actions only", () => {
     const value = extractPublicLinks(
-      "See [services](https://securemedy.ng/services/) or https://evil.test/.",
+      "See [services](https://new.securemedy.com/services/) or https://evil.test/.",
     );
     expect(value.message).not.toContain("https:");
     expect(value.actions).toHaveLength(1);
     expect(value.actions[0]).toMatchObject({
       type: "open_external",
       label: "View Our Services",
-      target: "https://securemedy.ng/services/",
+      target: "https://new.securemedy.com/services/",
     });
     for (const url of [
       "javascript:alert(1)",
-      "https://securemedy.ng.evil.test/",
-      "https://user:pass@securemedy.ng/",
-      "https://securemedy.ng:444/",
-      "https://securemedy.ng/wp-admin/",
+      "https://new.securemedy.com.evil.test/",
+      "https://user:pass@new.securemedy.com/",
+      "https://new.securemedy.com:444/",
+      "https://new.securemedy.com/wp-admin/",
     ])
       expect(supportedPublicUrl(url)).toBe(false);
   });
@@ -62,7 +62,7 @@ describe("shared safe public presentation", () => {
                 title: "Source",
                 domain: "public",
                 snippet: "private-source-content",
-                url: "https://securemedy.ng/contact/",
+                url: "https://new.securemedy.com/contact/",
               },
             ],
             suggestedQuestions: [],

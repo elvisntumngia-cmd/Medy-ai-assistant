@@ -1,16 +1,12 @@
 [
   {
     "id": "warehouse-nighttime-theft",
-    "turns": [
-      "We have nighttime theft at our warehouse. What could help?"
-    ],
+    "turns": ["We have nighttime theft at our warehouse. What could help?"],
     "source": "physical-security"
   },
   {
     "id": "existing-cameras-loading-dock",
-    "turns": [
-      "We already have cameras but need help with the loading dock."
-    ],
+    "turns": ["We already have cameras but need help with the loading dock."],
     "source": "electronic-security"
   },
   {
@@ -40,45 +36,33 @@
   },
   {
     "id": "founder-versus-owner",
-    "turns": [
-      "Is the founder also the current owner?"
-    ],
-    "source": "leadership"
+    "turns": ["Is the founder also the current owner?"],
+    "intent": "ownership_review"
   },
   {
     "id": "contradictory-address",
-    "turns": [
-      "Your office address says 20744 and 20745. Which is right?"
-    ],
+    "turns": ["Your office address says 20744 and 20745. Which is right?"],
     "source": "company-contact"
   },
   {
     "id": "specific-state-license",
-    "turns": [
-      "Are you licensed in Virginia right now?"
-    ],
-    "source": "physical-security"
+    "turns": ["Are you licensed in Virginia right now?"],
+    "source": "company-licensing"
   },
   {
     "id": "active-job-posting",
-    "turns": [
-      "Is the armed security job open today?"
-    ],
+    "turns": ["Is the armed security job open today?"],
     "source": "careers"
   },
   {
     "id": "quote-request",
-    "turns": [
-      "Can I get a quote for unarmed guards?"
-    ],
+    "turns": ["Can I get a quote for unarmed guards?"],
     "source": "physical-security",
     "lead": true
   },
   {
     "id": "emergency",
-    "turns": [
-      "There is an active shooter at the warehouse."
-    ],
+    "turns": ["There is an active shooter at the warehouse."],
     "intent": "emergency"
   },
   {
@@ -90,10 +74,7 @@
   },
   {
     "id": "short-follow-up",
-    "turns": [
-      "Could you explain electronic security?",
-      "Yes, carry on."
-    ],
+    "turns": ["Could you explain electronic security?", "Yes, carry on."],
     "source": "electronic-security"
   }
 ]

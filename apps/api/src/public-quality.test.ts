@@ -82,7 +82,20 @@ describe("public conversation pipeline regression (scripted outputs, not a model
               },
         ),
       );
-      const answer = await provider.chat("public", history, []);
+      let answer;
+      try {
+        answer = await provider.chat("public", history, []);
+      } catch (error) {
+        const sentIds = JSON.parse(
+          mocks.create.mock.calls
+            .at(-1)![0]
+            .messages[0].content.split("APPROVED_KNOWLEDGE\n")[1],
+        ).map((item: { id: string }) => item.id);
+        throw new Error(
+          `Fixture ${fixture.id} failed with sanitized reason ${String(logs.at(-1)?.reason)}; sources=${fixture.sources.join(",")}; sent=${sentIds.includes(fixture.sources[0])}`,
+          { cause: error },
+        );
+      }
       if (fixture.boundary) {
         expect(answer.intent).toBe(fixture.boundary);
         expect(mocks.create).not.toHaveBeenCalled();

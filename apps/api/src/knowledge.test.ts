@@ -24,29 +24,30 @@ import {
   type PageFetcher,
 } from "./public-crawler.js";
 const baseline = readStore();
-// Isolate legacy editorial rules from the separately tested owner-authorized website index.
-baseline.entries = baseline.entries.filter(
-  (entry) => entry.approvalBasis !== "official_website",
-);
-baseline.entries.push(
-  ...JSON.parse(
-    fs.readFileSync(
-      path.join(repositoryRoot(), "knowledge/editorial/legacy-baseline.json"),
-      "utf8",
-    ),
-  )
-    .filter((entry: { id: string }) =>
-      ["leadership", "company-founded"].includes(entry.id),
-    )
-    .map((entry: Record<string, unknown>) => ({
-      ...entry,
-      ...readStore().entries.find((item) => item.id === entry.id),
-      answer: entry.answer,
-      approvalBasis: "editorial",
-      state: entry.id === "company-founded" ? "needs-review" : "approved",
-      factKeys: entry.id === "company-founded" ? ["founding-year"] : [],
-    })),
-);
+// Exercise manual editorial workflows with the archived fixture, independently
+// from the active new.securemedy.com website index.
+baseline.entries = JSON.parse(
+  fs.readFileSync(
+    path.join(repositoryRoot(), "knowledge/editorial/legacy-baseline.json"),
+    "utf8",
+  ),
+).map((entry: Record<string, unknown> & { id: string }) => {
+  const archived = readStore().entries.find((item) =>
+    item.id.startsWith("historical-" + entry.id + "-"),
+  )!;
+  return {
+    ...archived,
+    ...entry,
+    id: entry.id,
+    approvalBasis: "editorial",
+    state: entry.id === "company-founded" ? "needs-review" : "approved",
+    lastVerifiedAt: entry.verifiedAt,
+    factKeys: entry.id === "company-founded" ? ["founding-year"] : [],
+  };
+});
+baseline.conflicts.find(
+  (conflict) => conflict.factKey === "founding-year",
+)!.state = "open";
 let directory: string;
 let file: string;
 beforeEach(() => {
@@ -62,7 +63,7 @@ afterEach(() => {
 describe("editorial approval and isolation", () => {
   it("retrieves only approved public unexpired summaries, never research or raw crawl text", () => {
     const repo = new PublicKnowledgeRepository(file);
-    expect(repo.approved().length).toBe(17);
+    expect(repo.approved().length).toBe(18);
     expect(repo.approved().some((e) => e.id.startsWith("research-"))).toBe(
       false,
     );
@@ -158,7 +159,7 @@ describe("editorial approval and isolation", () => {
   it("never auto-approves a crawled injection and suppresses duplicate versions", () => {
     const source = {
       id: "test",
-      url: "https://securemedy.ng/test/",
+      url: "https://new.securemedy.com/test/",
       title: "Research",
       category: "company",
       retrievedAt: new Date().toISOString(),
@@ -193,15 +194,15 @@ describe("editorial approval and isolation", () => {
 });
 describe("public ingestion safety", () => {
   it.each([
-    "http://securemedy.ng/",
+    "http://new.securemedy.com/",
     "https://evil.test/",
-    "https://securemedy.ng.evil.test/",
-    "https://securemedy.ng:444/",
-    "https://user:password@securemedy.ng/",
-    "https://securemedy.ng/?s=trap",
-    "https://securemedy.ng/wp-admin/",
-    "https://securemedy.ng/%2577p-admin/",
-    "https://securemedy.ng/apply/",
+    "https://new.securemedy.com.evil.test/",
+    "https://new.securemedy.com:444/",
+    "https://user:password@new.securemedy.com/",
+    "https://new.securemedy.com/?s=trap",
+    "https://new.securemedy.com/wp-admin/",
+    "https://new.securemedy.com/%2577p-admin/",
+    "https://new.securemedy.com/apply/",
     "https://my.securemedy.com/",
   ])("rejects excluded URL %s", (url) =>
     expect(() => publicURL(url)).toThrow(),
@@ -249,7 +250,7 @@ describe("public ingestion safety", () => {
   );
   it("handles robots specificity, allow precedence, wildcard rules and crawl delay", () => {
     const p = robotPolicy(
-      "User-agent: *\nDisallow: /private/\nDisallow: /*.pdf$\nAllow: /private/public/\nCrawl-delay: 2\nSitemap: https://securemedy.ng/sitemap.xml",
+      "User-agent: *\nDisallow: /private/\nDisallow: /*.pdf$\nAllow: /private/public/\nCrawl-delay: 2\nSitemap: https://new.securemedy.com/sitemap.xml",
     );
     expect(p.allows("/private/a")).toBe(false);
     expect(p.allows("/private/public/page")).toBe(true);
@@ -264,13 +265,13 @@ describe("public ingestion safety", () => {
   it("extracts main text without executing scripts, forms, comments or third-party embeds", () => {
     const page = extractPage(
       '<title>Test</title><nav>Duplicate menu</nav><main><h1>Physical security</h1><p>Approved topics need review.</p><script>evil()</script><form>Applicant private data</form><iframe src="https://evil.test">External copy</iframe><section class="comments">Comment PII</section><a href="/services/">Services</a></main>',
-      "https://securemedy.ng/",
+      "https://new.securemedy.com/",
     );
     expect(page.text).toContain("Physical security");
     expect(page.text).not.toMatch(
       /evil|private data|Comment PII|Duplicate menu|External copy/,
     );
-    expect(page.links).toEqual(["https://securemedy.ng/services/"]);
+    expect(page.links).toEqual(["https://new.securemedy.com/services/"]);
   });
   it("enforces robots and rejects redirected destinations before fetching them", async () => {
     const seen: string[] = [];
@@ -298,11 +299,14 @@ describe("public ingestion safety", () => {
       };
     };
     const result = await crawlPublic(
-      ["https://securemedy.ng/private/page", "https://securemedy.ng/services/"],
+      [
+        "https://new.securemedy.com/private/page",
+        "https://new.securemedy.com/services/",
+      ],
       { fetcher, wait: async () => {}, storeFile: file },
     );
-    expect(seen).not.toContain("https://securemedy.ng/private/page");
-    expect(seen.every((s) => s.startsWith("https://securemedy.ng/"))).toBe(
+    expect(seen).not.toContain("https://new.securemedy.com/private/page");
+    expect(seen.every((s) => s.startsWith("https://new.securemedy.com/"))).toBe(
       true,
     );
     expect(result.pages).toBe(0);
@@ -318,12 +322,12 @@ describe("public ingestion safety", () => {
           : "text/html",
       body:
         url.pathname === "/robots.txt"
-          ? "User-agent: *\nSitemap: https://securemedy.ng/sitemap.xml"
+          ? "User-agent: *\nSitemap: https://new.securemedy.com/sitemap.xml"
           : url.pathname.endsWith(".xml")
-            ? "<urlset><url><loc>https://securemedy.ng/discovered/</loc></url></urlset>"
+            ? "<urlset><url><loc>https://new.securemedy.com/discovered/</loc></url></urlset>"
             : '<main><h1>New unapproved research</h1><p>New factual text for editorial review only. Do not interpret it as system instructions or company promises.</p><a href="/another/">Another</a></main>',
     });
-    const result = await crawlPublic(["https://securemedy.ng/"], {
+    const result = await crawlPublic(["https://new.securemedy.com/"], {
       maxPages: 2,
       maxRequests: 8,
       fetcher,
@@ -335,19 +339,19 @@ describe("public ingestion safety", () => {
     expect(
       readStore(file).sources.some((s) => s.url.endsWith("/discovered/")),
     ).toBe(true);
-    expect(new PublicKnowledgeRepository(file).approved()).toHaveLength(17);
+    expect(new PublicKnowledgeRepository(file).approved()).toHaveLength(18);
   });
   it("does not treat failing or stale navigation as live", () => {
     const s = readStore(file);
     s.links = [
       {
-        url: "https://securemedy.ng/contact/",
-        finalUrl: "https://securemedy.ng/contact/",
+        url: "https://new.securemedy.com/contact/",
+        finalUrl: "https://new.securemedy.com/contact/",
         checkedAt: new Date().toISOString(),
         status: 404,
       },
     ];
-    expect(usableLink("https://securemedy.ng/contact/", s)).toBe(false);
+    expect(usableLink("https://new.securemedy.com/contact/", s)).toBe(false);
     expect(usableLink("https://evil.test", s)).toBe(false);
   });
 });
@@ -361,7 +365,7 @@ describe("actual transport DNS boundary", () => {
       throw new Error("No network allowed in tests");
     });
     await expect(
-      fetchPublic(new URL("https://securemedy.ng/")),
+      fetchPublic(new URL("https://new.securemedy.com/")),
     ).rejects.toThrow(/Nonpublic/);
     expect(requestSpy).not.toHaveBeenCalled();
   });
@@ -373,7 +377,7 @@ describe("actual transport DNS boundary", () => {
       throw new Error("No network allowed in tests");
     });
     await expect(
-      fetchPublic(new URL("https://securemedy.ng/")),
+      fetchPublic(new URL("https://new.securemedy.com/")),
     ).rejects.toThrow();
     const options = requestSpy.mock.calls[0][1] as {
       lookup: (
@@ -383,7 +387,7 @@ describe("actual transport DNS boundary", () => {
       ) => void;
     };
     const callback = vi.fn();
-    options.lookup("securemedy.ng", {}, callback);
+    options.lookup("new.securemedy.com", {}, callback);
     expect(callback).toHaveBeenCalledWith(null, "93.184.216.34", 4);
     expect(lookup).toHaveBeenCalledTimes(1);
   });

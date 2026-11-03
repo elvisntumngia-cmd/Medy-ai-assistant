@@ -12,7 +12,11 @@ import {
   openPublicConflicts,
   getPublishedJobs,
 } from "./public-knowledge.js";
-import { publicBoundary, redactContactDetails } from "./public-policy.js";
+import {
+  conflictBoundary,
+  publicBoundary,
+  redactContactDetails,
+} from "./public-policy.js";
 
 export class AIControlError extends Error {
   constructor(
@@ -105,7 +109,7 @@ export class OpenAIProvider implements AIProvider {
       content: redactContactDetails(m.content),
     }));
     const latest = messages.at(-1)!.content;
-    const boundary = publicBoundary(latest);
+    const boundary = publicBoundary(latest) || conflictBoundary(latest);
     if (boundary) return boundary;
     // Latest-turn matches have priority; history fills context for short follow-ups.
     const latestMatches = retrievePublicKnowledge(latest, 6);
@@ -119,15 +123,37 @@ export class OpenAIProvider implements AIProvider {
       ? retrievePublicKnowledge(previousQuery, 3)
       : [];
     const essentials = getPublicKnowledge().filter((e) =>
-      ["company-contact", "careers", "employee-portal"].includes(e.id),
+      [
+        "company-overview",
+        "services-overview",
+        "company-contact",
+        "careers",
+        "employee-portal",
+      ].includes(e.id),
     );
     const jobs =
       latestMatches[0]?.topic === "careers" ? getPublishedJobs() : [];
+    const serviceDetails = latestMatches.some(
+      (entry) => entry.topic === "services",
+    )
+      ? getPublicKnowledge().filter((entry) =>
+          [
+            "services-overview",
+            "physical-security",
+            "electronic-security",
+            "risk-management",
+          ].includes(entry.id),
+        )
+      : [];
     const approved = [
       ...new Map(
-        [...latestMatches, ...previousMatches, ...essentials, ...jobs].map(
-          (e) => [e.id, e],
-        ),
+        [
+          ...latestMatches,
+          ...previousMatches,
+          ...essentials,
+          ...serviceDetails,
+          ...jobs,
+        ].map((e) => [e.id, e]),
       ).values(),
     ];
     const system =

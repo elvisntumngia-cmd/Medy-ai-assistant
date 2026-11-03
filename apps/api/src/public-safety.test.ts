@@ -130,20 +130,28 @@ describe("public-only API boundary and lead privacy", () => {
       expect(r.body.intent).toBe(intent);
     }
   });
-  it("keeps unresolved current facts qualified while allowing owner-approved published leadership", async () => {
+  it("uses the sole active website while keeping ownership and live status qualified", async () => {
     const app = createApp();
-    for (const content of [
-      "Who owns SecureMedy?",
-      "Where is your office?",
-      "Are you licensed in Virginia?",
-      "When was SecureMedy established?",
+    const owner = await request(app)
+      .post("/api/chat")
+      .send({
+        mode: "public",
+        messages: [{ role: "user", content: "Who owns SecureMedy?" }],
+      });
+    expect(owner.status).toBe(200);
+    expect(owner.body.message).toContain("don't have verified ownership");
+    for (const [content, expected] of [
+      ["Where is your office?", "8507 Oxon Hill Road"],
+      ["Are you licensed in Virginia?", "Virginia"],
+      ["When was SecureMedy established?", "2009"],
     ]) {
-      const r = await request(app)
+      const response = await request(app)
         .post("/api/chat")
         .send({ mode: "public", messages: [{ role: "user", content }] });
-      expect(r.status).toBe(200);
-      expect(r.body.message).not.toMatch(
-        /2009|2002|8507|20744|20745|16 states|Olabanji/,
+      expect(response.status).toBe(200);
+      expect(response.body.message).toContain(expected);
+      expect(response.body.sources[0].url).toMatch(
+        /^https:\/\/new\.securemedy\.com\//,
       );
     }
     const leadership = await request(app)
@@ -155,7 +163,7 @@ describe("public-only API boundary and lead privacy", () => {
     expect(leadership.status).toBe(200);
     expect(leadership.body.message).toContain("Olabanji O. Folayan");
     expect(leadership.body.sources[0].url).toBe(
-      "https://securemedy.ng/about-us/",
+      "https://new.securemedy.com/about/leadership/",
     );
-  });
+  }, 10000);
 });

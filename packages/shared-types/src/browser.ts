@@ -19,14 +19,7 @@ export function supportedPublicUrl(value: string) {
       !url.username &&
       !url.password &&
       !url.search &&
-      [
-        "securemedy.ng",
-        "www.securemedy.ng",
-        "securemedy.com",
-        "www.securemedy.com",
-        "new.securemedy.com",
-        "my.securemedy.com",
-      ].includes(url.hostname) &&
+      ["new.securemedy.com", "my.securemedy.com"].includes(url.hostname) &&
       !/wp-admin|wp-json|wp-login|xmlrpc|logout|\.(?:zip|exe)$/i.test(path)
     );
   } catch {

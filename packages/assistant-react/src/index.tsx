@@ -294,7 +294,7 @@ export function MedyAssistant({
             </div>
             {m.response?.sources.map((s) => (
               <small className="medy-source" key={s.id}>
-                Source:{" "}
+                Learn more:{" "}
                 {s.url && supportedPublicUrl(s.url) ? (
                   <a
                     href={s.url}

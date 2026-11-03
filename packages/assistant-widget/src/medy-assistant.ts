@@ -217,7 +217,7 @@ class MedyAssistantWidget extends HTMLElement {
     article.append(actions);
     for (const source of reply.sources) {
       if (source.url && this.safeLink(source.url)) {
-        const link = el("a", "source", "Source: " + source.title);
+        const link = el("a", "source", "Learn more: " + source.title);
         link.href = source.url;
         link.target =
           new URL(source.url).origin === location.origin ? "_self" : "_blank";

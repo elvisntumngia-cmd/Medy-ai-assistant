@@ -70,7 +70,9 @@ describe("OpenAI provider contract and conversation grounding", () => {
     expect(mocks.create.mock.calls[0][0].messages.at(-1).content).toBe(content);
     expect(
       reply.actions.some(
-        (a) => a.target === "https://securemedy.ng/service/physical-security/",
+        (a) =>
+          a.target ===
+          "https://new.securemedy.com/services/security-personnel/",
       ),
     ).toBe(true);
   });

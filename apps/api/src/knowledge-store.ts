@@ -7,13 +7,7 @@ import { PublicKnowledgeItemSchema } from "./public-knowledge-schema.js";
 
 export const hashText = (text: string) =>
   crypto.createHash("sha256").update(text).digest("hex");
-const officialPublicHosts = new Set([
-  "securemedy.ng",
-  "www.securemedy.ng",
-  "securemedy.com",
-  "www.securemedy.com",
-  "new.securemedy.com",
-]);
+const officialPublicHosts = new Set(["new.securemedy.com"]);
 const state = z.enum(["approved", "rejected", "needs-review", "withdrawn"]);
 const version = z.object({
   at: z.string().datetime(),
@@ -238,22 +232,28 @@ export class PublicKnowledgeRepository implements EditorialKnowledgeRepository {
         "Internal retrieval requires a separate authenticated adapter",
       );
     const tokens = words(request.query);
-    const score = (entry: EditorialEntry) =>
-      tokens.reduce(
-        (n, t) =>
-          n +
-          (words(
-            entry.id +
-              " " +
-              entry.examples.join(" ") +
-              " " +
-              entry.aliases.join(" "),
-          ).includes(t)
-            ? 4
-            : 0) +
-          (words(entry.answer).includes(t) ? 1 : 0),
-        0,
+    const phrase = tokens.join(" ");
+    const score = (entry: EditorialEntry) => {
+      const answerWords = words(entry.answer);
+      return (
+        (phrase.length > 0 && answerWords.join(" ").includes(phrase) ? 8 : 0) +
+        tokens.reduce(
+          (n, t) =>
+            n +
+            (words(
+              entry.id +
+                " " +
+                entry.examples.join(" ") +
+                " " +
+                entry.aliases.join(" "),
+            ).includes(t)
+              ? 4
+              : 0) +
+            (answerWords.includes(t) ? 1 : 0),
+          0,
+        )
       );
+    };
     const ranked = this.approved()
       .map((entry) => ({ entry, score: score(entry) }))
       .filter((item) => item.score > 0)

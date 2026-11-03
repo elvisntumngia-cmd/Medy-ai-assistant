@@ -40,10 +40,12 @@ export function openPublicConflicts() {
 
 /** Only freshly refreshed public listings; these do not prove current hiring status. */
 export function getPublishedJobs() {
+  const now = Date.now();
   return getPublicKnowledge().filter(
     (entry) =>
       entry.id.startsWith("official-job-") &&
       new URL(entry.sourceUrl).hostname === "new.securemedy.com" &&
-      Date.parse(entry.retrievedAt) > Date.now() - 86400000,
+      Date.parse(entry.retrievedAt) <= now &&
+      Date.parse(entry.retrievedAt) > now - 86400000,
   );
 }

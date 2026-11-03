@@ -52,6 +52,62 @@ const requestAction = (): AssistantAction => ({
   label: "Request Security Services",
   requiresConfirmation: false,
 });
+const visitorAnswers: Record<string, string> = {
+  "company-overview":
+    "We provide professional security and emergency-management services for government agencies, commercial properties, healthcare facilities, schools, residential communities and other organizations.",
+  "company-founded":
+    "Our website says Securemedy Incorporated was founded in 2009 as an American-owned and American-managed security services provider.",
+  "company-motto":
+    "Our corporate motto is “On Time Response | Real Time Events.”",
+  "mission-vision":
+    "Our mission is to detect vulnerabilities, deter threats, observe risks and recommend protective measures through superior security services. Our values include integrity, professionalism, reliability, accountability and client-focused service.",
+  "company-licensing":
+    "Our website lists security agency licenses in the District of Columbia, Florida, Georgia, Massachusetts, Maryland, New Jersey, New York, Pennsylvania, Tennessee, Texas, Virginia and West Virginia. Please confirm current licensing for your assignment with our team.",
+  "company-contact":
+    "You can call us at (240) 419-3125 or email info@securemedy.com. Our office is at 8507 Oxon Hill Road, Suite 101, Fort Washington, MD 20744, and published office hours are Monday through Friday, 8:00 AM to 5:00 PM.",
+  "services-overview":
+    "We provide physical security personnel, patrol and response, security technology, access control, risk management, security consulting, executive protection, event security and security program management.",
+  "electronic-security":
+    "Our security technology services include video surveillance and CCTV, control-room operations, remote monitoring, access-control systems and intrusion detection.",
+  "risk-management":
+    "We provide security risk and vulnerability assessments, threat identification, security planning, loss prevention and emergency planning tailored to the organization.",
+  "emergency-management":
+    "We can help with emergency and continuity planning, incident procedures, resilience and security plans based on your facility and operations.",
+  "personnel-security":
+    "Our personnel security services include armed and unarmed officers, site and facility security, front-desk and reception coverage, and short- or long-term staffing.",
+  "concierge-security":
+    "We provide front-desk, reception and concierge security that combines visitor screening and access control with professional customer service.",
+  "specialized-services":
+    "Our specialized services include executive protection, special-event security, escort services and special assignments tailored to the risk profile.",
+  industries:
+    "We serve government and public-sector facilities, healthcare, corporate and commercial properties, construction, education, retail, hospitality and events, residential communities, industrial and manufacturing sites, and transportation and logistics operations.",
+  "industry-government":
+    "We provide security personnel, access control, risk assessments, emergency planning and executive protection for government and public-sector environments.",
+  "industry-healthcare":
+    "We support hospitals, medical facilities and healthcare environments with security personnel, access control, patrol, risk management and security technology tailored to patient, staff and visitor safety.",
+  "industry-commercial":
+    "We support offices, corporate campuses and commercial properties with professional personnel, access control, patrol and security technology.",
+  "industry-construction":
+    "We support construction sites with access control, patrols and protective services for personnel, equipment and assets.",
+  "industry-education":
+    "We provide security solutions for schools, colleges and universities, including campus personnel, access control, patrol and emergency planning.",
+  "industry-retail":
+    "We provide retail security and loss-prevention support designed to protect people, inventory and customer environments.",
+  "industry-hospitality-events":
+    "We provide security support for hotels, venues, conferences, special events and large gatherings.",
+  "industry-residential":
+    "We provide security solutions for managed residential communities, homeowners associations and apartment environments.",
+  "industry-industrial":
+    "We support industrial facilities, manufacturing environments, critical infrastructure and operational sites with tailored security programs.",
+  "industry-logistics":
+    "We support transportation facilities, warehouses, distribution centers and logistics operations with tailored security services.",
+  careers:
+    "You can view our current opportunities and application guidance on the Careers page. We cannot confirm vacancies are still open because the website does not provide a reliable live status or expiry feed.",
+  "employee-portal":
+    "Current employees can use Employee Login for pay stubs, personal information and direct deposit. I cannot access employee records or accept passwords, verification codes, banking details or government identification numbers.",
+  privacy:
+    "You can review the published M3dyHub privacy policy for information about data collection, use and protection.",
+};
 const reply = (
   message: string,
   intent: string,
@@ -59,6 +115,7 @@ const reply = (
     actions?: AssistantAction[];
     suggestions?: string[];
     source?: PublicKnowledgeItem;
+    sources?: PublicKnowledgeItem[];
     confidence?: number;
   } = {},
 ) =>
@@ -69,17 +126,21 @@ const reply = (
     actions: options.actions || [],
     suggestedQuestions: options.suggestions || [],
     escalation: null,
-    sources: options.source
-      ? [
-          {
-            id: options.source.id,
-            title: options.source.sourceTitle,
-            domain: "public",
-            snippet: options.source.answer,
-            url: options.source.sourceUrl,
-          },
-        ]
-      : [],
+    sources: [
+      ...(options.sources || []),
+      ...(options.source ? [options.source] : []),
+    ]
+      .filter(
+        (item, index, items) =>
+          items.findIndex(({ id }) => id === item.id) === index,
+      )
+      .map((item) => ({
+        id: item.id,
+        title: item.sourceTitle,
+        domain: "public" as const,
+        snippet: item.answer,
+        url: item.sourceUrl,
+      })),
   });
 const fromKnowledge = (
   id: string,
@@ -98,7 +159,7 @@ const fromKnowledge = (
         ],
       },
     );
-  return reply(message || item.answer, intent, {
+  return reply(message || visitorAnswers[id] || item.answer, intent, {
     source: item,
     actions: [
       ...(item.action
@@ -294,8 +355,25 @@ const interpret = (q: string): TopicMatch | null => {
     "government facility",
     "property",
     "building",
-    "venue",
+    " venue ",
   ]);
+  const specificIndustry = (
+    [
+      [["hospital", "healthcare", "medical"], "industry-healthcare"],
+      [["school", "university", "college", "education"], "industry-education"],
+      [["warehouse", "logistics", "distribution"], "industry-logistics"],
+      [["construction"], "industry-construction"],
+      [["retail", "shopping center"], "industry-retail"],
+      [["hotel", "hospitality", "conference"], "industry-hospitality-events"],
+      [["residential", "apartment", "hoa"], "industry-residential"],
+      [["industrial", "manufacturing"], "industry-industrial"],
+      [["government facility", "public sector"], "industry-government"],
+      [
+        ["commercial building", "office building", "corporate campus"],
+        "industry-commercial",
+      ],
+    ] as [string[], string][]
+  ).find(([terms]) => hasAny(q, terms));
   const guardNeed = hasAny(q, [
     "need security",
     "want security",
@@ -315,11 +393,26 @@ const interpret = (q: string): TopicMatch | null => {
     "unarmed guard",
     "security officer",
   ]);
+  if (
+    specificIndustry &&
+    hasAny(q, ["about", "solutions", "serve", "industry"])
+  )
+    return {
+      knowledgeId: specificIndustry[1],
+      intent: "industries",
+      confidence: 0.96,
+    };
   if (guardNeed || (property && hasAny(q, ["security", "protect", "guard"])))
     return {
       knowledgeId: "physical-security",
       intent: "physical_security",
       confidence: 0.94,
+    };
+  if (specificIndustry)
+    return {
+      knowledgeId: specificIndustry[1],
+      intent: "industries",
+      confidence: 0.96,
     };
   if (
     hasAny(q, [
@@ -544,16 +637,6 @@ export class PublicAssistantProvider implements AIProvider {
           ],
         },
       );
-    if (
-      match?.intent === "licensing" &&
-      hasAny(q, ["virginia", " va ", "specific state", "my state"])
-    )
-      return fromKnowledge(
-        match.knowledgeId,
-        match.intent,
-        [],
-        "I can't confirm current coverage in that specific state from the approved public information. Please contact the team to confirm availability.",
-      );
     if (match?.intent === "physical_security") {
       const needsConfirmation = hasAny(q, [
         "church",
@@ -578,12 +661,7 @@ export class PublicAssistantProvider implements AIProvider {
     if (match?.intent === "careers") {
       const jobs = getPublishedJobs().slice(0, 3);
       if (jobs.length)
-        return fromKnowledge(
-          "careers",
-          "careers",
-          jobs.map((job) =>
-            action("job-" + job.id, job.action!.label, job.sourceUrl),
-          ),
+        return reply(
           "Our website lists these roles:\n" +
             jobs
               .map(
@@ -592,7 +670,16 @@ export class PublicAssistantProvider implements AIProvider {
               )
               .join("\n") +
             "\nWe cannot confirm vacancies are still open: the website does not expose a reliable live status or expiry feed. Use the role buttons and Careers page for availability and application guidance.",
+          "careers",
+          {
+            source: publicKnowledgeById.get("careers"),
+            sources: jobs,
+            actions: jobs.map((job) =>
+              action("job-" + job.id, job.action!.label, job.sourceUrl),
+            ),
+          },
         );
+      return fromKnowledge("careers", "careers");
     }
     if (match?.intent === "services")
       return fromKnowledge(match.knowledgeId, match.intent, [requestAction()]);

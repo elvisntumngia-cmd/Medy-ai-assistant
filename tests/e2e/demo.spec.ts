@@ -47,7 +47,7 @@ test("public assistant supports independent topic changes without qualification"
   await send("Are you hiring?");
   await expect(page.getByText(/Careers page/i)).toBeVisible();
   await send("Do you install cameras?");
-  await expect(page.getByText(/CCTV design and installation/i)).toBeVisible();
+  await expect(page.getByText(/video surveillance and CCTV/i)).toBeVisible();
   await send("What's your phone number?");
   await expect(page.getByText(/\(240\) 419-3125/i)).toBeVisible();
 });
@@ -163,7 +163,7 @@ test("implemented data, department contact, and escalation actions respond", asy
     .fill("I want someone to call me");
   await page.getByRole("button", { name: "Send" }).click();
   await expect(
-    page.getByRole("button", { name: "Contact SecureMedy" }),
+    page.getByRole("button", { name: "Contact Our Team" }),
   ).toBeVisible();
 });
 test("mobile widget opens and closes", async ({ page }) => {
@@ -286,7 +286,7 @@ test("WordPress widget renders AI citations and retains corrections with a mocke
             title: "Electronic Security",
             domain: "public",
             snippet: "Approved services",
-            url: "https://securemedy.ng/service/electronic-security/",
+            url: "https://new.securemedy.com/services/security-technology/",
           },
         ],
       }),
@@ -298,7 +298,7 @@ test("WordPress widget renders AI citations and retains corrections with a mocke
   await input.fill("We already have cameras at the loading dock");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(
-    page.getByRole("link", { name: "Source: Electronic Security" }),
+    page.getByRole("link", { name: "Learn more: Electronic Security" }),
   ).toBeVisible();
   await input.fill("Correction: I am the property manager, not the homeowner");
   await page.getByRole("button", { name: "Send", exact: true }).click();
@@ -358,13 +358,13 @@ test("public widget deduplicates destinations and recovers an unanswered languag
             id: "career",
             type: "open_external",
             label: "View Careers",
-            target: "https://securemedy.ng/careers/",
+            target: "https://new.securemedy.com/careers/",
           },
           {
             id: "career-again",
             type: "open_external",
             label: "Duplicate",
-            target: "https://securemedy.ng/careers/",
+            target: "https://new.securemedy.com/careers/",
           },
         ],
         sources: [
@@ -373,7 +373,7 @@ test("public widget deduplicates destinations and recovers an unanswered languag
             title: "Careers",
             domain: "public",
             snippet: "Application guidance",
-            url: "https://securemedy.ng/careers/",
+            url: "https://new.securemedy.com/careers/",
           },
         ],
       }),
@@ -429,7 +429,7 @@ for (const width of [1280, 390])
                 id: "services",
                 type: "open_external",
                 label: "View Our Services",
-                target: "https://securemedy.ng/services/",
+                target: "https://new.securemedy.com/services/",
               },
             ],
             sources: [],

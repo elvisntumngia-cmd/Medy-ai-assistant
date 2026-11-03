@@ -11,13 +11,7 @@ import {
 } from "./knowledge-store.js";
 export const CRAWL_AGENT = "MedyPublicResearch/1.0";
 /** Exact, owner-approved public website hosts. Authentication systems stay outside this boundary. */
-export const officialPublicHosts = new Set([
-  "securemedy.ng",
-  "www.securemedy.ng",
-  "securemedy.com",
-  "www.securemedy.com",
-  "new.securemedy.com",
-]);
+export const officialPublicHosts = new Set(["new.securemedy.com"]);
 export function publicURL(value: string, base?: string) {
   const url = new URL(value, base);
   const decoded = decodeURIComponent(decodeURIComponent(url.pathname));
@@ -236,6 +230,31 @@ export function robotPolicy(text: string) {
   };
 }
 type Node = DefaultTreeAdapterMap["node"];
+const windows1252Characters = "€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ";
+const windows1252Values = [
+  0x80, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8e,
+  0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0x9b, 0x9c, 0x9e,
+  0x9f,
+];
+const windows1252Bytes = new Map(
+  [...windows1252Characters].map(
+    (character, index) => [character, windows1252Values[index]] as const,
+  ),
+);
+const repairToken = (value: string) => {
+  if (!/[âÂ]/.test(value)) return value;
+  const bytes: number[] = [];
+  for (const character of value) {
+    const code = character.codePointAt(0)!;
+    const byte = code <= 0xff ? code : windows1252Bytes.get(character);
+    if (byte === undefined) return value;
+    bytes.push(byte);
+  }
+  const decoded = Buffer.from(bytes).toString("utf8");
+  return decoded.includes("�") ? value : decoded;
+};
+const repairPublishedText = (value: string) =>
+  value.split(/(\s+)/).map(repairToken).join("");
 const forbidden = new Set([
   "script",
   "style",
@@ -277,7 +296,10 @@ export function extractPage(html: string, url: string) {
       )
         return "";
       if (node.tagName === "main" || attrs.role === "main") main = node;
-      if (node.tagName === "meta" && attrs.name?.toLowerCase() === "description")
+      if (
+        node.tagName === "meta" &&
+        attrs.name?.toLowerCase() === "description"
+      )
         description = attrs.content?.trim().slice(0, 500) || "";
       if (node.tagName === "link" && attrs.rel?.toLowerCase() === "canonical")
         try {
@@ -286,17 +308,20 @@ export function extractPage(html: string, url: string) {
           /* Retain the fetched URL when a malformed canonical is published. */
         }
       if (node.tagName === "a" && attrs.href) {
-        const label = "childNodes" in node
-          ? node.childNodes
-              .map((n) => ("value" in n ? n.value : ""))
-              .join(" ")
-              .replace(/\s+/g, " ")
-              .trim()
-              .slice(0, 160)
-          : "";
+        const label =
+          "childNodes" in node
+            ? node.childNodes
+                .map((n) => ("value" in n ? n.value : ""))
+                .join(" ")
+                .replace(/\s+/g, " ")
+                .trim()
+                .slice(0, 160)
+            : "";
         try {
           const destination = new URL(attrs.href, url);
-          const pathname = decodeURIComponent(destination.pathname).toLowerCase();
+          const pathname = decodeURIComponent(
+            destination.pathname,
+          ).toLowerCase();
           const kind = /\.(?:pdf|docx?|xlsx?|pptx?)$/.test(pathname)
             ? "download"
             : officialPublicHosts.has(destination.hostname)
@@ -321,7 +346,7 @@ export function extractPage(html: string, url: string) {
       : "";
   };
   walk(doc, false);
-  const text = walk(main || doc, true)
+  const text = repairPublishedText(walk(main || doc, true))
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 24000);
@@ -345,12 +370,20 @@ export function pageCategory(url: string) {
   if (/^\/careers\/jobs\//.test(pathname)) return "current-job-opportunities";
   if (/^\/careers\//.test(pathname)) return "careers-and-recruitment";
   if (/^\/resources\/m3dyhub\//.test(pathname)) return "public-m3dyhub";
-  if (/^\/resources\/employee/.test(pathname)) return "public-employee-resources";
+  if (/^\/resources\/employee/.test(pathname))
+    return "public-employee-resources";
   if (/^\/resources\/faqs?\//.test(pathname)) return "security-faqs";
-  if (/^\/resources\/(?:security-insights|guides|case-studies)\//.test(pathname))
+  if (
+    /^\/resources\/(?:security-insights|guides|case-studies)\//.test(pathname)
+  )
     return "security-resources";
-  if (/^\/resources\/client/.test(pathname)) return "client-resources-and-procurement";
-  if (/^\/(?:about|our-story|mission|vision|leadership|approach|standards)/.test(pathname))
+  if (/^\/resources\/client/.test(pathname))
+    return "client-resources-and-procurement";
+  if (
+    /^\/(?:about|our-story|mission|vision|leadership|approach|standards)/.test(
+      pathname,
+    )
+  )
     return "company-overview-and-leadership";
   if (/^\/contact\//.test(pathname)) return "contact-and-business-inquiries";
   return "company-overview";
