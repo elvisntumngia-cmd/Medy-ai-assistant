@@ -7,6 +7,13 @@ import { PublicKnowledgeItemSchema } from "./public-knowledge-schema.js";
 
 export const hashText = (text: string) =>
   crypto.createHash("sha256").update(text).digest("hex");
+const officialPublicHosts = new Set([
+  "securemedy.ng",
+  "www.securemedy.ng",
+  "securemedy.com",
+  "www.securemedy.com",
+  "new.securemedy.com",
+]);
 const state = z.enum(["approved", "rejected", "needs-review", "withdrawn"]);
 const version = z.object({
   at: z.string().datetime(),
@@ -34,6 +41,8 @@ export const SourceRecordSchema = z.object({
   url: z.string().url(),
   title: z.string(),
   category: z.string(),
+  canonicalUrl: z.string().url().optional(),
+  description: z.string().max(500).optional(),
   retrievedAt: z.string().datetime(),
   contentHash: z.string(),
   text: z.string().max(24000),
@@ -139,7 +148,7 @@ export function hasOfficialEvidence(
   const url = new URL(entry.sourceUrl);
   return (
     url.protocol === "https:" &&
-    url.hostname === "securemedy.ng" &&
+    officialPublicHosts.has(url.hostname) &&
     !url.port &&
     !url.username &&
     !url.password &&

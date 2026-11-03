@@ -8,7 +8,7 @@ import { publicURL } from "./public-crawler.js";
 const suspicious =
   /<script|ignore (all |previous )?instructions|system prompt|reveal (?:secrets|credentials)/i;
 const reason =
-  "Business owner approved publicly published securemedy.ng content for customer-facing answers (2026-10-19). Published claims retain attribution and do not guarantee current availability or legal ownership.";
+  "Business owner approved publicly published Securemedy website content for customer-facing answers. Published claims retain attribution and do not guarantee current availability or legal ownership.";
 function chunks(text: string) {
   const parts: string[] = [];
   let remaining = text;
@@ -43,7 +43,13 @@ export function indexOfficialSources(file?: string) {
         continue;
       }
       if (
-        url.hostname !== "securemedy.ng" ||
+        ![
+          "securemedy.ng",
+          "www.securemedy.ng",
+          "securemedy.com",
+          "www.securemedy.com",
+          "new.securemedy.com",
+        ].includes(url.hostname) ||
         source.status !== 200 ||
         Date.parse(source.expiresAt) <= Date.now() ||
         source.contentHash !== hashText(source.text) ||

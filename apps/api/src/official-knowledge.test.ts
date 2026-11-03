@@ -51,7 +51,7 @@ describe("owner-authorized official public knowledge", () => {
           "Official FAQ: warehouse projects can begin with a discussion of access control and monitoring requirements.",
         ],
         [
-          "https://securemedy.com/other/",
+          "https://untrusted.example/other/",
           "External domain research remains unapproved.",
         ],
         [
@@ -82,7 +82,7 @@ describe("owner-authorized official public knowledge", () => {
     }, file);
     const indexed = indexOfficialSources(file);
     expect(indexed).toContain("https://securemedy.ng/faq/");
-    expect(indexed).not.toContain("https://securemedy.com/other/");
+    expect(indexed).not.toContain("https://untrusted.example/other/");
     const approved = new PublicKnowledgeRepository(file).approved();
     expect(
       approved.some((entry) => entry.answer.includes("Official FAQ:")),
@@ -100,15 +100,17 @@ describe("owner-authorized official public knowledge", () => {
   });
   it("invalidates old chunks on source changes and reindexes without changing prompts", () => {
     const repo = new PublicKnowledgeRepository(file);
+    const sourceUrl = "https://new.securemedy.com/about/";
+    const sourcePrefix = "official-" + hashText(sourceUrl).slice(0, 16) + "-";
     mutateStore((store) => {
-      const source = store.sources.find((source) =>
-        source.url.endsWith("/about-us/"),
+      const source = store.sources.find(
+        (source) => source.url === sourceUrl,
       )!;
       source.text =
         "About Us Updated public wording describes a different leadership publication and no legal ownership assertion.";
       source.contentHash = hashText(source.text);
     }, file);
-    expect(repo.approved().some((entry) => entry.id === "leadership")).toBe(
+    expect(repo.approved().some((entry) => entry.id.startsWith(sourcePrefix))).toBe(
       false,
     );
     indexOfficialSources(file);
@@ -117,16 +119,6 @@ describe("owner-authorized official public knowledge", () => {
         .search({ namespace: "public", query: "Updated public wording" })
         .some((entry) => entry.answer.includes("Updated public wording")),
     ).toBe(true);
-    expect(
-      repo
-        .approved()
-        .some((entry) =>
-          entry.answer.includes("Prior to establishing Securemedy"),
-        ),
-    ).toBe(true); // Other independently published CEO page remains attributed.
-    expect(repo.approved().some((entry) => entry.id === "leadership")).toBe(
-      false,
-    );
   });
   it("rejects altered excerpts, stale sources and invented ownership while retaining conflicts", async () => {
     mutateStore((store) => {

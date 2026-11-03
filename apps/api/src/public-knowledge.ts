@@ -43,6 +43,7 @@ export function getPublishedJobs() {
   return getPublicKnowledge().filter(
     (entry) =>
       entry.id.startsWith("official-job-") &&
+      new URL(entry.sourceUrl).hostname === "new.securemedy.com" &&
       Date.parse(entry.retrievedAt) > Date.now() - 86400000,
   );
 }

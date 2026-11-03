@@ -1,0 +1,3053 @@
+{
+  "at": "2026-11-02T23:13:52.033Z",
+  "scope": "new.securemedy.com public sitemap and discovered public links",
+  "pages": [
+    {
+      "url": "https://new.securemedy.com/",
+      "canonicalUrl": "https://securemedy.com/",
+      "title": "Securemedy Incorporated | Professional Security & Protective Services",
+      "description": "Securemedy Incorporated provides professional security personnel, patrol, access control, risk management, protective services and security technology across Maryland, Washington, DC and Virginia.",
+      "category": "company-overview",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/services/executive-protection/",
+        "https://new.securemedy.com/services/security-consulting/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/construction/",
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/industries/hospitality-events/",
+        "https://new.securemedy.com/industries/residential-communities/",
+        "https://new.securemedy.com/about/",
+        "https://new.securemedy.com/about/our-story/",
+        "https://securemedy.com/blog/why-securemedy-a-reintroduction-to-the-team-protecting-what-matters-most",
+        "https://securemedy.com/blog/what-real-protection-actually-looks-like",
+        "https://securemedy.com/blog/armed-vs-unarmed-security-guards-how-to-choose-what-s-right-for-your-property",
+        "https://new.securemedy.com/about/standards-commitments/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/sitemap/",
+      "canonicalUrl": "https://securemedy.com/sitemap/",
+      "title": "Sitemap | Securemedy Incorporated",
+      "description": "A complete list of pages on the Securemedy Incorporated website.",
+      "category": "company-overview",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/sitemap/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/",
+        "https://new.securemedy.com/about/",
+        "https://new.securemedy.com/about/our-story/",
+        "https://new.securemedy.com/about/mission/",
+        "https://new.securemedy.com/about/leadership/",
+        "https://new.securemedy.com/about/our-approach/",
+        "https://new.securemedy.com/about/standards-commitments/",
+        "https://new.securemedy.com/terms-and-conditions/",
+        "https://new.securemedy.com/m3dyhub-privacy-policy/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/services/executive-protection/",
+        "https://new.securemedy.com/services/security-consulting/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/construction/",
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/industries/hospitality-events/",
+        "https://new.securemedy.com/industries/residential-communities/",
+        "https://new.securemedy.com/industries/industrial-manufacturing/",
+        "https://new.securemedy.com/industries/transportation-logistics/",
+        "https://new.securemedy.com/careers/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/careers/benefits/",
+        "https://new.securemedy.com/careers/hiring-process/",
+        "https://new.securemedy.com/careers/why-securemedy/",
+        "https://new.securemedy.com/careers/jobs/campus-safety-officer-unarmed-spo-washington-dc/",
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-washington-dc/",
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-baltimore-md/",
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-atlanta-ga/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-dmv/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ny-nj/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ga/",
+        "https://new.securemedy.com/careers/jobs/director-client-relations/",
+        "https://new.securemedy.com/resources/",
+        "https://new.securemedy.com/resources/case-studies/",
+        "https://new.securemedy.com/resources/security-guides/",
+        "https://new.securemedy.com/resources/faqs/",
+        "https://new.securemedy.com/resources/downloads/",
+        "https://new.securemedy.com/resources/client-resources/",
+        "https://new.securemedy.com/resources/employee-resources/",
+        "https://new.securemedy.com/resources/employee-survey/",
+        "https://new.securemedy.com/resources/m3dyhub/",
+        "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+        "https://new.securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+        "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/",
+        "https://new.securemedy.com/resources/security-insights/suspicious-devices-in-public-spaces/",
+        "https://new.securemedy.com/resources/security-insights/security-placement-vs-security-program/",
+        "https://new.securemedy.com/announcement/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/contact/",
+      "canonicalUrl": "https://securemedy.com/contact/",
+      "title": "Contact Us | Securemedy Incorporated",
+      "description": "Contact Securemedy Incorporated: call (240) 419-3125, email info@securemedy.com or send us a message. Headquarters in Fort Washington, MD. We reply within 24 hours.",
+      "category": "contact-and-business-inquiries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/resources/faqs/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/services/executive-protection/",
+        "https://new.securemedy.com/services/security-consulting/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/about/standards-commitments/",
+        "https://new.securemedy.com/careers/jobs/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "mailto:info@securemedy.com",
+          "label": "info@securemedy.com",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.google.com/maps/search/?api=1&query=8507%20Oxon%20Hill%20Road%20Suite%20101%2C%20Fort%20Washington%2C%20MD%2020744",
+          "label": "8507 Oxon Hill Road, Suite 101, Fort Washington, MD 20744",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/contact/",
+      "canonicalUrl": "https://new.securemedy.com/contact/",
+      "title": "",
+      "description": "",
+      "category": "contact-and-business-inquiries",
+      "status": "failed",
+      "internalLinks": [],
+      "externalDestinations": []
+    },
+    {
+      "url": "https://new.securemedy.com/resources/security-insights/",
+      "canonicalUrl": "https://securemedy.com/resources/security-insights/",
+      "title": "Security Insights & Articles | Securemedy Resources",
+      "description": "Security insights, company updates and practical perspectives from Securemedy Incorporated on protection, security programs and public safety.",
+      "category": "security-resources",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+        "https://new.securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+        "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/",
+        "https://securemedy.com/blog",
+        "https://new.securemedy.com/resources/security-insights/suspicious-devices-in-public-spaces/",
+        "https://new.securemedy.com/resources/security-insights/security-placement-vs-security-program/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/services/",
+      "canonicalUrl": "https://securemedy.com/services/",
+      "title": "Security Services | Securemedy Incorporated",
+      "description": "Security personnel, patrol, access control, risk management, executive protection, security consulting and security technology from Securemedy Incorporated.",
+      "category": "security-services",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/services/executive-protection/",
+        "https://new.securemedy.com/services/security-consulting/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/about/our-approach/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/construction/",
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/industries/hospitality-events/",
+        "https://new.securemedy.com/industries/residential-communities/",
+        "https://new.securemedy.com/industries/industrial-manufacturing/",
+        "https://new.securemedy.com/industries/transportation-logistics/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/services/patrol-services/",
+      "canonicalUrl": "https://securemedy.com/services/patrol-services/",
+      "title": "Patrol Services | Securemedy Incorporated",
+      "description": "Mobile and on-site patrols, property checks, alarm response and emergency response that give your property a visible, responsive security presence.",
+      "category": "security-services",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/industries/residential-communities/",
+        "https://new.securemedy.com/industries/construction/",
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/services/risk-management/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/jobs/",
+      "canonicalUrl": "https://securemedy.com/careers/jobs/",
+      "title": "Current Openings | Careers at Securemedy",
+      "description": "Search open security officer, special police officer, supervisory and business development positions at Securemedy Incorporated by keyword, location, category and employment type.",
+      "category": "current-job-opportunities",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/jobs/campus-safety-officer-unarmed-spo-washington-dc/",
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-washington-dc/",
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-baltimore-md/",
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-atlanta-ga/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-dmv/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ny-nj/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ga/",
+        "https://new.securemedy.com/careers/jobs/director-client-relations/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://joblinkapply.com/Joblink/6943/Search/SearchWithFilters",
+          "label": "Career Portal",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/services/security-personnel/",
+      "canonicalUrl": "https://securemedy.com/services/security-personnel/",
+      "title": "Security Personnel Services | Securemedy Incorporated",
+      "description": "Armed and unarmed security officers, site and facility security, front desk and reception security, and professional security staffing from Securemedy Incorporated.",
+      "category": "security-services",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/hospitality-events/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/executive-protection/",
+        "https://new.securemedy.com/services/security-consulting/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/services/security-technology/",
+      "canonicalUrl": "https://securemedy.com/services/security-technology/",
+      "title": "Security Technology Services | Securemedy Incorporated",
+      "description": "Video surveillance and CCTV, control room operations, remote monitoring, access control systems, intrusion detection and alarm response from Securemedy.",
+      "category": "security-services",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/residential-communities/",
+        "https://new.securemedy.com/industries/construction/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/risk-management/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/services/risk-management/",
+      "canonicalUrl": "https://securemedy.com/services/risk-management/",
+      "title": "Risk Management & Security Assessments | Securemedy Incorporated",
+      "description": "Security and risk assessments, threat and vulnerability identification, loss prevention and emergency planning to reduce risk across your organization.",
+      "category": "security-services",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/construction/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-consulting/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/executive-protection/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/services/executive-protection/",
+      "canonicalUrl": "https://securemedy.com/services/executive-protection/",
+      "title": "Executive Protection Services | Securemedy Incorporated",
+      "description": "Discreet, professional executive protection with advance planning, travel security considerations and event protection, tailored to each individual’s risk profile.",
+      "category": "security-services",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/services/executive-protection/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/hospitality-events/",
+        "https://new.securemedy.com/industries/residential-communities/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/services/security-consulting/",
+        "https://new.securemedy.com/services/patrol-services/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/services/security-consulting/",
+      "canonicalUrl": "https://securemedy.com/services/security-consulting/",
+      "title": "Security Consulting Services | Securemedy Incorporated",
+      "description": "Security assessments, program development, policies and procedures, site-specific recommendations and supervisory training from Securemedy’s security consultants.",
+      "category": "security-services",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/services/security-consulting/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/construction/",
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/access-control/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/industries/",
+      "canonicalUrl": "https://securemedy.com/industries/",
+      "title": "Industries We Serve | Securemedy Incorporated",
+      "description": "Securemedy provides professional security, protective services, risk management and emergency response solutions for government, healthcare, commercial and other critical environments.",
+      "category": "industries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/construction/",
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/industries/hospitality-events/",
+        "https://new.securemedy.com/industries/residential-communities/",
+        "https://new.securemedy.com/industries/industrial-manufacturing/",
+        "https://new.securemedy.com/industries/transportation-logistics/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/industries/government-public-sector/",
+      "canonicalUrl": "https://securemedy.com/industries/government-public-sector/",
+      "title": "Government & Public Sector Security Services | Securemedy",
+      "description": "Security personnel, access control, risk assessments, emergency management and executive protection for federal, state and local government facilities.",
+      "category": "industries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/services/executive-protection/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/industries/corporate-commercial/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/industries/healthcare/",
+      "canonicalUrl": "https://securemedy.com/industries/healthcare/",
+      "title": "Healthcare Security Services | Securemedy",
+      "description": "Security personnel, access control, patrols and emergency response support for hospitals, clinics and medical facilities.",
+      "category": "industries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/industries/residential-communities/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/industries/corporate-commercial/",
+      "canonicalUrl": "https://securemedy.com/industries/corporate-commercial/",
+      "title": "Corporate & Commercial Security Services | Securemedy",
+      "description": "Uniformed officers, concierge and front desk security, access control and patrols for office buildings, corporate campuses and commercial properties.",
+      "category": "industries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/hospitality-events/",
+        "https://new.securemedy.com/industries/transportation-logistics/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/industries/construction/",
+      "canonicalUrl": "https://securemedy.com/industries/construction/",
+      "title": "Construction Site Security Services | Securemedy",
+      "description": "On-site officers, mobile patrols and access control that protect construction projects, personnel, equipment and materials.",
+      "category": "industries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/industries/construction/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/industrial-manufacturing/",
+        "https://new.securemedy.com/industries/residential-communities/",
+        "https://new.securemedy.com/industries/corporate-commercial/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/industries/education/",
+      "canonicalUrl": "https://securemedy.com/industries/education/",
+      "title": "Education & Campus Security Services | Securemedy",
+      "description": "Campus security officers, patrols, access control and emergency management planning for schools, colleges and universities.",
+      "category": "industries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/residential-communities/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/industries/retail-loss-prevention/",
+      "canonicalUrl": "https://securemedy.com/industries/retail-loss-prevention/",
+      "title": "Retail & Loss Prevention Security Services | Securemedy",
+      "description": "Loss-prevention staffing, uniformed officers, patrols and standardized procedures that protect retail people, property and inventory.",
+      "category": "industries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/hospitality-events/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/transportation-logistics/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/industries/hospitality-events/",
+      "canonicalUrl": "https://securemedy.com/industries/hospitality-events/",
+      "title": "Hospitality & Event Security Services | Securemedy",
+      "description": "Event security staffing, concierge security, access and credential control, and executive protection for hotels, venues and events.",
+      "category": "industries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/industries/hospitality-events/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/executive-protection/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/industries/government-public-sector/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/industries/residential-communities/",
+      "canonicalUrl": "https://securemedy.com/industries/residential-communities/",
+      "title": "Residential Community Security Services | Securemedy",
+      "description": "Gate and concierge security, courtesy and mobile patrols, access control and incident response for HOAs, apartments and managed properties.",
+      "category": "industries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/industries/residential-communities/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/hospitality-events/",
+        "https://new.securemedy.com/industries/construction/",
+        "https://new.securemedy.com/industries/corporate-commercial/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/about/",
+      "canonicalUrl": "https://securemedy.com/about/",
+      "title": "About Securemedy Incorporated | Professional Security & Protective Services",
+      "description": "Learn about Securemedy Incorporated, our people, mission, leadership, approach and commitment to professional security and protective services.",
+      "category": "company-overview-and-leadership",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/about/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/about/our-story/",
+        "https://new.securemedy.com/about/mission/",
+        "https://new.securemedy.com/about/our-approach/",
+        "https://new.securemedy.com/about/leadership/",
+        "https://new.securemedy.com/about/standards-commitments/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/about/our-story/",
+      "canonicalUrl": "https://securemedy.com/about/our-story/",
+      "title": "Our Story | About Securemedy Incorporated",
+      "description": "Founded in 2009 as an American-owned and American-managed security provider, Securemedy has grown into a multi-state provider of professional security services.",
+      "category": "company-overview-and-leadership",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/about/our-story/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/careers/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/about/standards-commitments/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/about/standards-commitments/",
+      "canonicalUrl": "https://securemedy.com/about/standards-commitments/",
+      "title": "Standards & Commitments | Securemedy Incorporated",
+      "description": "Securemedy security agency licenses, diverse-business certifications, professional affiliations and the operating standards behind our security services.",
+      "category": "company-overview-and-leadership",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/about/standards-commitments/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/about/mission/",
+      "canonicalUrl": "https://securemedy.com/about/mission/",
+      "title": "Mission, Vision & Values | Securemedy Incorporated",
+      "description": "Securemedy's mission, vision and core values: integrity, professionalism, reliability, accountability and client-focused service.",
+      "category": "company-overview-and-leadership",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/about/mission/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/about/our-approach/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/about/leadership/",
+      "canonicalUrl": "https://securemedy.com/about/leadership/",
+      "title": "Leadership | Securemedy Incorporated",
+      "description": "Meet Olabanji O. Folayan, Chairman and CEO of Securemedy Incorporated, and learn how experienced leadership guides our security services.",
+      "category": "company-overview-and-leadership",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/about/leadership/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/",
+        "https://new.securemedy.com/resources/employee-resources/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/about/our-approach/",
+      "canonicalUrl": "https://securemedy.com/about/our-approach/",
+      "title": "Our Approach | Securemedy Incorporated",
+      "description": "How Securemedy builds security programs around people, technology, intelligence, risk, operations and client requirements: assess, design, deploy and manage.",
+      "category": "company-overview-and-leadership",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/about/our-approach/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/services/security-technology/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/terms-and-conditions/",
+      "canonicalUrl": "https://securemedy.com/terms-and-conditions/",
+      "title": "Terms & Conditions | Securemedy Incorporated",
+      "description": "Securemedy Terms of Service and Use: the terms that apply to Securemedy Incorporated’s security services, website and online platforms. Effective June 16, 2024.",
+      "category": "company-overview",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/terms-and-conditions/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/m3dyhub-privacy-policy/",
+        "https://securemedy.com/sms-consent-form"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "mailto:info@securemedy.com",
+          "label": "info@securemedy.com",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/m3dyhub-privacy-policy/",
+      "canonicalUrl": "https://securemedy.com/m3dyhub-privacy-policy/",
+      "title": "Privacy Policy | Securemedy Incorporated",
+      "description": "Securemedy Incorporated’s Privacy Policy: how we collect, use and protect your personal data when you use the M3dyHub mobile application and our company website. Effective June 16, 2024.",
+      "category": "company-overview",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/m3dyhub-privacy-policy/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/terms-and-conditions/",
+        "https://securemedy.com/sms-consent-form"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "mailto:itsupport.team@securemedy.com",
+          "label": "itsupport.team@securemedy.com",
+          "kind": "external"
+        },
+        {
+          "url": "mailto:info@securemedy.com",
+          "label": "info@securemedy.com",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/services/access-control/",
+      "canonicalUrl": "https://securemedy.com/services/access-control/",
+      "title": "Access Control Services | Securemedy Incorporated",
+      "description": "Controlled entry, visitor management, credential verification and restricted-area protection delivered by trained Securemedy security officers.",
+      "category": "security-services",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/residential-communities/",
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/services/patrol-services/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/industries/industrial-manufacturing/",
+      "canonicalUrl": "https://securemedy.com/industries/industrial-manufacturing/",
+      "title": "Industrial & Manufacturing Security Services | Securemedy",
+      "description": "Security officers, access and gate control, perimeter patrols and risk assessments for industrial facilities, manufacturing sites and critical infrastructure.",
+      "category": "industries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/industries/industrial-manufacturing/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/construction/",
+        "https://new.securemedy.com/industries/transportation-logistics/",
+        "https://new.securemedy.com/industries/government-public-sector/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/industries/transportation-logistics/",
+      "canonicalUrl": "https://securemedy.com/industries/transportation-logistics/",
+      "title": "Transportation & Logistics Security Services | Securemedy",
+      "description": "Access and gate control, security officers, yard patrols and security technology for transportation facilities, warehouses and distribution centers.",
+      "category": "industries",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/industries/transportation-logistics/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/industrial-manufacturing/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/industries/corporate-commercial/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/",
+      "canonicalUrl": "https://securemedy.com/careers/",
+      "title": "Careers at Securemedy | Security Officer & Security Jobs",
+      "description": "Build a career with purpose at Securemedy Incorporated. Explore security officer, supervisory and business development openings, employee benefits and our hiring process.",
+      "category": "careers-and-recruitment",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/careers/benefits/",
+        "https://new.securemedy.com/careers/why-securemedy/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/benefits/",
+      "canonicalUrl": "https://securemedy.com/careers/benefits/",
+      "title": "Employee Benefits | Careers at Securemedy",
+      "description": "Securemedy employee benefits: competitive pay, health coverage, paid time off, retirement plan, paid training and career advancement, based on position and site location.",
+      "category": "careers-and-recruitment",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/benefits/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/careers/hiring-process/",
+        "https://securemedy.com/training"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/hiring-process/",
+      "canonicalUrl": "https://securemedy.com/careers/hiring-process/",
+      "title": "Hiring Process | Careers at Securemedy",
+      "description": "How to join Securemedy: apply, interview, train and succeed. What to prepare, what happens at each stage, required documentation and training expectations.",
+      "category": "careers-and-recruitment",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/hiring-process/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://securemedy.com/training",
+        "https://new.securemedy.com/careers/benefits/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/why-securemedy/",
+      "canonicalUrl": "https://securemedy.com/careers/why-securemedy/",
+      "title": "Why Work at Securemedy | Culture & Careers",
+      "description": "Why build a security career at Securemedy: meaningful work, professional growth, training, team culture and diverse opportunities across industries.",
+      "category": "careers-and-recruitment",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/why-securemedy/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/about/mission/",
+        "https://new.securemedy.com/careers/hiring-process/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/industries/residential-communities/",
+        "https://new.securemedy.com/industries/hospitality-events/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/about/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/jobs/campus-safety-officer-unarmed-spo-washington-dc/",
+      "canonicalUrl": "https://securemedy.com/careers/jobs/campus-safety-officer-unarmed-spo-washington-dc/",
+      "title": "Campus Safety Officer (Unarmed SPO), Washington, DC | Careers at Securemedy",
+      "description": "Serve as a visible ambassador for safety on a school campus, combining access control, patrols, customer service and emergency response. Full-Time position in Washington, DC.",
+      "category": "current-job-opportunities",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/jobs/campus-safety-officer-unarmed-spo-washington-dc/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/benefits/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-washington-dc/",
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-baltimore-md/",
+        "https://new.securemedy.com/careers/hiring-process/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://joblinkapply.com/Joblink/6943/Job/Index/862426/campus-safety-officer-unarmed-spo-washington-dc-23-hr-",
+          "label": "View on Career Portal",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/jobs/unarmed-security-officer-washington-dc/",
+      "canonicalUrl": "https://securemedy.com/careers/jobs/unarmed-security-officer-washington-dc/",
+      "title": "Unarmed Licensed Security Officer, Washington, DC | Careers at Securemedy",
+      "description": "Support a private security program in the Washington, DC metropolitan area with access control, visitor screening and reporting. Full-Time / Part-Time position in Washington, DC.",
+      "category": "current-job-opportunities",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-washington-dc/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/benefits/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/careers/jobs/campus-safety-officer-unarmed-spo-washington-dc/",
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-baltimore-md/",
+        "https://new.securemedy.com/careers/hiring-process/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://joblinkapply.com/Joblink/6943/Job/Index/841908/dc-unarmed-licensed-security-officer-26-22-hr-",
+          "label": "View on Career Portal",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/jobs/unarmed-security-officer-baltimore-md/",
+      "canonicalUrl": "https://securemedy.com/careers/jobs/unarmed-security-officer-baltimore-md/",
+      "title": "Unarmed Security Officer, Baltimore, MD 21206 | Careers at Securemedy",
+      "description": "Protect personnel, sensitive materials and government property at a federal facility in Baltimore on weekend day shifts. Part-Time position in Baltimore, MD 21206.",
+      "category": "current-job-opportunities",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-baltimore-md/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/benefits/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/careers/jobs/campus-safety-officer-unarmed-spo-washington-dc/",
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-washington-dc/",
+        "https://new.securemedy.com/careers/hiring-process/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://joblinkapply.com/Joblink/6943/Job/Index/787086/md-unarmed-security-guard-baltimore-md-21206-20-00-hr-",
+          "label": "View on Career Portal",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/jobs/unarmed-security-officer-atlanta-ga/",
+      "canonicalUrl": "https://securemedy.com/careers/jobs/unarmed-security-officer-atlanta-ga/",
+      "title": "Unarmed Security Officer (Clarkston, GA), Clarkston / Atlanta, GA | Careers at Securemedy",
+      "description": "Support a private security program in the Atlanta area on evening and midnight shifts, with access control, screening and reporting. Full-Time / Part-Time position in Clarkston / Atlanta, GA.",
+      "category": "current-job-opportunities",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-atlanta-ga/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/benefits/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/careers/jobs/campus-safety-officer-unarmed-spo-washington-dc/",
+        "https://new.securemedy.com/careers/jobs/unarmed-security-officer-washington-dc/",
+        "https://new.securemedy.com/careers/hiring-process/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://joblinkapply.com/Joblink/6943/Job/Index/863489/ga-unarmed-security-officer-clarkston-ga-two-shifts-available-evenings-and-midnight-",
+          "label": "View on Career Portal",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/jobs/junior-business-development-associate-dmv/",
+      "canonicalUrl": "https://securemedy.com/careers/jobs/junior-business-development-associate-dmv/",
+      "title": "Junior Business Development Associate (Entry-Level), DMV, DMV Area (field-based) | Careers at Securemedy",
+      "description": "Field-based, entry-level role introducing Securemedy's security services to businesses and property managers across the DMV market. Temporary to Permanent position in DMV Area (field-based).",
+      "category": "current-job-opportunities",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-dmv/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/benefits/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ny-nj/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ga/",
+        "https://new.securemedy.com/careers/hiring-process/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://joblinkapply.com/Joblink/6943/Job/Index/859526/jr-business-development-associates-dmv-entry-level-",
+          "label": "View on Career Portal",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ny-nj/",
+      "canonicalUrl": "https://securemedy.com/careers/jobs/junior-business-development-associate-ny-nj/",
+      "title": "Junior Business Development Associate (Entry-Level), NY/NJ, NY/NJ Area (field-based) | Careers at Securemedy",
+      "description": "Field-based, entry-level role introducing Securemedy's security services to businesses and property managers across the NY/NJ market. Temporary to Permanent position in NY/NJ Area (field-based).",
+      "category": "current-job-opportunities",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ny-nj/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/benefits/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-dmv/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ga/",
+        "https://new.securemedy.com/careers/hiring-process/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://joblinkapply.com/Joblink/6943/Job/Index/859956/jr-business-development-associates-ny-nj-entry-level-",
+          "label": "View on Career Portal",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ga/",
+      "canonicalUrl": "https://securemedy.com/careers/jobs/junior-business-development-associate-ga/",
+      "title": "Junior Business Development Associate (Entry-Level), Georgia, Georgia Area (field-based) | Careers at Securemedy",
+      "description": "Field-based, entry-level role introducing Securemedy's security services to businesses and property managers across the Georgia market. Temporary to Permanent position in Georgia Area (field-based).",
+      "category": "current-job-opportunities",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ga/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/benefits/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-dmv/",
+        "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ny-nj/",
+        "https://new.securemedy.com/careers/hiring-process/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://joblinkapply.com/Joblink/6943/Job/Index/859957/jr-business-development-associates-ga-entry-level-",
+          "label": "View on Career Portal",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/careers/jobs/director-client-relations/",
+      "canonicalUrl": "https://securemedy.com/careers/jobs/director-client-relations/",
+      "title": "Director, Client Relations, Fort Washington, MD | Careers at Securemedy",
+      "description": "Lead the client relations department under the Chairman/CEO, overseeing capture management, technical proposals and pricing. Full-Time position in Fort Washington, MD.",
+      "category": "current-job-opportunities",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/careers/jobs/director-client-relations/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/careers/benefits/",
+        "https://new.securemedy.com/careers/hiring-process/",
+        "https://new.securemedy.com/careers/jobs/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://joblinkapply.com/Joblink/6943/Job/Index/643929/director-client-relations",
+          "label": "View on Career Portal",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/",
+      "canonicalUrl": "https://securemedy.com/resources/",
+      "title": "Security Resources | Insights, Guides & FAQs | Securemedy",
+      "description": "Security insights, practical guides, case studies, FAQs, documents and client and employee resources from Securemedy Incorporated.",
+      "category": "company-overview",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/resources/case-studies/",
+        "https://new.securemedy.com/resources/security-guides/",
+        "https://new.securemedy.com/resources/faqs/",
+        "https://new.securemedy.com/resources/downloads/",
+        "https://new.securemedy.com/resources/client-resources/",
+        "https://new.securemedy.com/resources/employee-survey/",
+        "https://new.securemedy.com/resources/employee-resources/",
+        "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+        "https://new.securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+        "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/services/executive-protection/",
+        "https://new.securemedy.com/services/security-consulting/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/about/our-approach/",
+        "https://new.securemedy.com/about/standards-commitments/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/case-studies/",
+      "canonicalUrl": "https://securemedy.com/resources/case-studies/",
+      "title": "Case Studies | Securemedy Resources",
+      "description": "Examples of security programs Securemedy has delivered for government, healthcare, commercial, education and retail clients.",
+      "category": "security-resources",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/case-studies/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/industries/government-public-sector/",
+        "https://new.securemedy.com/industries/healthcare/",
+        "https://new.securemedy.com/industries/corporate-commercial/",
+        "https://new.securemedy.com/industries/education/",
+        "https://new.securemedy.com/industries/retail-loss-prevention/",
+        "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+        "https://new.securemedy.com/industries/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/security-guides/",
+      "canonicalUrl": "https://securemedy.com/resources/security-guides/",
+      "title": "Security Guides & Checklists | Securemedy Resources",
+      "description": "Practical security guides and checklists from Securemedy: choosing armed or unarmed coverage, selecting a provider, public-space vigilance and combining officers with technology.",
+      "category": "company-overview",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/security-guides/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+        "https://new.securemedy.com/about/our-approach/",
+        "https://new.securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+        "https://new.securemedy.com/about/standards-commitments/",
+        "https://new.securemedy.com/resources/security-insights/security-placement-vs-security-program/",
+        "https://new.securemedy.com/services/security-consulting/",
+        "https://new.securemedy.com/resources/security-insights/suspicious-devices-in-public-spaces/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/resources/case-studies/",
+        "https://new.securemedy.com/resources/faqs/",
+        "https://new.securemedy.com/resources/downloads/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/faqs/",
+      "canonicalUrl": "https://securemedy.com/resources/faqs/",
+      "title": "Frequently Asked Questions | Securemedy Resources",
+      "description": "Answers to common questions about Securemedy security services, industries served, licenses and credentials, and employment.",
+      "category": "security-faqs",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/faqs/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/services/security-personnel/",
+        "https://new.securemedy.com/services/patrol-services/",
+        "https://new.securemedy.com/services/access-control/",
+        "https://new.securemedy.com/services/risk-management/",
+        "https://new.securemedy.com/services/executive-protection/",
+        "https://new.securemedy.com/services/security-consulting/",
+        "https://new.securemedy.com/services/security-technology/",
+        "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/",
+        "https://new.securemedy.com/about/our-approach/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/about/standards-commitments/",
+        "https://new.securemedy.com/careers/jobs/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/careers/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "mailto:info@securemedy.com",
+          "label": "info@securemedy.com",
+          "kind": "external"
+        },
+        {
+          "url": "https://safehotline.com/SubmitReport",
+          "label": "SafeHotline.com",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/downloads/",
+      "canonicalUrl": "https://securemedy.com/resources/downloads/",
+      "title": "Downloads, Forms & Policies | Securemedy Resources",
+      "description": "Securemedy documents in one place: the employee handbook, employee portal, SMS consent form, credentials, privacy policy and terms.",
+      "category": "company-overview",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/downloads/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/about/standards-commitments/",
+        "https://securemedy.com/sms-consent-form",
+        "https://new.securemedy.com/resources/employee-survey/",
+        "https://new.securemedy.com/m3dyhub-privacy-policy/",
+        "https://new.securemedy.com/terms-and-conditions/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://storage.googleapis.com/wzukusers/user-34042533/documents/5c0529188b096y7uOvB7/Handbook_EE.pdf",
+          "label": "Download",
+          "kind": "download"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/client-resources/",
+      "canonicalUrl": "https://securemedy.com/resources/client-resources/",
+      "title": "Client Resources & Procurement Information | Securemedy",
+      "description": "Client resources from Securemedy: procurement information, NAICS codes, certifications, security agency licenses, how we work and client support contacts.",
+      "category": "client-resources-and-procurement",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/client-resources/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/about/our-approach/",
+        "https://new.securemedy.com/services/",
+        "https://new.securemedy.com/industries/",
+        "https://new.securemedy.com/resources/case-studies/",
+        "https://new.securemedy.com/about/standards-commitments/",
+        "https://new.securemedy.com/resources/security-guides/",
+        "https://new.securemedy.com/resources/faqs/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "mailto:info@securemedy.com",
+          "label": "info@securemedy.com",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/employee-resources/",
+      "canonicalUrl": "https://securemedy.com/resources/employee-resources/",
+      "title": "Employee Resources | Securemedy Resources",
+      "description": "Securemedy employee resources: Employee Login for pay stubs and direct deposit, the employee handbook, pay days and benefits, HR forms and the anonymous reporting line.",
+      "category": "public-employee-resources",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/employee-resources/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/resources/faqs/",
+        "https://new.securemedy.com/resources/employee-survey/",
+        "https://new.securemedy.com/resources/m3dyhub/",
+        "https://new.securemedy.com/announcement/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://storage.googleapis.com/wzukusers/user-34042533/documents/5c0529188b096y7uOvB7/Handbook_EE.pdf",
+          "label": "Download the Handbook",
+          "kind": "download"
+        },
+        {
+          "url": "https://safehotline.com/SubmitReport",
+          "label": "Submit a Report Online",
+          "kind": "external"
+        },
+        {
+          "url": "tel:+18556627233",
+          "label": "Call 1-855-662-SAFE",
+          "kind": "external"
+        },
+        {
+          "url": "mailto:hr_msa@securemedy.com",
+          "label": "hr_msa@securemedy.com",
+          "kind": "external"
+        },
+        {
+          "url": "mailto:hr_msa@securemedy.com?subject=Form%20request",
+          "label": "Email HR",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/employee-survey/",
+      "canonicalUrl": "https://securemedy.com/resources/employee-survey/",
+      "title": "Employee Survey | Securemedy Resources",
+      "description": "Take the Securemedy Employee Satisfaction Survey and find employee resources: the employee portal, handbook, anonymous reporting line and HR contact.",
+      "category": "public-employee-resources",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/employee-survey/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://securemedy.com/employee-survey",
+        "https://new.securemedy.com/resources/employee-resources/",
+        "https://new.securemedy.com/resources/faqs/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "https://storage.googleapis.com/wzukusers/user-34042533/documents/5c0529188b096y7uOvB7/Handbook_EE.pdf",
+          "label": "Download Handbook",
+          "kind": "download"
+        },
+        {
+          "url": "https://safehotline.com/SubmitReport",
+          "label": "Submit a Report",
+          "kind": "external"
+        },
+        {
+          "url": "mailto:hr_msa@securemedy.com",
+          "label": "hr_msa@securemedy.com",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/m3dyhub/",
+      "canonicalUrl": "https://securemedy.com/resources/m3dyhub/",
+      "title": "M3dyHub | Securemedy Workforce Operations Platform",
+      "description": "M3dyHub is Securemedy's workforce operations platform for managing employee requests, approvals, documents, compliance, workflows and operational processes across the organization.",
+      "category": "public-m3dyhub",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/m3dyhub/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+      "canonicalUrl": "https://securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+      "title": "Why Securemedy: A Reintroduction | Securemedy Security Insights",
+      "description": "A refresher on what Securemedy stands for: the tradeoffs behind every security plan, a people-first philosophy and the standard behind our motto.",
+      "category": "security-resources",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://securemedy.com/blog/why-securemedy-a-reintroduction-to-the-team-protecting-what-matters-most",
+        "https://new.securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+        "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/",
+        "https://new.securemedy.com/resources/security-insights/suspicious-devices-in-public-spaces/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+      "canonicalUrl": "https://securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+      "title": "What Real Protection Actually Looks Like | Securemedy Security Insights",
+      "description": "A uniform shows that someone is present. Real protection is built earlier, in how a company hires, trains, supervises and responds.",
+      "category": "security-resources",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://securemedy.com/blog/what-real-protection-actually-looks-like",
+        "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+        "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/",
+        "https://new.securemedy.com/resources/security-insights/suspicious-devices-in-public-spaces/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/",
+      "canonicalUrl": "https://securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/",
+      "title": "Armed vs. Unarmed Security Guards | Securemedy Security Insights",
+      "description": "Armed or unarmed coverage should be a site-by-site assessment, not a default setting. Here are the factors worth weighing.",
+      "category": "security-resources",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://securemedy.com/blog/armed-vs-unarmed-security-guards-how-to-choose-what-s-right-for-your-property",
+        "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+        "https://new.securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+        "https://new.securemedy.com/resources/security-insights/suspicious-devices-in-public-spaces/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/security-insights/suspicious-devices-in-public-spaces/",
+      "canonicalUrl": "https://securemedy.com/resources/security-insights/suspicious-devices-in-public-spaces/",
+      "title": "Suspicious Devices in Public Spaces | Securemedy Security Insights",
+      "description": "Lessons from the March 2026 Fort Washington Park incident on why public reporting, visible patrols and coordinated response protect open spaces.",
+      "category": "security-resources",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/security-insights/suspicious-devices-in-public-spaces/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://securemedy.com/blog/suspicious-devices-in-public-spaces-why-vigilance-still-matters",
+        "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+        "https://new.securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+        "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/resources/security-insights/security-placement-vs-security-program/",
+      "canonicalUrl": "https://securemedy.com/resources/security-insights/security-placement-vs-security-program/",
+      "title": "Security Placement vs. Security Program | Securemedy Security Insights",
+      "description": "A guard at a desk is a placement. A program is built around how people, assets and information move through your space.",
+      "category": "security-resources",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/resources/security-insights/security-placement-vs-security-program/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://securemedy.com/blog/security-placement-vs-security-program-why-context-changes-everything",
+        "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+        "https://new.securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+        "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        }
+      ]
+    },
+    {
+      "url": "https://new.securemedy.com/announcement/",
+      "canonicalUrl": "https://securemedy.com/announcement/",
+      "title": "Announcements: $5,000 Image Excellence Challenge | Securemedy",
+      "description": "Securemedy’s $5,000 Image Excellence Challenge (2024) rewarded uniformed security personnel for their professional appearance. Prizes, eligibility, evaluation criteria, entry and judging details.",
+      "category": "company-overview",
+      "status": "extracted",
+      "internalLinks": [
+        "https://new.securemedy.com/announcement/",
+        "https://new.securemedy.com/contact/",
+        "https://new.securemedy.com/resources/security-insights/",
+        "https://new.securemedy.com/resources/employee-resources/"
+      ],
+      "externalDestinations": [
+        {
+          "url": "tel:+12404193125",
+          "label": "(240) 419-3125",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.facebook.com/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.linkedin.com/company/securemedyincorp",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://www.instagram.com/securemedyincor",
+          "label": "",
+          "kind": "external"
+        },
+        {
+          "url": "https://my.securemedy.com/",
+          "label": "Employee Login",
+          "kind": "external"
+        },
+        {
+          "url": "mailto:admin@securemedy.com",
+          "label": "admin@securemedy.com",
+          "kind": "external"
+        }
+      ]
+    }
+  ],
+  "sitemapInventory": [
+    "https://new.securemedy.com/",
+    "https://new.securemedy.com/about/",
+    "https://new.securemedy.com/about/leadership/",
+    "https://new.securemedy.com/about/mission/",
+    "https://new.securemedy.com/about/our-approach/",
+    "https://new.securemedy.com/about/our-story/",
+    "https://new.securemedy.com/about/standards-commitments/",
+    "https://new.securemedy.com/announcement/",
+    "https://new.securemedy.com/careers/",
+    "https://new.securemedy.com/careers/benefits/",
+    "https://new.securemedy.com/careers/hiring-process/",
+    "https://new.securemedy.com/careers/jobs/",
+    "https://new.securemedy.com/careers/jobs/campus-safety-officer-unarmed-spo-washington-dc/",
+    "https://new.securemedy.com/careers/jobs/director-client-relations/",
+    "https://new.securemedy.com/careers/jobs/junior-business-development-associate-dmv/",
+    "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ga/",
+    "https://new.securemedy.com/careers/jobs/junior-business-development-associate-ny-nj/",
+    "https://new.securemedy.com/careers/jobs/unarmed-security-officer-atlanta-ga/",
+    "https://new.securemedy.com/careers/jobs/unarmed-security-officer-baltimore-md/",
+    "https://new.securemedy.com/careers/jobs/unarmed-security-officer-washington-dc/",
+    "https://new.securemedy.com/careers/why-securemedy/",
+    "https://new.securemedy.com/contact/",
+    "https://new.securemedy.com/industries/",
+    "https://new.securemedy.com/industries/construction/",
+    "https://new.securemedy.com/industries/corporate-commercial/",
+    "https://new.securemedy.com/industries/education/",
+    "https://new.securemedy.com/industries/government-public-sector/",
+    "https://new.securemedy.com/industries/healthcare/",
+    "https://new.securemedy.com/industries/hospitality-events/",
+    "https://new.securemedy.com/industries/industrial-manufacturing/",
+    "https://new.securemedy.com/industries/residential-communities/",
+    "https://new.securemedy.com/industries/retail-loss-prevention/",
+    "https://new.securemedy.com/industries/transportation-logistics/",
+    "https://new.securemedy.com/m3dyhub-privacy-policy/",
+    "https://new.securemedy.com/resources/",
+    "https://new.securemedy.com/resources/case-studies/",
+    "https://new.securemedy.com/resources/client-resources/",
+    "https://new.securemedy.com/resources/downloads/",
+    "https://new.securemedy.com/resources/employee-resources/",
+    "https://new.securemedy.com/resources/employee-survey/",
+    "https://new.securemedy.com/resources/faqs/",
+    "https://new.securemedy.com/resources/m3dyhub/",
+    "https://new.securemedy.com/resources/security-guides/",
+    "https://new.securemedy.com/resources/security-insights/",
+    "https://new.securemedy.com/resources/security-insights/armed-vs-unarmed-security-guards/",
+    "https://new.securemedy.com/resources/security-insights/security-placement-vs-security-program/",
+    "https://new.securemedy.com/resources/security-insights/suspicious-devices-in-public-spaces/",
+    "https://new.securemedy.com/resources/security-insights/what-real-protection-actually-looks-like/",
+    "https://new.securemedy.com/resources/security-insights/why-securemedy-a-reintroduction/",
+    "https://new.securemedy.com/services/",
+    "https://new.securemedy.com/services/access-control/",
+    "https://new.securemedy.com/services/executive-protection/",
+    "https://new.securemedy.com/services/patrol-services/",
+    "https://new.securemedy.com/services/risk-management/",
+    "https://new.securemedy.com/services/security-consulting/",
+    "https://new.securemedy.com/services/security-personnel/",
+    "https://new.securemedy.com/services/security-technology/",
+    "https://new.securemedy.com/sitemap/",
+    "https://new.securemedy.com/terms-and-conditions/"
+  ],
+  "missingFromExtraction": [],
+  "failures": [
+    {
+      "url": "https://new.securemedy.com/contact/",
+      "reason": "Excluded, robots/network failure, or limit reached"
+    }
+  ],
+  "pending": 0
+}

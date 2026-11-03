@@ -206,6 +206,29 @@ describe("public ingestion safety", () => {
   ])("rejects excluded URL %s", (url) =>
     expect(() => publicURL(url)).toThrow(),
   );
+  it("accepts the new owner-approved public site and records page metadata", () => {
+    const page = extractPage(
+      '<title>Services</title><meta name="description" content="Published security services."><link rel="canonical" href="https://securemedy.com/services/"><main><h1>Services</h1><p>Published content.</p><a href="/contact/">Contact us</a><a href="https://example.org/report.pdf">Download</a></main>',
+      "https://new.securemedy.com/services/",
+    );
+    expect(publicURL("https://new.securemedy.com/services/").href).toBe(
+      "https://new.securemedy.com/services/",
+    );
+    expect(page.canonicalUrl).toBe("https://securemedy.com/services/");
+    expect(page.description).toBe("Published security services.");
+    expect(page.destinations).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          url: "https://new.securemedy.com/contact/",
+          kind: "internal",
+        }),
+        expect.objectContaining({
+          url: "https://example.org/report.pdf",
+          kind: "download",
+        }),
+      ]),
+    );
+  });
   it.each([
     "127.0.0.1",
     "10.0.0.1",

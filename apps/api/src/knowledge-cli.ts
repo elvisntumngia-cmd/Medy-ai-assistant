@@ -51,15 +51,47 @@ try {
       .filter((s) => s.startsWith("https://"));
     const report = await crawlPublic(
       command === "refresh"
-        ? seeds.filter((seed) => new URL(seed).hostname === "securemedy.ng")
+        ? seeds.filter((seed) => new URL(seed).hostname === "new.securemedy.com")
         : seeds,
-      { maxPages: 40 },
+      {
+        maxPages: 80,
+        maxRequests: 140,
+        allowedHosts: ["new.securemedy.com"],
+      },
     );
     const indexed = command === "refresh" ? indexOfficialSources(file) : [];
+    const sitemapInventory = [
+      ...new Set(
+        report.manifest
+          .filter((page) => new URL(page.url).pathname === "/sitemap/")
+          .flatMap((page) => page.internalLinks)
+          .filter((url) => new URL(url).hostname === "new.securemedy.com"),
+      ),
+    ].sort();
+    const extracted = new Set(
+      report.manifest
+        .filter((page) => page.status === "extracted")
+        .map((page) => page.url),
+    );
+    const missingFromExtraction = sitemapInventory.filter(
+      (url) => !extracted.has(url),
+    );
     fs.writeFileSync(
       path.join(repositoryRoot(), "knowledge/editorial/crawl-report.json"),
+      JSON.stringify({ at: new Date().toISOString(), ...report, indexed }, null, 2) + "\n",
+    );
+    fs.writeFileSync(
+      path.join(repositoryRoot(), "knowledge/editorial/source-manifest.json"),
       JSON.stringify(
-        { at: new Date().toISOString(), ...report, indexed },
+        {
+          at: new Date().toISOString(),
+          scope: "new.securemedy.com public sitemap and discovered public links",
+          pages: report.manifest,
+          sitemapInventory,
+          missingFromExtraction,
+          failures: report.failures,
+          pending: report.pending,
+        },
         null,
         2,
       ) + "\n",

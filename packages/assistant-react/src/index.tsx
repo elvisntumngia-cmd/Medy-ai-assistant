@@ -169,7 +169,7 @@ export function MedyAssistant({
       return;
     if (action.type === "start_form") {
       if (onRequestServices) onRequestServices();
-      else navigation.openExternal("https://securemedy.ng/contact/");
+      else navigation.openExternal("https://new.securemedy.com/contact/");
       return;
     }
     if (action.type === "navigate" && action.target)
@@ -392,7 +392,7 @@ export function MedyAssistant({
             emergency services. Medy cannot dispatch help.
           </p>
           <a
-            href="https://securemedy.ng/privacy-policy/"
+            href="https://new.securemedy.com/privacy/"
             target="_blank"
             rel="noopener noreferrer"
           >

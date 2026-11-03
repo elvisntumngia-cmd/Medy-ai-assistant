@@ -10,23 +10,25 @@ import {
   type EditorialStore,
 } from "./knowledge-store.js";
 export const CRAWL_AGENT = "MedyPublicResearch/1.0";
-const hosts = new Set([
+/** Exact, owner-approved public website hosts. Authentication systems stay outside this boundary. */
+export const officialPublicHosts = new Set([
   "securemedy.ng",
   "www.securemedy.ng",
   "securemedy.com",
   "www.securemedy.com",
+  "new.securemedy.com",
 ]);
 export function publicURL(value: string, base?: string) {
   const url = new URL(value, base);
   const decoded = decodeURIComponent(decodeURIComponent(url.pathname));
   if (
     url.protocol !== "https:" ||
-    !hosts.has(url.hostname) ||
+    !officialPublicHosts.has(url.hostname) ||
     url.port ||
     url.username ||
     url.password ||
     url.search ||
-    /(?:wp-admin|wp-login|wp-json|xmlrpc|login|signin|sign-in|logout|portal|employee|applicant|application|apply|account|admin|feed|comment|search|uploads|hello-world|sample-page|\.pdf|\.zip)/i.test(
+    /(?:wp-admin|wp-login|wp-json|xmlrpc|login|signin|sign-in|logout|portal|apply|account|admin|feed|comment|search|uploads|hello-world|sample-page|\.pdf|\.zip)/i.test(
       decoded,
     )
   )
@@ -253,8 +255,15 @@ const forbidden = new Set([
 export function extractPage(html: string, url: string) {
   const doc = parse(html);
   let title = "";
+  let description = "";
+  let canonicalUrl = url;
   let main: Node | undefined;
   const links: string[] = [];
+  const destinations: {
+    url: string;
+    label: string;
+    kind: "internal" | "external" | "download";
+  }[] = [];
   const walk = (node: Node, extract: boolean): string => {
     if ("tagName" in node) {
       const attrs = Object.fromEntries(
@@ -268,12 +277,37 @@ export function extractPage(html: string, url: string) {
       )
         return "";
       if (node.tagName === "main" || attrs.role === "main") main = node;
-      if (node.tagName === "a" && attrs.href)
+      if (node.tagName === "meta" && attrs.name?.toLowerCase() === "description")
+        description = attrs.content?.trim().slice(0, 500) || "";
+      if (node.tagName === "link" && attrs.rel?.toLowerCase() === "canonical")
         try {
-          links.push(publicURL(attrs.href, url).href);
+          canonicalUrl = new URL(attrs.href, url).href;
         } catch {
-          /* excluded */
+          /* Retain the fetched URL when a malformed canonical is published. */
         }
+      if (node.tagName === "a" && attrs.href) {
+        const label = "childNodes" in node
+          ? node.childNodes
+              .map((n) => ("value" in n ? n.value : ""))
+              .join(" ")
+              .replace(/\s+/g, " ")
+              .trim()
+              .slice(0, 160)
+          : "";
+        try {
+          const destination = new URL(attrs.href, url);
+          const pathname = decodeURIComponent(destination.pathname).toLowerCase();
+          const kind = /\.(?:pdf|docx?|xlsx?|pptx?)$/.test(pathname)
+            ? "download"
+            : officialPublicHosts.has(destination.hostname)
+              ? "internal"
+              : "external";
+          destinations.push({ url: destination.href, label, kind });
+          if (kind === "internal") links.push(publicURL(destination.href).href);
+        } catch {
+          /* Invalid or out-of-bound href. */
+        }
+      }
       if (node.tagName === "title")
         title = (
           "childNodes" in node
@@ -293,13 +327,39 @@ export function extractPage(html: string, url: string) {
     .slice(0, 24000);
   return {
     title: title.slice(0, 240) || url,
+    description,
+    canonicalUrl,
     text,
     links: [...new Set(links)],
+    destinations: destinations.filter(
+      (item, index, all) =>
+        index === all.findIndex((other) => other.url === item.url),
+    ),
   };
+}
+
+export function pageCategory(url: string) {
+  const pathname = new URL(url).pathname;
+  if (/^\/services?\//.test(pathname)) return "security-services";
+  if (/^\/industr(?:y|ies)\//.test(pathname)) return "industries";
+  if (/^\/careers\/jobs\//.test(pathname)) return "current-job-opportunities";
+  if (/^\/careers\//.test(pathname)) return "careers-and-recruitment";
+  if (/^\/resources\/m3dyhub\//.test(pathname)) return "public-m3dyhub";
+  if (/^\/resources\/employee/.test(pathname)) return "public-employee-resources";
+  if (/^\/resources\/faqs?\//.test(pathname)) return "security-faqs";
+  if (/^\/resources\/(?:security-insights|guides|case-studies)\//.test(pathname))
+    return "security-resources";
+  if (/^\/resources\/client/.test(pathname)) return "client-resources-and-procurement";
+  if (/^\/(?:about|our-story|mission|vision|leadership|approach|standards)/.test(pathname))
+    return "company-overview-and-leadership";
+  if (/^\/contact\//.test(pathname)) return "contact-and-business-inquiries";
+  return "company-overview";
 }
 export type CrawlOptions = {
   maxPages?: number;
   maxRequests?: number;
+  /** Keep a crawl on the explicitly seeded public host(s), while retaining canonical metadata. */
+  allowedHosts?: string[];
   fetcher?: PageFetcher;
   wait?: (ms: number) => Promise<void>;
   storeFile?: string;
@@ -307,12 +367,29 @@ export type CrawlOptions = {
 export async function crawlPublic(seeds: string[], options: CrawlOptions = {}) {
   const fetcher = options.fetcher || fetchPublic;
   const wait = options.wait || ((ms) => new Promise((r) => setTimeout(r, ms)));
-  const maxPages = Math.min(40, Math.max(1, options.maxPages ?? 24));
-  const maxRequests = Math.min(100, options.maxRequests ?? 70);
+  const maxPages = Math.min(80, Math.max(1, options.maxPages ?? 70));
+  const maxRequests = Math.min(160, Math.max(1, options.maxRequests ?? 140));
   const policies = new Map<string, ReturnType<typeof robotPolicy>>();
   const deferred = new Set<string>();
   const last = new Map<string, number>();
   const failures: { url: string; reason: string }[] = [];
+  const crawlHosts = new Set(
+    options.allowedHosts || seeds.map((seed) => new URL(seed).hostname),
+  );
+  const manifest: {
+    url: string;
+    canonicalUrl: string;
+    title: string;
+    description: string;
+    category: string;
+    status: "extracted" | "failed" | "partial";
+    internalLinks: string[];
+    externalDestinations: {
+      url: string;
+      label: string;
+      kind: "external" | "download";
+    }[];
+  }[] = [];
   const queue = seeds.map((s) => publicURL(s).href);
   const seen = new Set<string>();
   const sitemapSeen = new Set<string>();
@@ -382,6 +459,7 @@ export async function crawlPublic(seeds: string[], options: CrawlOptions = {}) {
       for (const loc of locations) {
         try {
           const url = publicURL(loc).href;
+          if (!crawlHosts.has(new URL(url).hostname)) continue;
           if (/\.xml$/.test(new URL(url).pathname))
             await sitemap(url, depth + 1);
           else queue.push(url);
@@ -425,18 +503,48 @@ export async function crawlPublic(seeds: string[], options: CrawlOptions = {}) {
       }, options.storeFile);
       if (result.status !== 200 || !result.type.includes("html")) {
         failures.push({ url: value, reason: "Not a live HTML page" });
+        manifest.push({
+          url: value,
+          canonicalUrl: result.url,
+          title: "",
+          description: "",
+          category: pageCategory(value),
+          status: "failed",
+          internalLinks: [],
+          externalDestinations: [],
+        });
         continue;
       }
       const page = extractPage(result.body, result.url);
       pages++;
-      queue.push(...page.links.slice(0, 60));
+      queue.push(
+        ...page.links
+          .filter((link) => crawlHosts.has(new URL(link).hostname))
+          .slice(0, 60),
+      );
+      const category = pageCategory(result.url);
+      manifest.push({
+        url: result.url,
+        canonicalUrl: page.canonicalUrl,
+        title: page.title,
+        description: page.description,
+        category,
+        status: page.text.length < 80 ? "partial" : "extracted",
+        internalLinks: page.links,
+        externalDestinations: page.destinations.filter(
+          (item): item is typeof item & { kind: "external" | "download" } =>
+            item.kind !== "internal",
+        ),
+      });
       if (page.text.length < 80) continue;
       ingestSource(
         {
           id: hashText(result.url).slice(0, 16),
           url: result.url,
           title: page.title,
-          category: new URL(result.url).pathname.split("/")[1] || "company",
+          category,
+          canonicalUrl: page.canonicalUrl,
+          description: page.description,
           retrievedAt: now,
           contentHash: hashText(page.text),
           text: page.text,
@@ -454,6 +562,16 @@ export async function crawlPublic(seeds: string[], options: CrawlOptions = {}) {
         url: value,
         reason: "Excluded, robots/network failure, or limit reached",
       });
+      manifest.push({
+        url: value,
+        canonicalUrl: value,
+        title: "",
+        description: "",
+        category: pageCategory(value),
+        status: "failed",
+        internalLinks: [],
+        externalDestinations: [],
+      });
     }
   }
   return {
@@ -462,6 +580,7 @@ export async function crawlPublic(seeds: string[], options: CrawlOptions = {}) {
     discovered: seen.size,
     pending: queue.length,
     failures,
+    manifest,
   };
 }
 export function usableLink(
@@ -481,6 +600,6 @@ export function usableLink(
     !!record &&
     record.status === 200 &&
     now - Date.parse(record.checkedAt) < 30 * 86400000 &&
-    hosts.has(new URL(record.finalUrl).hostname)
+    officialPublicHosts.has(new URL(record.finalUrl).hostname)
   );
 }

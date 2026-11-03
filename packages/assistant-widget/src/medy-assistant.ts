@@ -98,7 +98,7 @@ class MedyAssistantWidget extends HTMLElement {
       ),
     );
     const privacy = el("a", "", "Privacy Policy");
-    privacy.href = "https://securemedy.ng/privacy-policy/";
+    privacy.href = "https://new.securemedy.com/privacy/";
     privacy.target = "_blank";
     privacy.rel = "noopener noreferrer";
     disclosure.append(privacy);

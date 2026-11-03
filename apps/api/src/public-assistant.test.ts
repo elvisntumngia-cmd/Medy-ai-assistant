@@ -16,11 +16,11 @@ describe("Medy V1 stateless public website assistant", () => {
       publicKnowledge.length,
     );
     expect(PUBLIC_LINKS).toMatchObject({
-      home: "https://securemedy.ng/",
-      about: "https://securemedy.ng/about-us/",
-      services: "https://securemedy.ng/services/",
-      careers: "https://securemedy.ng/careers/",
-      contact: "https://securemedy.ng/contact/",
+      home: "https://new.securemedy.com/",
+      about: "https://new.securemedy.com/about/",
+      services: "https://new.securemedy.com/services/",
+      careers: "https://new.securemedy.com/careers/",
+      contact: "https://new.securemedy.com/contact/",
       employeePortal: "https://my.securemedy.com/",
     });
   });

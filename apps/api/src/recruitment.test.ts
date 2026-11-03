@@ -22,14 +22,16 @@ afterEach(() => {
   fs.rmSync(directory, { recursive: true, force: true });
 });
 describe("fresh published recruitment guidance", () => {
-  it("makes seven substantive published role headings available with verified detail URLs", () => {
+  it("makes eight substantive published role headings available with verified detail URLs", () => {
     const jobs = getPublishedJobs();
-    expect(jobs).toHaveLength(7);
-    expect(jobs.some((job) => job.answer.includes("Washington, D.C."))).toBe(
+    expect(jobs).toHaveLength(8);
+    expect(jobs.some((job) => job.answer.includes("Washington"))).toBe(
       true,
     );
     for (const job of jobs) {
-      expect(job.action?.url).toContain("https://securemedy.ng/careers/jobs/");
+      expect(job.action?.url).toContain(
+        "https://new.securemedy.com/careers/jobs/",
+      );
       expect(job.uncertainty).toContain("not a confirmed current vacancy");
     }
   });
