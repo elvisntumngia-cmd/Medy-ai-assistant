@@ -141,7 +141,7 @@ describe("public chatbot production-readiness conversations", () => {
     expect(response.status).toBe(200);
     expect(response.body.intent).toBe("public_clarification");
     expect(response.body.message).toContain(
-      "don't have enough verified public information",
+      "do not have enough verified public information",
     );
     expect(response.body.sources).toEqual([]);
     expect(response.body.message).not.toMatch(/\$|million|billion/i);

@@ -33,7 +33,7 @@ export function publicBoundary(message: string): AssistantResponse | undefined {
   )
     return AssistantResponseSchema.parse({
       message:
-        "I can't collect or disclose credentials, private employee records or sensitive security procedures. Please use an authorized Securemedy channel.",
+        "I cannot collect or disclose credentials, private employee records or sensitive security procedures. Please use an authorized Securemedy channel.",
       intent: "sensitive_information",
       confidence: 1,
     });
@@ -61,13 +61,13 @@ export function conflictBoundary(
       "founder",
       /founder|who founded/,
       "founder_unknown",
-      "Founder, Chairman and current owner are different roles. Current ownership is unverified, and I don't have approved founder attribution; please consult the About Us page.",
+      "Founder, Chairman and current owner are different roles. Current ownership is unverified, and I do not have approved founder attribution. Please consult the About Us page.",
     ],
     [
       "owner",
       /\bowner\b|ownership|who owns/,
       "ownership_review",
-      "I don't have verified ownership information. A Chairman or founder title does not establish current ownership.",
+      "I do not have verified ownership information. A Chairman or founder title does not establish current ownership.",
     ],
     [
       "founder",
@@ -79,7 +79,7 @@ export function conflictBoundary(
       "founding-year",
       /when.*(?:start|found|establish)|what year|how long|\b(?:founded|established) in\b/,
       "company_founded",
-      "Public sources conflict about the founding year. I can't confirm it until the owner reviews the evidence.",
+      "Public sources conflict about the founding year. I cannot confirm it until the owner reviews the evidence.",
     ],
     [
       "address",
@@ -91,7 +91,7 @@ export function conflictBoundary(
       "state-coverage",
       /licens|what states|state coverage|coverage area|service area|(?:operate|serve|cover|available).*\b(?:virginia|maryland|va|md|state)\b/,
       "licensing",
-      "I can't confirm current state coverage or licensing from the approved information. Securemedy must confirm availability for your location.",
+      "I cannot confirm current state coverage or licensing from the approved information. Securemedy must confirm availability for your location.",
     ],
     [
       "licenses",
@@ -103,19 +103,19 @@ export function conflictBoundary(
       "certifications",
       /certif|endors/,
       "credentials_review",
-      "I don't have approved current certification or endorsement details.",
+      "I do not have approved current certification or endorsement details.",
     ],
     [
       "case-studies",
       /named client|client names|who are your clients|case stud|government contract/,
       "references_review",
-      "I don't have approved client or contract references to share.",
+      "I do not have approved client or contract references to share.",
     ],
     [
       "testimonials",
       /testimonial/,
       "references_review",
-      "Testimonials require publication review; I don't have approved endorsements to share.",
+      "Testimonials require publication review. I do not have approved endorsements to share.",
     ],
     [
       "entity",

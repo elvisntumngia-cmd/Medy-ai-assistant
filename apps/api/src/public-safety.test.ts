@@ -139,7 +139,7 @@ describe("public-only API boundary and lead privacy", () => {
         messages: [{ role: "user", content: "Who owns SecureMedy?" }],
       });
     expect(owner.status).toBe(200);
-    expect(owner.body.message).toContain("don't have verified ownership");
+    expect(owner.body.message).toContain("do not have verified ownership");
     for (const [content, expected] of [
       ["Where is your office?", "8507 Oxon Hill Road"],
       ["Are you licensed in Virginia?", "Virginia"],

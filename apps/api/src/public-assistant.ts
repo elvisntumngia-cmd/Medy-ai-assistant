@@ -557,7 +557,7 @@ export class PublicAssistantProvider implements AIProvider {
       )
     )
       return reply(
-        "I can't collect or disclose passwords, verification codes, access details, confidential security procedures, banking information or government identification numbers. Please use an authorized Securemedy channel.",
+        "I cannot collect or disclose passwords, verification codes, access details, confidential security procedures, banking information or government identification numbers. Please use an authorized Securemedy channel.",
         "sensitive_information",
       );
     if (
@@ -567,7 +567,7 @@ export class PublicAssistantProvider implements AIProvider {
       q.trim().split(" ").length <= 3
     )
       return reply(
-        "Hey! What brings you by—security services, a job, or just checking us out?",
+        "Welcome to Securemedy. How may I assist you with our security services, career opportunities or company information?",
         "greeting",
         {
           suggestions: [
@@ -580,7 +580,7 @@ export class PublicAssistantProvider implements AIProvider {
       );
     if (hasAny(q, ["who are you", "what are you", "are you a bot"]))
       return reply(
-        "I'm Medy, Securemedy's virtual website assistant. I provide verified public information and links, but I don't access private records or dispatch services.",
+        "I am Medy, Securemedy's virtual website assistant. I provide verified public information and relevant links. I cannot access private records or dispatch services.",
         "assistant_identity",
         { actions: [action("home", "Securemedy Website", PUBLIC_LINKS.home)] },
       );
@@ -626,7 +626,7 @@ export class PublicAssistantProvider implements AIProvider {
       return fromKnowledge("leadership", "published_leadership");
     if (match?.intent === "founder_unknown")
       return reply(
-        "I don't have a verified public fact identifying Securemedy's founder. The About Us page provides the approved company background, and the team can answer further questions.",
+        "I do not have verified public information identifying Securemedy's founder. The About Us page provides the approved company background, and our team can address further questions.",
         match.intent,
         {
           confidence: match.confidence,
@@ -691,7 +691,7 @@ export class PublicAssistantProvider implements AIProvider {
         { suggestions: ["Explore services", "Contact Securemedy", "Careers"] },
       );
     return reply(
-      "I don't have enough verified public information to answer that confidently. I can help with Securemedy's services, company information, Careers, employee access or contacting the team.",
+      "I do not have enough verified public information to answer that question confidently. I can assist with Securemedy's services, company information, Careers, employee access or contact options.",
       "public_clarification",
       {
         confidence: 0.35,

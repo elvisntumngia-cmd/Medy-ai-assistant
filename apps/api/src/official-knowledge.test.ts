@@ -148,16 +148,16 @@ describe("owner-authorized official public knowledge", () => {
       [{ role: "user", content: "Who owns SecureMedy?" }],
       [],
     );
-    expect(answer.message).toContain("don't have verified ownership");
+    expect(answer.message).toContain("do not have verified ownership");
   });
-  it("passes warm tone, direct-answer, discovery, handoff and employee boundaries to the model", async () => {
+  it("passes professional tone, direct-answer, discovery, handoff and employee boundaries to the model", async () => {
     const create = vi.fn().mockResolvedValue({
       choices: [
         {
           finish_reason: "stop",
           message: {
             content: JSON.stringify({
-              message: "Amigo! What brings you by?",
+              message: "Welcome. How may I assist you?",
               sourceIds: [],
               navigationIds: [],
               offerLeadForm: false,
@@ -179,7 +179,10 @@ describe("owner-authorized official public knowledge", () => {
     expect(response.sources).toHaveLength(0);
     expect(response.actions).toHaveLength(0);
     const prompt = create.mock.calls[0][0].messages[0].content;
-    expect(prompt).toContain("contractions and everyday language");
+    expect(prompt).toContain("formal, courteous and polished corporate tone");
+    expect(prompt).toContain("Avoid slang, emojis, excessive enthusiasm");
+    expect(prompt).toContain("Great question, Absolutely");
+    expect(prompt).toContain("Respond professionally even when a visitor uses casual language");
     expect(prompt).toContain("never ask merely to prolong");
     expect(prompt).toContain("occasionally two when closely related");
     expect(prompt).toContain("after understanding the request");

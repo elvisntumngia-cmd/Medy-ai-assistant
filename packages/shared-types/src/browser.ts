@@ -4,7 +4,7 @@ import {
   type AssistantAction,
 } from "./index.js";
 export const welcome =
-  "Hi! I'm Medy, Securemedy's AI assistant. How can I help you today?";
+  "Welcome to Securemedy. I am Medy, Securemedy's AI assistant. How may I assist you today?";
 export const companyCopy = (text: string) =>
   text.replace(/https?:\/\/\S+|\bsecuremedy\b/gi, (value) =>
     /^https?:/i.test(value) ? value : "Securemedy",
