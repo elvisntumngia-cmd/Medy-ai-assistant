@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "tsx watch src/dev-server.ts",
     "build": "tsc -p tsconfig.json",
+    "postbuild": "node ../../scripts/package-api-knowledge.mjs",
     "start": "node dist/src/server.js",
     "test:openai:live": "tsx src/openai-smoke.ts",
     "knowledge": "node --use-system-ca --import tsx src/knowledge-cli.ts",

@@ -15,5 +15,6 @@ AGENTS.md
 !.env.example
 .npm-cache/
 .aws-sam/
+apps/knowledge/
 
 .medy-dev/
