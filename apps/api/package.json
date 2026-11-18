@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.850.0",
+    "@aws-sdk/client-dynamodb": "^3.1170.0",
+    "@aws-sdk/lib-dynamodb": "^3.1170.0",
+    "@codegenie/serverless-express": "^4.17.1",
     "@medy/shared": "*",
     "cors": "^2.8.5",
     "express": "^4.21.2",

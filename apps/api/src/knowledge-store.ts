@@ -4,6 +4,9 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { PublicKnowledgeItemSchema } from "./public-knowledge-schema.js";
+import bundledStore from "../../../knowledge/editorial/store.json" with {
+  type: "json",
+};
 
 export const hashText = (text: string) =>
   crypto.createHash("sha256").update(text).digest("hex");
@@ -82,10 +85,18 @@ export function repositoryRoot() {
     if (fs.existsSync(path.join(dir, "knowledge", "editorial"))) return dir;
   throw new Error("Editorial knowledge directory missing");
 }
-export const defaultStorePath = () =>
-  process.env.MEDY_PUBLIC_KNOWLEDGE_FILE ||
-  path.join(repositoryRoot(), "knowledge/editorial/store.json");
+export const defaultStorePath = () => {
+  if (process.env.MEDY_PUBLIC_KNOWLEDGE_FILE)
+    return process.env.MEDY_PUBLIC_KNOWLEDGE_FILE;
+  try {
+    return path.join(repositoryRoot(), "knowledge/editorial/store.json");
+  } catch {
+    // The SAM esbuild artifact embeds the approved store and has no repository tree.
+    return "";
+  }
+};
 export function readStore(file = defaultStorePath()): EditorialStore {
+  if (file === "") return StoreSchema.parse(bundledStore);
   if (fs.statSync(file).size > 8_000_000)
     throw new Error("Knowledge store exceeds size limit");
   return StoreSchema.parse(JSON.parse(fs.readFileSync(file, "utf8")));

@@ -1,0 +1,262 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Securemedy public Medy chatbot API (employee/demo assistant excluded)
+Metadata:
+  AWSToolsMetrics:
+    AWSAgentToolkit: aws-cloudformation@3
+  com.aws.cloudformation.Context:
+    arch: API Gateway HTTP API invokes one Node.js Lambda; the Lambda calls Bedrock and DynamoDB.
+    must:
+      - Package from the npm workspace lockfile in a Linux SAM container without host node_modules.
+      - Keep the employee and demo assistant outside the public Lambda API.
+
+Parameters:
+  AllowedOrigins:
+    Type: String
+    Default: https://new.securemedy.com,https://www.securemedy.com
+  BedrockModelId:
+    Type: String
+    Default: amazon.nova-micro-v1:0
+  LeadRetentionDays:
+    Type: Number
+    Default: 30
+    MinValue: 1
+    MaxValue: 90
+  MonthlyBudgetUsd:
+    Type: Number
+    Default: 5
+  BudgetAlertEmailPrimary:
+    Type: String
+    Default: program.specialist@securemedy.com
+    AllowedPattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+  BudgetAlertEmailSecondary:
+    Type: String
+    Default: uniform.equipment@securemedy.com
+    AllowedPattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+  ReservedConcurrency:
+    Type: Number
+    Default: 3
+    MinValue: 1
+    MaxValue: 10
+  LogRetentionDays:
+    Type: Number
+    Default: 14
+    AllowedValues: [7, 14, 30, 60, 90]
+
+Globals:
+  Function:
+    Runtime: nodejs22.x
+    Architectures: [arm64]
+    MemorySize: 512
+    Timeout: 20
+    Environment:
+      Variables:
+        NODE_ENV: production
+        MEDY_AWS_PRODUCTION: "true"
+        AI_PROVIDER: bedrock
+        MEDY_PRODUCTION_AI: "true"
+        AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+        BEDROCK_MODEL_ID: !Ref BedrockModelId
+        CLIENT_ORIGIN: !Ref AllowedOrigins
+        MEDY_LEADS_TABLE: !Ref LeadsTable
+        MEDY_LEAD_RETENTION_DAYS: !Ref LeadRetentionDays
+        MEDY_METRICS: "true"
+
+Resources:
+  PublicApi:
+    Type: AWS::Serverless::HttpApi
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Provide the public HTTPS front door with distributed throttling and metadata-only access logs.
+        must:
+          - Never log request or response bodies, query strings, headers, or visitor contact data.
+          - Keep allowed origins explicit and configurable.
+        mutable: change-with-constraints
+    Properties:
+      CorsConfiguration:
+        AllowOrigins: !Split [",", !Ref AllowedOrigins]
+        AllowHeaders: [content-type, x-request-id]
+        AllowMethods: [GET, POST, OPTIONS]
+        MaxAge: 600
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 5
+        ThrottlingRateLimit: 2
+      AccessLogSettings:
+        DestinationArn: !GetAtt ApiAccessLogGroup.Arn
+        Format: '{"requestId":"$context.requestId","routeKey":"$context.routeKey","status":"$context.status","responseLatency":"$context.responseLatency"}'
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints:
+          - apps/api/src/lambda.ts
+        Format: cjs
+        Minify: false
+        Sourcemap: false
+        Target: es2022
+        UseNpmCi: true
+      com.aws.cloudformation.Context:
+        why: Bundle the TypeScript handler, workspace code, runtime dependencies, and approved knowledge with SAM's Linux esbuild workflow.
+        must:
+          - Never copy host node_modules because npm workspace links are platform-specific.
+          - Build must not require GNU Make on Windows.
+        mutable: change-with-constraints
+    Properties:
+      CodeUri: .
+      Handler: apps/api/src/lambda.handler
+      ReservedConcurrentExecutions: !Ref ReservedConcurrency
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: bedrock:InvokeModel
+              Resource: !Sub arn:${AWS::Partition}:bedrock:${AWS::Region}::foundation-model/${BedrockModelId}
+            - Effect: Allow
+              Action: [dynamodb:PutItem, dynamodb:GetItem]
+              Resource: !GetAtt LeadsTable.Arn
+      Events:
+        Proxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PublicApi
+            Path: /{proxy+}
+            Method: ANY
+            PayloadFormatVersion: "2.0"
+        Root:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PublicApi
+            Path: /
+            Method: ANY
+            PayloadFormatVersion: "2.0"
+  ApiAccessLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Retain privacy-safe HTTP API metadata long enough for incident review without indefinite storage.
+        must:
+          - Do not add payload, header, query-string, or contact fields to the access log format.
+        mutable: change-with-constraints
+    Properties:
+      RetentionInDays: !Ref LogRetentionDays
+      LogGroupName: !Sub /aws/http-api/${AWS::StackName}
+  FunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Enforce finite retention for structured application diagnostics.
+        must:
+          - Application diagnostics must never contain visitor message or lead content.
+        mutable: change-with-constraints
+    Properties:
+      RetentionInDays: !Ref LogRetentionDays
+      LogGroupName: !Sub /aws/lambda/${ApiFunction}
+  LeadsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+      SSESpecification:
+        SSEEnabled: true
+  FunctionErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Public Medy Lambda returned an unhandled error.
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref ApiFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+  FunctionThrottlesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Public Medy Lambda exhausted reserved concurrency.
+      Namespace: AWS/Lambda
+      MetricName: Throttles
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref ApiFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+  FunctionDurationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Public Medy Lambda p99 duration exceeded 80 percent of its timeout.
+      Namespace: AWS/Lambda
+      MetricName: Duration
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref ApiFunction
+      ExtendedStatistic: p99
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 16000
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+  Budget:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetLimit: { Amount: !Ref MonthlyBudgetUsd, Unit: USD }
+        BudgetName: !Sub ${AWS::StackName}-monthly
+        BudgetType: COST
+        CostFilters:
+          Service:
+            - Amazon Bedrock
+            - AWS Lambda
+            - Amazon API Gateway
+            - Amazon DynamoDB
+            - AmazonCloudWatch
+            - Amazon Simple Storage Service
+        TimeUnit: MONTHLY
+      NotificationsWithSubscribers:
+        - Notification:
+            ComparisonOperator: GREATER_THAN
+            NotificationType: ACTUAL
+            Threshold: 80
+            ThresholdType: PERCENTAGE
+          Subscribers:
+            - Address: !Ref BudgetAlertEmailPrimary
+              SubscriptionType: EMAIL
+            - Address: !Ref BudgetAlertEmailSecondary
+              SubscriptionType: EMAIL
+        - Notification:
+            ComparisonOperator: GREATER_THAN
+            NotificationType: FORECASTED
+            Threshold: 80
+            ThresholdType: PERCENTAGE
+          Subscribers:
+            - Address: !Ref BudgetAlertEmailPrimary
+              SubscriptionType: EMAIL
+            - Address: !Ref BudgetAlertEmailSecondary
+              SubscriptionType: EMAIL
+
+Outputs:
+  ApiUrl:
+    Value: !Sub https://${PublicApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}
+  LeadsTableName:
+    Value: !Ref LeadsTable

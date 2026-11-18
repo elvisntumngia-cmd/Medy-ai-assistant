@@ -6,12 +6,15 @@ beforeEach(() => {
   vi.stubEnv("AI_PROVIDER", "deterministic");
   vi.stubEnv("MEDY_PRODUCTION_AI", "false");
   vi.stubEnv("MEDY_LOCAL_AI", "false");
-  vi.stubEnv("CLIENT_ORIGIN", "https://approved.example");
+  vi.stubEnv(
+    "CLIENT_ORIGIN",
+    "https://new.securemedy.com, https://www.securemedy.com",
+  );
 });
 afterEach(() => vi.unstubAllEnvs());
 
 describe("exact-origin CORS", () => {
-  it.each(["https://new.securemedy.com", "https://approved.example"])(
+  it.each(["https://new.securemedy.com", "https://www.securemedy.com"])(
     "allows chat preflight and API responses for %s",
     async (origin) => {
       const app = createApp();
@@ -50,10 +53,24 @@ describe("exact-origin CORS", () => {
         "http://localhost:5180",
         "http://127.0.0.1:5180",
         "http://localhost:8888",
-        "https://approved.example",
+        "https://www.securemedy.com",
       ]),
     );
     expect(resolveAllowedOrigins()).not.toContain("*");
+  });
+
+  it("allows only configured origins in AWS production", () => {
+    vi.stubEnv("MEDY_AWS_PRODUCTION", "true");
+    expect(resolveAllowedOrigins()).toEqual([
+      "https://new.securemedy.com",
+      "https://www.securemedy.com",
+    ]);
+  });
+
+  it("fails AWS production startup without an explicit origin", () => {
+    vi.stubEnv("MEDY_AWS_PRODUCTION", "true");
+    vi.stubEnv("CLIENT_ORIGIN", "");
+    expect(() => resolveAllowedOrigins()).toThrow(/requires CLIENT_ORIGIN/);
   });
 
   it.each([

@@ -76,6 +76,13 @@ describe("public-only API boundary and lead privacy", () => {
           .send({ ...form, fullName: "A".repeat(151) })
       ).status,
     ).toBe(400);
+    expect(
+      (
+        await request(app)
+          .post("/api/leads")
+          .send({ ...form, additionalDetails: "My password is do-not-store-this" })
+      ).status,
+    ).toBe(400);
   });
   it("fails closed on corrupt storage rather than overwriting it or acknowledging success", async () => {
     fs.writeFileSync(process.env.MEDY_LEADS_FILE!, "corrupt");

@@ -99,7 +99,26 @@ export const LeadSchema = z
       message: "Provide the selected contact method.",
       path: ["preferredContactMethod"],
     },
-  );
+  )
+  .superRefine((value, context) => {
+    const sensitive =
+      /\b(password|passcode|verification code|one[- ]time code|social security|ssn|bank account|credit card|debit card)\b/i;
+    for (const field of [
+      "organization",
+      "serviceLocation",
+      "propertyType",
+      "requestedService",
+      "coverageSchedule",
+      "additionalDetails",
+    ] as const) {
+      if (sensitive.test(value[field]))
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [field],
+          message: "Do not submit credentials or sensitive financial identifiers.",
+        });
+    }
+  });
 export type LeadInput = z.infer<typeof LeadSchema>;
 export const DemoConfigSchema = z.object({
   role: RoleSchema.default("officer"),

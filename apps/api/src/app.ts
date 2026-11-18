@@ -24,24 +24,33 @@ import {
 import {
   BedrockAIProvider,
   LocalKnowledgeProvider,
-  LocalLeadProvider,
   MockActionProvider,
   MockAIProvider,
   MockAuthAdapter,
   employeeData,
+  type AIProvider,
 } from "./providers.js";
 import { PublicAssistantProvider } from "./public-assistant.js";
 
 import { AIControlError, configuredOpenAIProvider } from "./openai-provider.js";
+import { configuredBedrockProvider } from "./bedrock-provider.js";
+import {
+  createPublicLeadRepository,
+  type PublicLeadRepository,
+} from "./public-lead-repository.js";
 
 type AppOptions = {
   serveFrontend?: boolean;
   demoDistPath?: string;
   widgetBundlePath?: string;
+  publicProvider?: AIProvider;
+  publicProviderName?: "bedrock" | "openai" | "deterministic";
+  leadRepository?: PublicLeadRepository;
 };
 
 const defaultAllowedOrigins = [
   "https://new.securemedy.com",
+  "https://www.securemedy.com",
   "https://medy-ai-assistant-demo.onrender.com",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
@@ -55,6 +64,14 @@ export function resolveAllowedOrigins() {
     .split(",")
     .map((origin) => origin.trim())
     .filter(Boolean);
+  if (
+    process.env.MEDY_AWS_PRODUCTION === "true" ||
+    process.env.AWS_LAMBDA_FUNCTION_NAME !== undefined
+  ) {
+    if (!configured.length)
+      throw new Error("AWS production requires CLIENT_ORIGIN.");
+    return [...new Set(configured)];
+  }
   return [...new Set([...defaultAllowedOrigins, ...configured])];
 }
 
@@ -110,7 +127,12 @@ export function createApp(options: AppOptions = {}) {
   const auth = new MockAuthAdapter();
   const knowledge = new LocalKnowledgeProvider();
   const mockAI = new MockAIProvider();
-  const openAI = configuredOpenAIProvider();
+  const selected = process.env.AI_PROVIDER;
+  const bedrock = selected === "bedrock" ? configuredBedrockProvider() : undefined;
+  // Preserve existing explicit OpenAI configuration validation, except when Bedrock is selected.
+  const openAI = selected === "bedrock" ? undefined : configuredOpenAIProvider();
+  const configuredPublicProvider = options.publicProvider || bedrock || openAI;
+  const publicProviderName = options.publicProviderName || (bedrock ? "bedrock" : openAI ? "openai" : "deterministic");
   const aiLimit = rateLimit({
     windowMs: 60_000,
     limit: z.coerce
@@ -128,9 +150,9 @@ export function createApp(options: AppOptions = {}) {
       },
     },
   });
-  const bedrock = new BedrockAIProvider();
+  const demoBedrock = new BedrockAIProvider();
   const publicAssistant = new PublicAssistantProvider();
-  const leads = new LocalLeadProvider();
+  const leads = options.leadRepository || createPublicLeadRepository();
   const actions = new MockActionProvider();
   const session = (req: express.Request) => req.header("x-demo-session");
   const localDemo =
@@ -180,8 +202,8 @@ export function createApp(options: AppOptions = {}) {
   app.get("/api/health", (_req, res) =>
     res.json({
       status: "ok",
-      publicProvider: openAI ? "openai" : "deterministic",
-      ...(openAI ? { aiAccounting: "usage-reconciled-v1" } : {}),
+      publicProvider: publicProviderName,
+      ...(configuredPublicProvider ? { aiAccounting: "usage-reconciled-v1" } : {}),
       ...(process.env.MEDY_LOCAL_AI === "true" &&
       process.env.NODE_ENV !== "production" &&
       process.env.RENDER !== "true"
@@ -191,8 +213,8 @@ export function createApp(options: AppOptions = {}) {
             ),
           }
         : {}),
-      provider: openAI
-        ? "openai"
+      provider: configuredPublicProvider
+        ? publicProviderName
         : process.env.BEDROCK_ENABLED === "true"
           ? "bedrock-enabled"
           : "mock",
@@ -201,7 +223,7 @@ export function createApp(options: AppOptions = {}) {
   app.post(
     "/api/chat",
     (req, res, next) => {
-      if (openAI && req.body?.mode === "public") return aiLimit(req, res, next);
+      if (configuredPublicProvider && req.body?.mode === "public") return aiLimit(req, res, next);
       next();
     },
     async (req, res, next) => {
@@ -269,17 +291,32 @@ export function createApp(options: AppOptions = {}) {
           (body.provider || config.provider) === "bedrock";
         const provider =
           body.mode === "public" && !useBedrock
-            ? openAI || publicAssistant
+            ? configuredPublicProvider || publicAssistant
             : useBedrock
-              ? bedrock
+              ? demoBedrock
               : mockAI;
-        const answer = await provider.chat(
-          body.mode,
-          body.messages,
-          context,
-          user || undefined,
-          body.conversationId,
-        );
+        let answer;
+        try {
+          answer = await provider.chat(
+            body.mode,
+            body.messages,
+            context,
+            user || undefined,
+            body.conversationId,
+          );
+        } catch (error) {
+          if (
+            body.mode === "public" &&
+            publicProviderName === "bedrock" &&
+            error instanceof AIControlError &&
+            error.code === "AI_UNAVAILABLE"
+          ) {
+            console.warn(JSON.stringify({ event: "ai_safe_fallback", provider: "bedrock", reason: "unavailable" }));
+            answer = await publicAssistant.chat(
+              "public", body.messages, context, undefined, body.conversationId,
+            );
+          } else throw error;
+        }
         if (body.mode === "public") {
           const store = readStore();
           const approved = getPublicKnowledge();
@@ -323,14 +360,14 @@ export function createApp(options: AppOptions = {}) {
   app.post(
     "/api/leads",
     rateLimit({ windowMs: 15 * 60_000, limit: 10 }),
-    (req, res, next) => {
+    async (req, res, next) => {
       try {
-        const lead = leads.create(LeadSchema.parse(req.body));
+        const lead = await leads.create(LeadSchema.parse(req.body));
         res.status(201).json({
           id: lead.id,
           status: lead.status,
           createdAt: lead.createdAt,
-          persistence: "local_simulation",
+          persistence: leads.persistence,
           notificationStatus: "not_configured",
         });
       } catch (error) {
@@ -338,9 +375,9 @@ export function createApp(options: AppOptions = {}) {
       }
     },
   );
-  app.get("/api/leads", demoOnly, (_req, res) => res.json(leads.list()));
-  app.get("/api/leads/:id", demoOnly, (req, res) => {
-    const lead = leads.get(String(req.params.id));
+  app.get("/api/leads", demoOnly, async (_req, res) => res.json(await leads.list?.() || []));
+  app.get("/api/leads/:id", demoOnly, async (req, res) => {
+    const lead = await leads.get(String(req.params.id));
     res
       .status(lead ? 200 : 404)
       .json(
@@ -439,7 +476,7 @@ export function createApp(options: AppOptions = {}) {
         session: z.boolean().default(true),
       })
       .parse(req.body || {});
-    if (body.leads) leads.reset();
+    if (body.leads) void leads.reset?.();
     if (body.actions) actions.reset();
     if (body.session) auth.reset();
     if (body.session) publicAssistant.reset();

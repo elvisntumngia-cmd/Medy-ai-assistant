@@ -94,7 +94,7 @@ class MedyAssistantWidget extends HTMLElement {
       el(
         "p",
         "",
-        "AI-assisted chat may use OpenAI. Keep questions public; use the consent form for contact details. For immediate danger, call your local emergency services. Medy cannot dispatch help.",
+        "AI-assisted chat may use an external AI service. Keep questions public; use the consent form for contact details. For immediate danger, call your local emergency services. Medy cannot dispatch help.",
       ),
     );
     const privacy = el("a", "", "Privacy Policy");
