@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import {
   retrievePublicKnowledge,
   getPublicKnowledge,
+  verifiedFaqResponse,
 } from "./public-knowledge.js";
 import { readStore } from "./knowledge-store.js";
 import { usableLink } from "./public-crawler.js";
@@ -155,6 +156,39 @@ export function createApp(options: AppOptions = {}) {
   const publicAssistant = new PublicAssistantProvider();
   const leads = options.leadRepository || createPublicLeadRepository();
   const actions = new MockActionProvider();
+  const sanitizePublicAnswer = (answer: Awaited<ReturnType<AIProvider["chat"]>>) => {
+    const store = readStore();
+    const approved = getPublicKnowledge();
+    answer.actions = answer.actions.filter(
+      (action) =>
+        (action.type === "open_external" &&
+          !!action.target &&
+          usableLink(action.target, store)) ||
+        (action.type === "start_form" &&
+          action.id === "request-security-services"),
+    );
+    answer.message = companyCopy(answer.message);
+    answer.actions = answer.actions.map((action) => ({
+      ...action,
+      label: companyCopy(action.label),
+    }));
+    answer.data = undefined;
+    answer.sources = answer.sources.flatMap((source) => {
+      const entry = approved.find((candidate) => candidate.id === source.id);
+      return entry
+        ? [{
+            id: entry.id,
+            title: entry.sourceTitle,
+            domain: "public" as const,
+            snippet: entry.answer,
+            ...(usableLink(entry.sourceUrl, store)
+              ? { url: entry.sourceUrl }
+              : {}),
+          }]
+        : [];
+    });
+    return answer;
+  };
   const session = (req: express.Request) => req.header("x-demo-session");
   const localDemo =
     process.env.DEMO_MODE === "true" &&
@@ -204,7 +238,14 @@ export function createApp(options: AppOptions = {}) {
     res.json({
       status: "ok",
       publicProvider: publicProviderName,
-      ...(configuredPublicProvider ? { aiAccounting: "usage-reconciled-v1" } : {}),
+      ...(configuredPublicProvider
+        ? {
+            aiAccounting:
+              publicProviderName === "bedrock"
+                ? "dynamodb-reserved-v2"
+                : "usage-reconciled-v1",
+          }
+        : {}),
       ...(process.env.MEDY_LOCAL_AI === "true" &&
       process.env.NODE_ENV !== "production" &&
       process.env.RENDER !== "true"
@@ -224,7 +265,13 @@ export function createApp(options: AppOptions = {}) {
   app.post(
     "/api/chat",
     (req, res, next) => {
-      if (configuredPublicProvider && req.body?.mode === "public") return aiLimit(req, res, next);
+      const latest = req.body?.messages?.at?.(-1)?.content;
+      if (
+        configuredPublicProvider &&
+        req.body?.mode === "public" &&
+        !(typeof latest === "string" && verifiedFaqResponse(latest))
+      )
+        return aiLimit(req, res, next);
       next();
     },
     async (req, res, next) => {
@@ -252,6 +299,8 @@ export function createApp(options: AppOptions = {}) {
             );
             return res.json(boundary);
           }
+          const faq = verifiedFaqResponse(body.messages.at(-1)!.content);
+          if (faq) return res.json(sanitizePublicAnswer(faq));
         }
         const user =
           body.mode === "employee"
@@ -319,38 +368,7 @@ export function createApp(options: AppOptions = {}) {
           } else throw error;
         }
         if (body.mode === "public") {
-          const store = readStore();
-          const approved = getPublicKnowledge();
-          answer.actions = answer.actions.filter(
-            (action) =>
-              (action.type === "open_external" &&
-                !!action.target &&
-                usableLink(action.target, store)) ||
-              (action.type === "start_form" &&
-                action.id === "request-security-services"),
-          );
-          answer.message = companyCopy(answer.message);
-          answer.actions = answer.actions.map((action) => ({
-            ...action,
-            label: companyCopy(action.label),
-          }));
-          answer.data = undefined;
-          answer.sources = answer.sources.flatMap((source) => {
-            const entry = approved.find((e) => e.id === source.id);
-            return entry
-              ? [
-                  {
-                    id: entry.id,
-                    title: entry.sourceTitle,
-                    domain: "public" as const,
-                    snippet: entry.answer,
-                    ...(usableLink(entry.sourceUrl, store)
-                      ? { url: entry.sourceUrl }
-                      : {}),
-                  },
-                ]
-              : [];
-          });
+          answer = sanitizePublicAnswer(answer);
         }
         res.json(answer);
       } catch (error) {
@@ -514,7 +532,10 @@ export function createApp(options: AppOptions = {}) {
                   : "PROVIDER_ERROR",
             message:
               error instanceof AIControlError &&
-              error.code === "AI_DAILY_BUDGET"
+              error.code === "AI_PAID_BUDGET"
+                ? "Medy's paid AI limit is currently reached. Verified FAQ answers remain available."
+                : error instanceof AIControlError &&
+                    error.code === "AI_DAILY_BUDGET"
                 ? "Medy has reached its daily AI limit. Please use the SecureMedy Contact page or try again after 00:00 UTC."
                 : error instanceof AIControlError &&
                     error.code === "AI_INPUT_LIMIT"

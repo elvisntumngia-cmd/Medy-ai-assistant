@@ -17,6 +17,7 @@ Parameters:
   BedrockModelId:
     Type: String
     Default: amazon.nova-micro-v1:0
+    AllowedValues: [amazon.nova-micro-v1:0]
   LeadRetentionDays:
     Type: Number
     Default: 30
@@ -24,7 +25,74 @@ Parameters:
     MaxValue: 90
   MonthlyBudgetUsd:
     Type: Number
+    Default: 10
+  ApiThrottleRate:
+    Type: Number
+    Default: 2
+    MinValue: 1
+    MaxValue: 100
+  ApiThrottleBurst:
+    Type: Number
     Default: 5
+    MinValue: 1
+    MaxValue: 200
+  AiRateLimitPerMinute:
+    Type: Number
+    Default: 10
+    MinValue: 1
+    MaxValue: 100
+  AiMaxInputLength:
+    Type: Number
+    Default: 2000
+    MinValue: 100
+    MaxValue: 2000
+  AiHistoryMessages:
+    Type: Number
+    Default: 10
+    MinValue: 1
+    MaxValue: 20
+  AiMaxOutputTokens:
+    Type: Number
+    Default: 450
+    MinValue: 50
+    MaxValue: 2000
+  PublicDailyInferenceRequests:
+    Type: Number
+    Default: 250
+    MinValue: 1
+  PublicDailyTokenBudget:
+    Type: Number
+    Default: 250000
+    MinValue: 1
+  MedyHubDailyInferenceRequests:
+    Type: Number
+    Default: 250
+    MinValue: 1
+  MedyHubDailyTokenBudget:
+    Type: Number
+    Default: 250000
+    MinValue: 1
+  PublicMonthlyInferenceUsd:
+    Type: Number
+    Default: 4
+    MinValue: 1
+  MedyHubMonthlyInferenceUsd:
+    Type: Number
+    Default: 4
+    MinValue: 1
+  SharedMonthlyInferenceBufferUsd:
+    Type: Number
+    Default: 2
+    MinValue: 0
+  MonthlyInferenceCutoffUsd:
+    Type: Number
+    Default: 9
+    MinValue: 1
+  AccountingRetentionDays:
+    Type: Number
+    Default: 400
+    MinValue: 32
+    MaxValue: 800
   BudgetAlertEmailPrimary:
     Type: String
     Default: program.specialist@securemedy.com
@@ -60,6 +128,23 @@ Globals:
         CLIENT_ORIGIN: !Ref AllowedOrigins
         MEDY_LEADS_TABLE: !Ref LeadsTable
         MEDY_LEAD_RETENTION_DAYS: !Ref LeadRetentionDays
+        MEDY_INFERENCE_ACCOUNTING_TABLE: !Ref InferenceAccountingTable
+        MEDY_ASSISTANT_ID: public
+        PUBLIC_DAILY_INFERENCE_REQUESTS: !Ref PublicDailyInferenceRequests
+        PUBLIC_DAILY_TOKEN_BUDGET: !Ref PublicDailyTokenBudget
+        MEDYHUB_DAILY_INFERENCE_REQUESTS: !Ref MedyHubDailyInferenceRequests
+        MEDYHUB_DAILY_TOKEN_BUDGET: !Ref MedyHubDailyTokenBudget
+        PUBLIC_MONTHLY_INFERENCE_USD: !Ref PublicMonthlyInferenceUsd
+        MEDYHUB_MONTHLY_INFERENCE_USD: !Ref MedyHubMonthlyInferenceUsd
+        MEDY_SHARED_INFERENCE_BUFFER_USD: !Ref SharedMonthlyInferenceBufferUsd
+        MEDY_MONTHLY_INFERENCE_CUTOFF_USD: !Ref MonthlyInferenceCutoffUsd
+        MEDY_ACCOUNTING_RETENTION_DAYS: !Ref AccountingRetentionDays
+        AI_MAX_INPUT_LENGTH: !Ref AiMaxInputLength
+        AI_HISTORY_MESSAGES: !Ref AiHistoryMessages
+        AI_MAX_OUTPUT_TOKENS: !Ref AiMaxOutputTokens
+        AI_RATE_LIMIT_PER_MINUTE: !Ref AiRateLimitPerMinute
+        AI_INPUT_USD_PER_MILLION: "0.035"
+        AI_OUTPUT_USD_PER_MILLION: "0.14"
         MEDY_METRICS: "true"
 
 Resources:
@@ -84,8 +169,8 @@ Resources:
         AllowMethods: [GET, POST, OPTIONS]
         MaxAge: 600
       DefaultRouteSettings:
-        ThrottlingBurstLimit: 5
-        ThrottlingRateLimit: 2
+        ThrottlingBurstLimit: !Ref ApiThrottleBurst
+        ThrottlingRateLimit: !Ref ApiThrottleRate
       AccessLogSettings:
         DestinationArn: !GetAtt ApiAccessLogGroup.Arn
         Format: '{"requestId":"$context.requestId","routeKey":"$context.routeKey","status":"$context.status","responseLatency":"$context.responseLatency"}'
@@ -119,6 +204,9 @@ Resources:
             - Effect: Allow
               Action: [dynamodb:PutItem, dynamodb:GetItem]
               Resource: !GetAtt LeadsTable.Arn
+            - Effect: Allow
+              Action: [dynamodb:TransactWriteItems, dynamodb:UpdateItem]
+              Resource: !GetAtt InferenceAccountingTable.Arn
       Events:
         Proxy:
           Type: HttpApi
@@ -174,6 +262,30 @@ Resources:
           KeyType: HASH
       TimeToLiveSpecification:
         AttributeName: ttl
+        Enabled: true
+      SSESpecification:
+        SSEEnabled: true
+  InferenceAccountingTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Persist atomic paid-inference reservations and usage across concurrent Lambda instances.
+        must:
+          - Store metadata and aggregate counters only; never messages, model output, contacts, or secrets.
+          - Keep public and MedyHub counters separately attributable while enforcing one shared cutoff.
+        mutable: change-with-constraints
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
         Enabled: true
       SSESpecification:
         SSEEnabled: true
@@ -239,6 +351,16 @@ Resources:
             - Amazon Simple Storage Service
         TimeUnit: MONTHLY
       NotificationsWithSubscribers:
+        - Notification:
+            ComparisonOperator: GREATER_THAN
+            NotificationType: ACTUAL
+            Threshold: 60
+            ThresholdType: PERCENTAGE
+          Subscribers:
+            - Address: !Ref BudgetAlertEmailPrimary
+              SubscriptionType: EMAIL
+            - Address: !Ref BudgetAlertEmailSecondary
+              SubscriptionType: EMAIL
         - Notification:
             ComparisonOperator: GREATER_THAN
             NotificationType: ACTUAL

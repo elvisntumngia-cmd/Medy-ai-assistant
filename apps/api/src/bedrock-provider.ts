@@ -16,16 +16,19 @@ import {
   safeFailure,
   validateAndMapPublicResult,
 } from "./public-ai-shared.js";
+import {
+  configuredPaidInferenceAccounting,
+  type PaidInferenceAccounting,
+} from "./inference-accounting.js";
 
 export const BedrockConfigSchema = z.object({
   region: z.string().min(1).default("us-east-1"),
-  model: z.string().min(1).default("amazon.nova-micro-v1:0"),
+  model: z.literal("amazon.nova-micro-v1:0").default("amazon.nova-micro-v1:0"),
   maxInput: z.coerce.number().int().min(1).max(2000).default(2000),
   history: z.coerce.number().int().min(1).max(20).default(10),
   maxOutput: z.coerce.number().int().min(1).max(2000).default(450),
   timeout: z.coerce.number().int().min(1).max(60000).default(15000),
   temperature: z.coerce.number().min(0).max(1).default(0.2),
-  dailyTokens: z.coerce.number().int().nonnegative().default(250000),
 });
 export function bedrockConfig() {
   return BedrockConfigSchema.parse({
@@ -36,20 +39,17 @@ export function bedrockConfig() {
     maxOutput: process.env.AI_MAX_OUTPUT_TOKENS,
     timeout: process.env.AI_TIMEOUT_MS,
     temperature: process.env.AI_TEMPERATURE,
-    dailyTokens: process.env.AI_DAILY_TOKEN_BUDGET,
   });
 }
 
 export type ConverseClient = { send(command: ConverseCommand, options?: { abortSignal?: AbortSignal }): Promise<ConverseCommandOutput> };
 
 export class BedrockPublicProvider implements AIProvider {
-  private day = "";
-  private tokens = 0;
   constructor(
     private client: ConverseClient,
     private config = bedrockConfig(),
+    private accounting: PaidInferenceAccounting,
     private log: (value: Record<string, unknown>) => void = (value) => console.info(JSON.stringify(value)),
-    private now: () => Date = () => new Date(),
   ) {}
 
   async chat(mode: Mode, messages: { role: string; content: string }[], _context: KnowledgeMatch[]) {
@@ -60,11 +60,10 @@ export class BedrockPublicProvider implements AIProvider {
       instructions: PUBLIC_ASSISTANT_INSTRUCTIONS,
     });
     if (request.boundary) return request.boundary;
-    const reserved = estimateInputTokens(request.system + JSON.stringify(request.history)) + 1024 + this.config.maxOutput;
-    const day = this.now().toISOString().slice(0, 10);
-    if (day !== this.day) { this.day = day; this.tokens = 0; }
-    if (this.tokens + reserved > this.config.dailyTokens) throw new AIControlError(429, "AI_DAILY_BUDGET");
-    this.tokens += reserved;
+    const reservation = await this.accounting.reserve(
+      estimateInputTokens(request.system + JSON.stringify(request.history)),
+      this.config.maxOutput,
+    );
     const input: ConverseCommandInput = {
       modelId: this.config.model,
       system: [{ text: request.system }],
@@ -77,18 +76,27 @@ export class BedrockPublicProvider implements AIProvider {
         temperature: this.config.temperature,
       },
     };
+    let reconciled = false;
     try {
       const result = await this.client.send(new ConverseCommand(input), {
         abortSignal: AbortSignal.timeout(this.config.timeout),
       });
       const inputTokens = result.usage?.inputTokens;
       const outputTokens = result.usage?.outputTokens;
-      if (Number.isSafeInteger(inputTokens) && Number.isSafeInteger(outputTokens) && this.day === day)
-        this.tokens += Number(inputTokens) + Number(outputTokens) - reserved;
+      if (!Number.isSafeInteger(inputTokens) || !Number.isSafeInteger(outputTokens))
+        throw Object.assign(new Error("Missing usage"), { code: "usage_missing" });
+      const estimatedCostMicros = await this.accounting.settle(
+        reservation,
+        Number(inputTokens),
+        Number(outputTokens),
+      );
+      reconciled = true;
       this.log({
-        event: "ai_usage", provider: "bedrock", model: this.config.model,
+        event: "ai_usage", assistantId: reservation.assistantId,
+        provider: "bedrock", model: this.config.model,
         inputTokens: inputTokens ?? null, outputTokens: outputTokens ?? null,
-        reservedTokens: reserved,
+        reservedTokens: reservation.reservedTokens,
+        estimatedCostMicros,
       });
       if (result.stopReason !== "end_turn")
         throw Object.assign(new Error("Incomplete or refused output"), {
@@ -99,7 +107,10 @@ export class BedrockPublicProvider implements AIProvider {
       return validateAndMapPublicResult(parsePublicModelResult(text), request.approved);
     } catch (error) {
       const { status, reason } = safeFailure(error);
-      this.log({ event: "ai_failure", provider: "bedrock", model: this.config.model, reservedTokens: reserved, status, reason });
+      if (!reconciled) await this.accounting.fail(reservation, reason);
+      this.log({ event: "ai_failure", assistantId: reservation.assistantId,
+        provider: "bedrock", model: this.config.model,
+        reservedTokens: reservation.reservedTokens, status, reason });
       throw new AIControlError(503, "AI_UNAVAILABLE");
     }
   }
@@ -119,5 +130,6 @@ export function configuredBedrockProvider() {
       retryMode: "adaptive",
     }),
     config,
+    configuredPaidInferenceAccounting(),
   );
 }

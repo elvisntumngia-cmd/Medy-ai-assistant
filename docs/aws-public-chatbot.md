@@ -31,7 +31,7 @@ sam deploy --guided --region us-east-1 --stack-name medy-public-chatbot-staging 
   AllowedOrigins=https://securemedy.com,https://www.securemedy.com,https://new.securemedy.com `
   BedrockModelId=amazon.nova-micro-v1:0 LeadRetentionDays=30 `
   ReservedConcurrency=3 LogRetentionDays=14 `
-  MonthlyBudgetUsd=5 `
+  MonthlyBudgetUsd=10 `
   BudgetAlertEmailPrimary=program.specialist@securemedy.com `
   BudgetAlertEmailSecondary=uniform.equipment@securemedy.com
 ```
@@ -55,7 +55,9 @@ AWS production uses an encrypted on-demand DynamoDB table. An atomic determinist
 
 Logs contain allowlisted metadata only: request ID, known route, status, latency, provider/model, token counts, and safe failure category. Messages, model output, headers, query strings, and contacts are not logged. The template sets finite retention and creates Lambda error, throttle, and high-duration alarms. Alarm actions are intentionally not provisioned; attach an authorized notification destination after deployment. Do not enable payload execution logging.
 
-The separate Medy budget is scoped conservatively to Bedrock, Lambda, API Gateway, DynamoDB, CloudWatch, and S3 service charges and sends actual-spend and forecast alerts at 80% to both Securemedy recipients. This captures Medy's primary token cost but can overcount unrelated future workloads that use the same services. Each recipient must verify its address for this AWS account before notifications become active. Budgets are alerts, not hard caps. Provider token counters are in-memory estimates: Lambda instances do not share them, cold starts reset them, and concurrent calls can pass them. Use budgets, API throttling, monitoring, and service quotas for operational cost control.
+The separate `$10` Medy budget is scoped conservatively to Bedrock, Lambda, API Gateway, DynamoDB, CloudWatch, and S3 service charges and sends actual-spend alerts at 60% and 80%, plus a forecast alert at 80%, to both Securemedy recipients. This captures the primary AI services but can overcount unrelated workloads using the same services. Each recipient must verify its address for this AWS account before notifications become active. AWS Budgets are alerts, not hard caps.
+
+Paid Bedrock calls use a separate encrypted, on-demand DynamoDB accounting table. A transaction reserves the shared monthly estimate and the assistant's daily requests/tokens before invocation, including in-flight allowance. Public and future MedyHub usage are separately attributed with provisional `$4` allocations; the shared paid-inference cutoff rejects new calls at an estimated `$9`, while exact approved FAQ answers remain available. Unknown failures retain their reservation conservatively. Metadata-only warnings are emitted at estimated `$6` and `$8`. Prices and token estimates remain estimates rather than a guaranteed AWS billing cap.
 
 ## Authorization and release checklist
 
