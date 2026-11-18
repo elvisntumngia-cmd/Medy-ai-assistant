@@ -13,7 +13,7 @@ Metadata:
 Parameters:
   AllowedOrigins:
     Type: String
-    Default: https://new.securemedy.com,https://www.securemedy.com
+    Default: https://securemedy.com,https://www.securemedy.com,https://new.securemedy.com
   BedrockModelId:
     Type: String
     Default: amazon.nova-micro-v1:0
@@ -74,7 +74,12 @@ Resources:
         mutable: change-with-constraints
     Properties:
       CorsConfiguration:
-        AllowOrigins: !Split [",", !Ref AllowedOrigins]
+        # Keep these explicit: SAM does not preserve every CORS property when
+        # AllowOrigins is supplied as a list-level intrinsic such as !Split.
+        AllowOrigins:
+          - https://securemedy.com
+          - https://new.securemedy.com
+          - https://www.securemedy.com
         AllowHeaders: [content-type, x-request-id]
         AllowMethods: [GET, POST, OPTIONS]
         MaxAge: 600

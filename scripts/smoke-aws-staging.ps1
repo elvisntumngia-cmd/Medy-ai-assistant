@@ -1,6 +1,7 @@
 param(
   [Parameter(Mandatory = $true)][string]$ApiBaseUrl,
   [string[]]$Origins = @(
+    "https://securemedy.com",
     "https://new.securemedy.com",
     "https://www.securemedy.com"
   ),

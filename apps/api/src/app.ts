@@ -49,6 +49,7 @@ type AppOptions = {
 };
 
 const defaultAllowedOrigins = [
+  "https://securemedy.com",
   "https://new.securemedy.com",
   "https://www.securemedy.com",
   "https://medy-ai-assistant-demo.onrender.com",

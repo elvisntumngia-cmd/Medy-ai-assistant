@@ -8,13 +8,17 @@ beforeEach(() => {
   vi.stubEnv("MEDY_LOCAL_AI", "false");
   vi.stubEnv(
     "CLIENT_ORIGIN",
-    "https://new.securemedy.com, https://www.securemedy.com",
+    "https://securemedy.com, https://www.securemedy.com, https://new.securemedy.com",
   );
 });
 afterEach(() => vi.unstubAllEnvs());
 
 describe("exact-origin CORS", () => {
-  it.each(["https://new.securemedy.com", "https://www.securemedy.com"])(
+  it.each([
+    "https://securemedy.com",
+    "https://www.securemedy.com",
+    "https://new.securemedy.com",
+  ])(
     "allows chat preflight and API responses for %s",
     async (origin) => {
       const app = createApp();
@@ -47,6 +51,7 @@ describe("exact-origin CORS", () => {
     expect(resolveAllowedOrigins()).toEqual(
       expect.arrayContaining([
         "https://new.securemedy.com",
+        "https://securemedy.com",
         "https://medy-ai-assistant-demo.onrender.com",
         "http://localhost:5173",
         "http://127.0.0.1:5173",
@@ -62,8 +67,9 @@ describe("exact-origin CORS", () => {
   it("allows only configured origins in AWS production", () => {
     vi.stubEnv("MEDY_AWS_PRODUCTION", "true");
     expect(resolveAllowedOrigins()).toEqual([
-      "https://new.securemedy.com",
+      "https://securemedy.com",
       "https://www.securemedy.com",
+      "https://new.securemedy.com",
     ]);
   });
 

@@ -28,7 +28,7 @@ sam build --use-container --template-file template.yaml
 sam deploy --guided --region us-east-1 --stack-name medy-public-chatbot-staging `
   --capabilities CAPABILITY_IAM `
   --parameter-overrides `
-  AllowedOrigins=https://new.securemedy.com,https://www.securemedy.com `
+  AllowedOrigins=https://securemedy.com,https://www.securemedy.com,https://new.securemedy.com `
   BedrockModelId=amazon.nova-micro-v1:0 LeadRetentionDays=30 `
   ReservedConcurrency=3 LogRetentionDays=14 `
   MonthlyBudgetUsd=5 `
@@ -43,7 +43,7 @@ After an approved staging deployment, run:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-aws-staging.ps1 `
   -ApiBaseUrl "https://API_ID.execute-api.us-east-1.amazonaws.com/api" `
-  -Origins "https://new.securemedy.com","https://www.securemedy.com" `
+  -Origins "https://securemedy.com","https://www.securemedy.com","https://new.securemedy.com" `
   -IncludeThrottlingCheck
 ```
 
@@ -108,7 +108,7 @@ After cleanup, verify the stack and staging API no longer exist, the retained ta
 
 ### Cut over and monitor
 
-- Obtain separate approval for website CSP and endpoint changes. Before changing the endpoint, add the exact deployed API origin (for example, `https://API_ID.execute-api.us-east-1.amazonaws.com`) to `connect-src` on both `https://new.securemedy.com` and `https://www.securemedy.com`.
+- Obtain separate approval for website CSP and endpoint changes. Before changing the endpoint, add the exact deployed API origin (for example, `https://API_ID.execute-api.us-east-1.amazonaws.com`) to `connect-src` on `https://securemedy.com`, `https://www.securemedy.com`, and `https://new.securemedy.com`.
 - Change only the widget `api-url` to the stack `ApiUrl` plus `/api`. Keep the existing widget script and UX.
 - Preserve `https://medy-ai-assistant-demo.onrender.com/api` for immediate rollback. The script can remain `https://medy-ai-assistant-demo.onrender.com/medy-widget.js?v=1`.
 - Immediately repeat public health/chat/CORS checks and monitor both AWS and Render. Do not disable Render during migration.

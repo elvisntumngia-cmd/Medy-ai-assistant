@@ -18,10 +18,16 @@ describe("AWS production infrastructure contract", () => {
 
   it("configures both exact website origins without wildcard CORS", () => {
     expect(template).toContain(
-      "Default: https://new.securemedy.com,https://www.securemedy.com",
+      "Default: https://securemedy.com,https://www.securemedy.com,https://new.securemedy.com",
     );
-    expect(template).toContain('AllowOrigins: !Split [",", !Ref AllowedOrigins]');
+    expect(template).toMatch(
+      /AllowOrigins:\s*\n\s*- https:\/\/securemedy\.com\s*\n\s*- https:\/\/new\.securemedy\.com\s*\n\s*- https:\/\/www\.securemedy\.com/,
+    );
+    expect(template).toContain("AllowHeaders: [content-type, x-request-id]");
+    expect(template).toContain("AllowMethods: [GET, POST, OPTIONS]");
+    expect(template).toContain("MaxAge: 600");
     expect(template).toContain("CLIENT_ORIGIN: !Ref AllowedOrigins");
+    expect(template).not.toContain('AllowOrigins: !Split [",", !Ref AllowedOrigins]');
     expect(template).not.toMatch(/AllowOrigins:\s*\[?\s*["']?\*/);
   });
 
